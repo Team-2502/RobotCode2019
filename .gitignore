@@ -58,12 +58,12 @@
 
 ### IntelliJ ###
 
-.idea/workspace.xml
-.idea/usage.statistics.xml
-.idea/tasks.xml
-.idea/modules.xml
-.idea/gradle.xml
-.idea/libraries/**/*
+#.idea/workspace.xml
+#.idea/usage.statistics.xml
+#.idea/tasks.xml
+#.idea/modules.xml
+#.idea/gradle.xml
+.idea/**/*
 
 *.iml
 
