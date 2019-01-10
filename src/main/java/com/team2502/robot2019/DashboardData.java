@@ -1,7 +1,5 @@
 package com.team2502.robot2019;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +38,10 @@ public final class DashboardData
      */
     private static void updateNavX()
     {
-        SmartDashboard.putNumber("NavX: Yaw", Robot.NAVX.getYaw());
-        SmartDashboard.putNumber("NavX: X Displacement", Robot.NAVX.getDisplacementX());
-        SmartDashboard.putNumber("NavX: Y Displacement", Robot.NAVX.getDisplacementY());
-        SmartDashboard.putNumber("NavX: Z Displacement", Robot.NAVX.getDisplacementZ());
+//        SmartDashboard.putNumber("NavX: Yaw", Robot.NAVX.getYaw());
+//        SmartDashboard.putNumber("NavX: X Displacement", Robot.NAVX.getDisplacementX());
+//        SmartDashboard.putNumber("NavX: Y Displacement", Robot.NAVX.getDisplacementY());
+//        SmartDashboard.putNumber("NavX: Z Displacement", Robot.NAVX.getDisplacementZ());
     }
 
 

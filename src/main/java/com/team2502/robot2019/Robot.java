@@ -8,8 +8,10 @@
 package com.team2502.robot2019;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -35,6 +37,8 @@ public class Robot extends IterativeRobot
 
         AutoSwitcher.putToSmartDashboard();
     }
+
+
 
     /**
      * This function is called every robot packet, no matter the mode. Use
@@ -65,6 +69,7 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
+        new PrintAction().schedule();
         // Grab selected autonomous and run it
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
@@ -85,6 +90,10 @@ public class Robot extends IterativeRobot
     public void teleopPeriodic()
     {
         // See robotPeriodic
+    }
+
+    public static void main(String[] args) {
+        System.out.println("main called!");
     }
 
 }
