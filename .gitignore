@@ -63,7 +63,7 @@
 #.idea/tasks.xml
 #.idea/modules.xml
 #.idea/gradle.xml
-.idea
+.idea/
 
 *.iml
 

@@ -1,8 +1,5 @@
 package com.team2502.robot2019;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Exclusively for defining Button ID's, Solenoid ID's, Motor ID's, and other kinds of ID's
  * Stuff like conversion constants DO NOT belong here
@@ -10,7 +7,9 @@ import java.util.Map;
 public class RobotMap
 {
 
-    private RobotMap() { }
+    private RobotMap() {
+
+    }
 
     /**
      * Define Joystick ID's and button ID's
