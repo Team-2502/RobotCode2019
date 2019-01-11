@@ -8,10 +8,10 @@
 package com.team2502.robot2019;
 
 import com.kauailabs.navx.frc.AHRS;
+//import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
-import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.command.PrintCommand;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends IterativeRobot
+public class Robot extends TimedRobot
 {
 
     public static AHRS NAVX;
@@ -36,6 +36,7 @@ public class Robot extends IterativeRobot
         NAVX = new AHRS(SPI.Port.kMXP);
 
         AutoSwitcher.putToSmartDashboard();
+        System.out.println("test");
     }
 
 
@@ -69,8 +70,9 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
-        new PrintAction().schedule();
+//        new PrintAction().schedule();
         // Grab selected autonomous and run it
+        new PrintAction().schedule();
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
@@ -90,10 +92,6 @@ public class Robot extends IterativeRobot
     public void teleopPeriodic()
     {
         // See robotPeriodic
-    }
-
-    public static void main(String[] args) {
-        System.out.println("main called!");
     }
 
 }

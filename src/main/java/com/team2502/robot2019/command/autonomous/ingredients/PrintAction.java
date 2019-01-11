@@ -1,16 +1,16 @@
 package com.team2502.robot2019.command.autonomous.ingredients;
 
-import com.github.ezauton.core.action.PeriodicAction;
+import com.github.ezauton.core.action.BackgroundAction;
 
-public class PrintAction extends PeriodicAction {
+import java.util.concurrent.TimeUnit;
 
-    @Override
-    protected void execute() {
-        System.out.println("hmm");
+public class PrintAction extends BackgroundAction {
+    public PrintAction() {
+        super(20, TimeUnit.MILLISECONDS);
     }
 
     @Override
-    protected boolean isFinished() {
-        return false;
+    protected void execute() {
+        System.out.println("print test");
     }
 }
