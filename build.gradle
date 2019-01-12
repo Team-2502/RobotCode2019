@@ -59,6 +59,7 @@ dependencies {
 //    implementation 'com.github.ezAuton:ezAuton-Core:accf07eaab'
 
     compile 'com.github.ezAuton.ezAuton:ezAuton-Core:accf07eaab'
+    compile 'com.github.ezAuton.ezAuton:ezAuton-WPILib:accf07eaab'
 
 
 }

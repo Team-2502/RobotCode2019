@@ -7,6 +7,7 @@
 
 package com.team2502.robot2019;
 
+import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
@@ -36,7 +37,6 @@ public class Robot extends TimedRobot
         NAVX = new AHRS(SPI.Port.kMXP);
 
         AutoSwitcher.putToSmartDashboard();
-        System.out.println("test");
     }
 
 
@@ -72,8 +72,8 @@ public class Robot extends TimedRobot
     {
 //        new PrintAction().schedule();
         // Grab selected autonomous and run it
-        new PrintAction().schedule();
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+//        new Command new PrintAction().schedule();
+        Scheduler.getInstance().add(new CommandCreator(new PrintAction()));
     }
 
     /**
@@ -85,6 +85,12 @@ public class Robot extends TimedRobot
         // See robotPeriodic
     }
 
+    @Override
+    public void teleopInit()
+    {
+
+    }
+
     /**
      * This function is called periodically during operator control.
      */
@@ -92,6 +98,18 @@ public class Robot extends TimedRobot
     public void teleopPeriodic()
     {
         // See robotPeriodic
+    }
+
+    @Override
+    public void disabledInit()
+    {
+
+    }
+
+    @Override
+    public void disabledPeriodic()
+    {
+
     }
 
 }
