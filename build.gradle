@@ -39,6 +39,9 @@ repositories {
     maven { url 'https://jitpack.io' }
     maven { url 'http://devsite.ctr-electronics.com/maven/release/' }
     maven { url 'http://www.kauailabs.com/maven2'}
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
@@ -56,11 +59,12 @@ dependencies {
 //    compile 'openrio.mirror.third.ctre:CTRE-phoenix-java:5.2.1.1' # ummmmm keep this commented
     testCompile 'junit:junit:4.12'
 
-//    implementation 'com.github.ezAuton:ezAuton-Core:accf07eaab'
+//    implementation 'com.github.ezAuton.ezAuton:ezAuton:-b26423c914-1'
 
-    compile 'com.github.ezAuton.ezAuton:ezAuton-Core:accf07eaab'
+    compile name: 'ezAuton-Core-1.0-SNAPSHOT'
+    compile name: 'ezAuton-WPILib-1.0-SNAPSHOT'
 
-
+//    compile 'com.github.ezAuton.ezAuton:ezAuton-Core:-SNAPSHOT'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

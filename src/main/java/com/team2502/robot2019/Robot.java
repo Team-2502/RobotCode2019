@@ -7,6 +7,7 @@
 
 package com.team2502.robot2019;
 
+import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
@@ -72,7 +73,14 @@ public class Robot extends TimedRobot
     {
 //        new PrintAction().schedule();
         // Grab selected autonomous and run it
-        new PrintAction().schedule();
+        PrintAction printAction = new PrintAction();
+
+        printAction.schedule();
+
+        CommandCreator command = new CommandCreator(printAction);
+
+        Scheduler.getInstance().add(command);
+
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
