@@ -11,6 +11,8 @@ import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
+import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
+import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -26,6 +28,7 @@ public class Robot extends TimedRobot
 {
 
     public static AHRS NAVX;
+    public static DrivetrainSubsystem DRIVE_TRAIN;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -35,9 +38,9 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         NAVX = new AHRS(SPI.Port.kMXP);
+        DRIVE_TRAIN = new DrivetrainSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
-        System.out.println("test");
     }
 
 
@@ -71,17 +74,14 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
-//        new PrintAction().schedule();
-        // Grab selected autonomous and run it
-        PrintAction printAction = new PrintAction();
+//        PrintAction printAction = new PrintAction();
+//
+//        printAction.schedule();
 
-        printAction.schedule();
-
-        CommandCreator command = new CommandCreator(printAction);
+        CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3));
 
         Scheduler.getInstance().add(command);
 
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
     /**
@@ -93,6 +93,12 @@ public class Robot extends TimedRobot
         // See robotPeriodic
     }
 
+    @Override
+    public void teleopInit()
+    {
+
+    }
+
     /**
      * This function is called periodically during operator control.
      */
@@ -100,6 +106,18 @@ public class Robot extends TimedRobot
     public void teleopPeriodic()
     {
         // See robotPeriodic
+    }
+
+    @Override
+    public void disabledInit()
+    {
+
+    }
+
+    @Override
+    public void disabledPeriodic()
+    {
+
     }
 
 }

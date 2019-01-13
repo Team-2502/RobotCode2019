@@ -1,5 +1,7 @@
 package com.team2502.robot2019;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Constant variables generally pertaining to Pure Pursuit and encoders
  * <br>
@@ -17,6 +19,12 @@ public class Constants
      */
     @Deprecated
     public static final int UNDEFINED = -1;
+
+    public static final int INIT_TIMEOUT = 10;
+    public static final int LOOP_TIMEOUT = 0;
+
+    public static final long DEFAULT_ACTION_PERIOD = 20;
+    public static final TimeUnit DEFAULT_ACTION_PERIOD_UNIT = TimeUnit.MILLISECONDS;
 
     /**
      * Variables that pertain to auto
@@ -53,6 +61,10 @@ public class Constants
             public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
             public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
 
+            /**
+             * Threshold below which the joystick is considered to be at a 0 position
+             */
+            public static final double THRESHOLD = 1e-2;
 
 
             private DriveTrain() { }
