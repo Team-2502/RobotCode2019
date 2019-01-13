@@ -9,6 +9,8 @@ public class VoltageDriveCommand extends TimedCommand
     private final double rightVolts;
     private final boolean brake;
 
+    private int apple = 0;
+    private int banana = 0;
     /**
  * @param leftVolts
      * @param rightVolts
@@ -33,9 +35,19 @@ public class VoltageDriveCommand extends TimedCommand
     }
 
     @Override
+    protected void initialize()
+    {
+        Robot.DRIVE_TRAIN.runMotorsVoltage(leftVolts, rightVolts);
+        apple++;
+        System.out.println("apple = " + apple);
+        banana = 0;
+    }
+
+    @Override
     protected void execute()
     {
         Robot.DRIVE_TRAIN.runMotorsVoltage(leftVolts, rightVolts);
+        System.out.println("banana = " + banana++);
     }
 
     @Override
