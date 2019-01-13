@@ -11,6 +11,7 @@ import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
+import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -73,11 +74,11 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
-        PrintAction printAction = new PrintAction();
+//        PrintAction printAction = new PrintAction();
+//
+//        printAction.schedule();
 
-        printAction.schedule();
-
-        CommandCreator command = new CommandCreator(printAction);
+        CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3));
 
         Scheduler.getInstance().add(command);
 

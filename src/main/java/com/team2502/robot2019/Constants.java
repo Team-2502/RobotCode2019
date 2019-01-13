@@ -1,5 +1,7 @@
 package com.team2502.robot2019;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Constant variables generally pertaining to Pure Pursuit and encoders
  * <br>
@@ -20,6 +22,9 @@ public class Constants
 
     public static final int INIT_TIMEOUT = 10;
     public static final int LOOP_TIMEOUT = 0;
+
+    public static final long DEFAULT_ACTION_PERIOD = 20;
+    public static final TimeUnit DEFAULT_ACTION_PERIOD_UNIT = TimeUnit.MILLISECONDS;
 
     /**
      * Variables that pertain to auto
