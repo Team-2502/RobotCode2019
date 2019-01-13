@@ -7,10 +7,10 @@
 
 package com.team2502.robot2019;
 
-import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
+import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -26,6 +26,7 @@ public class Robot extends TimedRobot
 {
 
     public static AHRS NAVX;
+    public static DrivetrainSubsystem DRIVE_TRAIN;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         NAVX = new AHRS(SPI.Port.kMXP);
+        DRIVE_TRAIN = new DrivetrainSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
     }
@@ -73,7 +75,7 @@ public class Robot extends TimedRobot
 //        new PrintAction().schedule();
         // Grab selected autonomous and run it
 //        new Command new PrintAction().schedule();
-        Scheduler.getInstance().add(new CommandCreator(new PrintAction()));
+//        Scheduler.getInstance().add(new CommandCreator(new PrintAction()));
     }
 
     /**

@@ -18,6 +18,9 @@ public class Constants
     @Deprecated
     public static final int UNDEFINED = -1;
 
+    public static final int INIT_TIMEOUT = 10;
+    public static final int LOOP_TIMEOUT = 0;
+
     /**
      * Variables that pertain to auto
      */
@@ -53,6 +56,10 @@ public class Constants
             public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
             public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
 
+            /**
+             * Threshold below which the joystick is considered to be at a 0 position
+             */
+            public static final double THRESHOLD = 1e-2;
 
 
             private DriveTrain() { }

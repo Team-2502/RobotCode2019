@@ -2,7 +2,9 @@ package com.team2502.robot2019.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.RobotMap;
+import com.team2502.robot2019.command.teleop.DriveCommand;
 import com.team2502.robot2019.utils.IPIDTunable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -32,7 +34,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(null); //TODO: DriveCommand
+        setDefaultCommand(new DriveCommand()); //TODO: DriveCommand
     }
 
     public void runMotors(ControlMode controlMode, double leftVal, double rightVal) {
@@ -47,14 +49,6 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable {
     @Deprecated
     public void runMotorsVoltage(double leftVolts, double rightVolts) {
         runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
-    }
-
-    public WPI_TalonSRX getBackLeft() {
-        return backLeft;
-    }
-
-    public WPI_TalonSRX getBackRight() {
-        return backRight;
     }
 
     public WPI_TalonSRX getFrontLeft() {
@@ -119,14 +113,14 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable {
     }
 
     public void applyPID() {
-        frontLeft.config_kP(0, kP);
-        frontLeft.config_kI(0, kI);
-        frontLeft.config_kD(0, kD);
-        frontLeft.config_kF(0, kF);
+        frontLeft.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        frontLeft.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        frontLeft.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        frontLeft.config_kF(0, kF, Constants.INIT_TIMEOUT);
 
-        frontRight.config_kP(0, kP);
-        frontRight.config_kI(0, kI);
-        frontRight.config_kD(0, kD);
-        frontRight.config_kF(0, kF);
+        frontRight.config_kP(0, kP, Constants.INIT_TIMEOUT);
+        frontRight.config_kI(0, kI, Constants.INIT_TIMEOUT);
+        frontRight.config_kD(0, kD, Constants.INIT_TIMEOUT);
+        frontRight.config_kF(0, kF, Constants.INIT_TIMEOUT);
     }
 }
