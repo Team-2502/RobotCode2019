@@ -1,6 +1,8 @@
 package com.team2502.robot2019;
 
+import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.robot.ITankRobotConstants;
+import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +35,9 @@ public class Constants
      */
     public static class Autonomous
     {
-
+        public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
+            return new LookaheadBounds(1, 8, 3, 10, dt.getLocEstimator());
+        }
         private Autonomous() { }
     }
 

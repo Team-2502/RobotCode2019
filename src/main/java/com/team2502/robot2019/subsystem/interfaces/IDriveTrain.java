@@ -3,6 +3,7 @@ package com.team2502.robot2019.subsystem.interfaces;
 import com.github.ezauton.core.action.require.IResource;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.localization.IRotationalLocationEstimator;
+import com.github.ezauton.core.localization.ITankRobotVelocityEstimator;
 import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
@@ -27,7 +28,7 @@ public interface IDriveTrain extends TranslationalLocationDriveable, IResource, 
 
     IVelocityMotor getRight();
 
-    ITranslationalLocationEstimator getLocEstimator();
+    TankRobotEncoderEncoderEstimator getLocEstimator();
 
     IRotationalLocationEstimator getRotEstimator();
 
