@@ -2,109 +2,198 @@ package com.team2502.robot2019.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.github.ezauton.core.action.require.BaseResource;
+import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.localization.IRotationalLocationEstimator;
+import com.github.ezauton.core.localization.Updateable;
+import com.github.ezauton.core.localization.UpdateableGroup;
+import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
+import com.github.ezauton.core.localization.sensors.Encoders;
+import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.utils.MathUtils;
+import com.github.ezauton.wpilib.motors.ITypicalMotor;
+import com.github.ezauton.wpilib.motors.MotorControllers;
 import com.team2502.robot2019.Constants;
+import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.RobotMap;
 import com.team2502.robot2019.command.teleop.DriveCommand;
+import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
 import com.team2502.robot2019.utils.IPIDTunable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class DrivetrainSubsystem extends Subsystem implements IPIDTunable {
-
+public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriveTrain, Updateable
+{
     private final WPI_TalonSRX backLeft;
     private final WPI_TalonSRX backRight;
 
     private final WPI_TalonSRX frontLeft;
     private final WPI_TalonSRX frontRight;
 
+    private final ITypicalMotor left;
+    private final ITypicalMotor right;
+
+    private final TankRobotTransLocDriveable trtls;
+    private final TankRobotEncoderEncoderEstimator locEst;
+    private final IRotationalLocationEstimator rotEst;
+
+
     private double kP;
     private double kI;
     private double kD;
     private double kF;
 
-    public DrivetrainSubsystem() {
+    private final BaseResource resource = new BaseResource();
+    private final UpdateableGroup updateableGroup;
+
+    public DrivetrainSubsystem()
+    {
         backLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
         backRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
         frontLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
         frontRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
 
+        left = MotorControllers.fromSeveralCTRE(frontLeft, 0, backLeft);
+        right = MotorControllers.fromSeveralCTRE(frontRight, 0, backRight);
+
+        ITranslationalDistanceSensor leftSensor = Encoders.toTranslationalDistanceSensor(
+                Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET,
+                (long) Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS,
+                left
+                                                                                        );
+        ITranslationalDistanceSensor rightSensor = Encoders.toTranslationalDistanceSensor(
+                Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET,
+                (long) Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS,
+                right
+                                                                                         );
+
+        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
+        rotEst = () -> MathUtils.Kinematics.navXToRad(Robot.NAVX.getAngle());
+
+        trtls = new TankRobotTransLocDriveable(left, right, locEst, rotEst, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
+
         // DO NOT CHANGE
         backLeft.follow(frontLeft);
         backRight.follow(frontRight);
+
+        updateableGroup = new UpdateableGroup(locEst);
     }
 
     @Override
-    protected void initDefaultCommand() {
+    protected void initDefaultCommand()
+    {
         setDefaultCommand(new DriveCommand()); //TODO: DriveCommand
     }
 
-    public void runMotors(ControlMode controlMode, double leftVal, double rightVal) {
+    public void runMotors(ControlMode controlMode, double leftVal, double rightVal)
+    {
+        assertPossession();
         frontLeft.set(controlMode, leftVal);
         frontRight.set(controlMode, rightVal);
     }
 
-    public void runMotorsVelocity(double leftVal, double rightVal) {
+    public void runMotorsVelocity(double leftVal, double rightVal)
+    {
         runMotors(ControlMode.Velocity, leftVal, rightVal); //TODO: feet per second -> native units per 100 ms conversion
     }
 
     @Deprecated
-    public void runMotorsVoltage(double leftVolts, double rightVolts) {
+    public void runMotorsVoltage(double leftVolts, double rightVolts)
+    {
         runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
     }
 
-    public WPI_TalonSRX getFrontLeft() {
+    @Override
+    public IVelocityMotor getLeft()
+    {
+        return left;
+    }
+
+    @Override
+    public IVelocityMotor getRight()
+    {
+        return right;
+    }
+
+    @Override
+    public TankRobotEncoderEncoderEstimator getLocEstimator()
+    {
+        return locEst;
+    }
+
+    @Override
+    public IRotationalLocationEstimator getRotEstimator()
+    {
+        return rotEst;
+    }
+
+
+    public WPI_TalonSRX getFrontLeft()
+    {
         return frontLeft;
     }
 
-    public WPI_TalonSRX getFrontRight() {
+    public WPI_TalonSRX getFrontRight()
+    {
         return frontRight;
     }
 
     @Override
-    public double getkP() {
+    public double getkP()
+    {
         return kP;
     }
 
     @Override
-    public void setkP(double kP) {
+    public void setkP(double kP)
+    {
         this.kP = kP;
         applyPID();
     }
 
     @Override
-    public double getkI() {
+    public double getkI()
+    {
         return kI;
     }
 
     @Override
-    public void setkI(double kI) {
+    public void setkI(double kI)
+    {
         this.kI = kI;
         applyPID();
     }
 
     @Override
-    public double getkD() {
+    public double getkD()
+    {
         return kD;
     }
 
     @Override
-    public void setkD(double kD) {
+    public void setkD(double kD)
+    {
         this.kD = kD;
         applyPID();
     }
 
     @Override
-    public double getkF() {
+    public double getkF()
+    {
         return kF;
     }
 
     @Override
-    public void setkF(double kF) {
+    public void setkF(double kF)
+    {
         this.kF = kF;
         applyPID();
     }
 
     @Override
-    public void setPID(double kP, double kI, double kD) {
+    public void setPID(double kP, double kI, double kD)
+    {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
@@ -112,7 +201,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable {
         applyPID();
     }
 
-    public void applyPID() {
+    public void applyPID()
+    {
         frontLeft.config_kP(0, kP, Constants.INIT_TIMEOUT);
         frontLeft.config_kI(0, kI, Constants.INIT_TIMEOUT);
         frontLeft.config_kD(0, kD, Constants.INIT_TIMEOUT);
@@ -122,5 +212,30 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable {
         frontRight.config_kI(0, kI, Constants.INIT_TIMEOUT);
         frontRight.config_kD(0, kD, Constants.INIT_TIMEOUT);
         frontRight.config_kF(0, kF, Constants.INIT_TIMEOUT);
+    }
+
+    @Override
+    public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
+    {
+        return trtls.driveTowardTransLoc(speed, loc);
+    }
+
+    @Override
+    public boolean driveSpeed(double speed)
+    {
+        return trtls.driveSpeed(speed);
+    }
+
+
+    @Override
+    public BaseResource getResource()
+    {
+        return resource;
+    }
+
+    @Override
+    public boolean update()
+    {
+        return updateableGroup.update();
     }
 }

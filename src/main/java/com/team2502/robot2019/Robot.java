@@ -7,6 +7,10 @@
 
 package com.team2502.robot2019;
 
+import com.github.ezauton.core.pathplanning.PP_PathGenerator;
+import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
@@ -81,6 +85,18 @@ public class Robot extends TimedRobot
         CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3));
 
         Scheduler.getInstance().add(command);
+
+    }
+
+    private void PPTest() {
+        PPWaypoint[] waypoints = new PPWaypoint.Builder()
+                .add(0, 0, 16, 13, -12)
+                .add(0, 4, 16, 13, -12)
+                .buildArray();
+        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
+        Path path = pathGenerator.generate(0.05);
+
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
     }
 

@@ -1,5 +1,7 @@
 package com.team2502.robot2019;
 
+import com.github.ezauton.core.robot.ITankRobotConstants;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,32 +44,41 @@ public class Constants
         /**
          * Contains encoder conversion constants and details about the drivetrain wheels
          */
-        public static class DriveTrain
+        public static class DriveTrain implements ITankRobotConstants
         {
             //TODO: Measure wheels
-            public static final double WHEEL_DIAMETER_INCH = UNDEFINED;
+            public static final double WHEEL_DIAMETER_INCH = 6D;
             public static final double WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
             public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
 
+            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_DIAMETER_FT * Math.PI * WHEEL_REV_TO_ENC_REV_LOW;
+            public static final double ENC_UNITS_TO_FPS = ENC_UNITS_TO_FEET * 1000;
             //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 18.0F;
 
             //TODO: Measure/Calculate
-            public static final double MAX_FPS2_ACCEL = UNDEFINED;
-
-            //TODO: Figure out if 2019 robot will even have 2 speeds
-            public static final double SHIFT_UP_THRESHOLD = UNDEFINED;
-            public static final double SHIFT_DOWN_THRESHOLD = UNDEFINED;
+            public static final double MAX_FPS2_ACCEL = 30;
 
             /**
              * Threshold below which the joystick is considered to be at a 0 position
              */
             public static final double THRESHOLD = 1e-2;
 
+            //TODO: Measure
+            public static final double LATERAL_WHEEL_DIST_FT = 3;
+
+
+            public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
 
             private DriveTrain() { }
+
+            @Override
+            public double getLateralWheelDistance()
+            {
+                return LATERAL_WHEEL_DIST_FT;
+            }
         }
 
         public static class Encoder
@@ -87,4 +98,6 @@ public class Constants
             private Encoder() { }
         }
     }
+
+
 }
