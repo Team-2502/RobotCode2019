@@ -44,6 +44,7 @@ public class Robot extends TimedRobot
     {
         NAVX = new AHRS(SPI.Port.kMXP);
         DRIVE_TRAIN = new DrivetrainSubsystem();
+        HATCH_INTAKE_SOLENOID = new HatchIntakeSolenoid();
 
         AutoSwitcher.putToSmartDashboard();
     }
