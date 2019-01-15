@@ -88,7 +88,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     public void runMotors(ControlMode controlMode, double leftVal, double rightVal)
     {
-        assertPossession();
+//        assertPossession();
         frontLeft.set(controlMode, leftVal);
         frontRight.set(controlMode, rightVal);
     }
