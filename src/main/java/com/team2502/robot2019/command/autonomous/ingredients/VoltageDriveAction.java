@@ -27,7 +27,7 @@ public class VoltageDriveAction extends PeriodicAction implements Runnable
      * @param time       Amount of time to run for (seconds)
      */
     public VoltageDriveAction(double leftVolts, double rightVolts, double time)
-    {this(leftVolts, rightVolts, time, TimeUnit.SECONDS, true, RealClock.CLOCK, Robot.DRIVE_TRAIN);}
+    {this(leftVolts, rightVolts, time, TimeUnit.SECONDS, true, RealClock.CLOCK, Robot.DRIVE_TRAIN); }
 
 
     /**
@@ -46,7 +46,6 @@ public class VoltageDriveAction extends PeriodicAction implements Runnable
         this.brake = brake;
 
         stopwatch = new Stopwatch(clock);
-        stopwatch.init();
         this.dt = dt;
 
         this.onFinish(() -> {
@@ -71,6 +70,7 @@ public class VoltageDriveAction extends PeriodicAction implements Runnable
         {
             e.printStackTrace();
         }
+        stopwatch.init();
     }
 
 
