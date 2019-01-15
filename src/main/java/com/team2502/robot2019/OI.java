@@ -3,6 +3,7 @@ package com.team2502.robot2019;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import com.team2502.robot2019.command.teleop.*;
 
 /**
  * The Operator Interface class
@@ -35,6 +36,13 @@ public final class OI
     // Names are self explanatory
     // Convention: Button variable names here should be the same as ID names in RobotMap
 
+    /**
+     * Represents the hatch pusher button
+     *
+     * @see OI
+     */
+    public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HASH_PUSHER);
+
 
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -42,7 +50,8 @@ public final class OI
      */
     static
     {
-        // Put button actions here
+        //Active Intake Buttons
+        BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
     }
 
     /**
