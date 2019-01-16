@@ -36,7 +36,7 @@ public class Constants
     public static class Autonomous
     {
         public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
-            return new LookaheadBounds(1, 8, 3, 10, dt.getLocEstimator());
+            return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
     }

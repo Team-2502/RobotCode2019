@@ -7,9 +7,11 @@ import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.localization.IRotationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
+import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
@@ -35,8 +37,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private final ITypicalMotor right;
 
     private final TankRobotTransLocDriveable trtls;
-    private final TankRobotEncoderEncoderEstimator locEst;
+    private final EncoderRotationEstimator locEst;
     private final IRotationalLocationEstimator rotEst;
+    private final IVelocityEstimator velEst;
 
 
     private double kP;
@@ -68,8 +71,25 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
                 right
                                                                                          );
 
-        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
         rotEst = () -> MathUtils.Kinematics.navXToRad(Robot.NAVX.getAngle());
+        velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
+
+        locEst = new EncoderRotationEstimator(rotEst, new ITranslationalDistanceSensor()
+        {
+            @Override
+            public double getPosition()
+            {
+                return (leftSensor.getPosition() + rightSensor.getPosition()) / 2;
+            }
+
+            @Override
+            public double getVelocity()
+            {
+                return (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
+            }
+        }); //new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
+        locEst.reset();
+
 
         trtls = new TankRobotTransLocDriveable(left, right, locEst, rotEst, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
 
@@ -88,7 +108,6 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     public void runMotors(ControlMode controlMode, double leftVal, double rightVal)
     {
-//        assertPossession();
         frontLeft.set(controlMode, leftVal);
         frontRight.set(controlMode, rightVal);
     }
@@ -101,7 +120,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Deprecated
     public void runMotorsVoltage(double leftVolts, double rightVolts)
     {
-        runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
+//        runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
+        left.runVoltage(leftVolts);
+        right.runVoltage(rightVolts);
     }
 
     @Override
@@ -117,7 +138,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     }
 
     @Override
-    public TankRobotEncoderEncoderEstimator getLocEstimator()
+    public EncoderRotationEstimator getLocEstimator()
     {
         return locEst;
     }
@@ -128,6 +149,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         return rotEst;
     }
 
+    @Override
+    public IVelocityEstimator getVelocityEstimator()
+    {
+        return velEst;
+    }
 
     public WPI_TalonSRX getFrontLeft()
     {
@@ -217,6 +243,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
+        System.out.println("driveTowardTransLoc()");
         return trtls.driveTowardTransLoc(speed, loc);
     }
 
@@ -236,6 +263,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Override
     public boolean update()
     {
-        return updateableGroup.update();
+        boolean ret = updateableGroup.update();
+        System.out.println(locEst.estimateLocation());
+//        System.out.println("locEst.estimateLocation() = " + locEst.estimateLocation());
+//        System.out.println("locEst.estimateHeading() = " + locEst.estimateHeading());
+        return ret;
     }
 }

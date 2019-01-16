@@ -1,10 +1,23 @@
 package com.team2502.robot2019;
 
 
+import com.github.ezauton.core.action.*;
+import com.github.ezauton.core.pathplanning.PP_PathGenerator;
+import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.PointDriveAction;
+import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveAction;
+import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Select where we start the robot so it knows where it is on the field, resulting in a successful autonomous routine.
@@ -46,7 +59,31 @@ public class AutoSwitcher
      */
     public enum AutoMode
     {
-        DO_NOTHING("Do Nothing", DoNothingCommand::new);
+        DO_NOTHING("Do Nothing", DoNothingCommand::new),
+        ACTION_GROUP_TEST("PP Action Group Test", () -> {
+            ActionGroup group = new ActionGroup();
+            PPWaypoint[] waypoints = new PPWaypoint.Builder()
+                    .add(0, 0, 1600, 130000, -120000)
+                    .add(0, 4, 0, 130000, -120000)
+                    .buildArray();
+            PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
+            Path path = pathGenerator.generate(0.05);
+
+            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
+            PPCommand pp = new PPCommand(10, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
+
+            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
+            group.addSequential((IAction) pp);//new PointDriveAction(.05, new ImmutableVector(3, 10), 3));
+            group.addSequential((IAction) new VoltageDriveAction(-0.3, -0.3, 3));
+            return new CommandCreator(group);
+        }),
+        ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
+            ActionGroup group = new ActionGroup();
+            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
+            group.addSequential((IAction) new VoltageDriveAction(0.3, 0.3, 3));
+            return new CommandCreator(group);
+        });
+
 
         /**
          * A lambda that creates a new instance of the command

@@ -7,6 +7,7 @@ import com.github.ezauton.core.localization.ITankRobotVelocityEstimator;
 import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
+import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;
 
 /**
@@ -28,9 +29,11 @@ public interface IDriveTrain extends TranslationalLocationDriveable, IResource, 
 
     IVelocityMotor getRight();
 
-    TankRobotEncoderEncoderEstimator getLocEstimator();
+    ITranslationalLocationEstimator getLocEstimator();
 
     IRotationalLocationEstimator getRotEstimator();
+
+    IVelocityEstimator getVelocityEstimator();
 
     IResource getResource();
 

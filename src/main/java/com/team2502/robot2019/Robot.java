@@ -7,6 +7,9 @@
 
 package com.team2502.robot2019;
 
+import com.github.ezauton.core.action.ActionGroup;
+import com.github.ezauton.core.action.BackgroundAction;
+import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
@@ -20,6 +23,8 @@ import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -86,11 +91,12 @@ public class Robot extends TimedRobot
 
         CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3));
 
-        Scheduler.getInstance().add(command);
+        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+//        Scheduler.getInstance().add(PPTest());
 
     }
 
-    private void PPTest() {
+    private CommandCreator PPTest() {
         PPWaypoint[] waypoints = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
                 .add(0, 4, 16, 13, -12)
@@ -99,7 +105,12 @@ public class Robot extends TimedRobot
         Path path = pathGenerator.generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
-
+        PPCommand pp = new PPCommand(10, TimeUnit.MILLISECONDS, ppMoveStrat, DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(DRIVE_TRAIN), DRIVE_TRAIN);
+        BackgroundAction loc = new BackgroundAction(5, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update);
+        ActionGroup group = new ActionGroup();
+        group.with(loc);
+        group.addSequential(pp);
+        return new CommandCreator(group);
     }
 
     /**

@@ -8,6 +8,7 @@ import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.IClock;
@@ -37,7 +38,7 @@ public class SimulatedDrivetrain implements IDriveTrain
         right = new SimulatedMotor(clock, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, 0.05, Constants.Physical.DriveTrain.MAX_FPS_SPEED, 12 / Constants.Physical.DriveTrain.MAX_FPS_SPEED);
 
         leftTds = Encoders.toTranslationalDistanceSensor(1, 1, left);
-        rightTds= Encoders.toTranslationalDistanceSensor(1, 1, right);
+        rightTds = Encoders.toTranslationalDistanceSensor(1, 1, right);
 
         locEst = new TankRobotEncoderEncoderEstimator(leftTds, rightTds, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
         tankRobotTransLocDriveable = new TankRobotTransLocDriveable(left, right, locEst, locEst, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
@@ -73,6 +74,12 @@ public class SimulatedDrivetrain implements IDriveTrain
 
     @Override
     public IRotationalLocationEstimator getRotEstimator()
+    {
+        return locEst;
+    }
+
+    @Override
+    public IVelocityEstimator getVelocityEstimator()
     {
         return locEst;
     }
