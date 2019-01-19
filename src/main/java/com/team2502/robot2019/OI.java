@@ -1,5 +1,6 @@
 package com.team2502.robot2019;
 
+import com.team2502.robot2019.command.teleop.CargoActiveCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -35,6 +36,7 @@ public final class OI
     // Names are self explanatory
     // Convention: Button variable names here should be the same as ID names in RobotMap
 
+    public static final Button RUN_CARGO_ACTIVE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE);
 
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -43,6 +45,8 @@ public final class OI
     static
     {
         // Put button actions here
+        RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(1.0));
+
     }
 
     /**
