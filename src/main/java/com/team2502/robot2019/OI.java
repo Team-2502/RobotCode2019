@@ -37,6 +37,7 @@ public final class OI
     // Convention: Button variable names here should be the same as ID names in RobotMap
 
     public static final Button RUN_CARGO_ACTIVE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE);
+    public static final Button RUN_CARGO_ACTIVE_BKWDS = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS);
 
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -45,8 +46,8 @@ public final class OI
     static
     {
         // Put button actions here
-        RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(1.0));
-
+        RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS));
+        RUN_CARGO_ACTIVE_BKWDS.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
     }
 
     /**
