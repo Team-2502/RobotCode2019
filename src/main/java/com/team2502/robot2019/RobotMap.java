@@ -4,33 +4,40 @@ package com.team2502.robot2019;
  * Exclusively for defining Button ID's, Solenoid ID's, Motor ID's, and other kinds of ID's
  * Stuff like conversion constants DO NOT belong here
  */
-public class RobotMap {
+public class RobotMap
+{
 
-    private RobotMap() {
+    private RobotMap()
+    {
 
     }
 
     /**
      * Define Joystick ID's and button ID's
      */
-    public static final class Joystick {
+    public static final class Joystick
+    {
         public static final int JOYSTICK_DRIVE_LEFT = 1;
         public static final int JOYSTICK_DRIVE_RIGHT = 0;
         public static final int JOYSTICK_FUNCTION = 2;
 
-        private Joystick() {
+        private Joystick()
+        {
         }
 
         /**
          * Define Button ID's, which should be used in OI.java
          */
-        public static final class Button {
+        public static final class Button
+        {
             public static final int BUTTON_HASH_PUSHER = 1;
+            public static final int RUN_CARGO_ACTIVE = 4;
+            public static final int RUN_CARGO_ACTIVE_BKWDS = 6;
 
             private Button() { }
         }
     }
-    
+
     /**
      * Define Motor Controller ID's
      */
@@ -41,6 +48,8 @@ public class RobotMap {
         public static final int DRIVE_TRAIN_FRONT_LEFT = 3;
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
 
+        public static final int CARGO_LOWER_BELT = 5;
+        public static final int CARGO_UPPER_BELT = 8;
 
         private Motor() { }
     }
@@ -54,7 +63,7 @@ public class RobotMap {
          * HATCH_INTAKE ------ 0
          */
 
-        public static final int HATCH_INTAKE= 0;
+        public static final int HATCH_INTAKE = 0;
 
         private Solenoid() { }
     }

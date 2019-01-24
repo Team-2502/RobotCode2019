@@ -1,9 +1,10 @@
 package com.team2502.robot2019;
 
+import com.team2502.robot2019.command.teleop.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import com.team2502.robot2019.command.teleop.*;
 
 /**
  * The Operator Interface class
@@ -43,6 +44,8 @@ public final class OI
      */
     public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HASH_PUSHER);
 
+    public static final Button RUN_CARGO_ACTIVE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE);
+    public static final Button RUN_CARGO_ACTIVE_BKWDS = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS);
 
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -50,8 +53,9 @@ public final class OI
      */
     static
     {
-        //Active Intake Buttons
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
+        RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS));
+        RUN_CARGO_ACTIVE_BKWDS.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
     }
 
     /**

@@ -18,6 +18,7 @@ import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
+import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
 import edu.wpi.first.wpilibj.SPI;
@@ -37,8 +38,10 @@ public class Robot extends TimedRobot
 {
 
     public static AHRS NAVX;
+
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE_SOLENOID;
+    public static CargoSubsystem CARGO_ACTIVE;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -48,8 +51,10 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         NAVX = new AHRS(SPI.Port.kMXP);
+
         DRIVE_TRAIN = new DrivetrainSubsystem();
         HATCH_INTAKE_SOLENOID = new HatchIntakeSolenoid();
+        CARGO_ACTIVE = new CargoSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
     }
