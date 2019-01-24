@@ -20,7 +20,7 @@ public class CargoSubsystem extends Subsystem
     public void runIntake(double speed)
     {
         upperBelt.set(ControlMode.PercentOutput, speed);
-        lowerBelt.set(ControlMode.PercentOutput, speed);
+        lowerBelt.set(ControlMode.PercentOutput, -speed);
     }
 
     public void stopIntake()
