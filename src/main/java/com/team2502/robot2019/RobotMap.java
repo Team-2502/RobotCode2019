@@ -60,10 +60,10 @@ public class RobotMap
     public class Solenoid
     {
         /*
-         * HATCH_INTAKE ------ 0
+         * HATCH_INTAKE ------ 4
          */
 
-        public static final int HATCH_INTAKE = 0;
+        public static final int HATCH_INTAKE = 4;
 
         private Solenoid() { }
     }
