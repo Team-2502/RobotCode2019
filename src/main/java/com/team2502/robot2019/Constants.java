@@ -51,13 +51,13 @@ public class Constants
         public static class DriveTrain implements ITankRobotConstants
         {
             //TODO: Measure wheels
-            public static final double WHEEL_DIAMETER_INCH = 6D;
+            public static final double WHEEL_DIAMETER_INCH = 6.25;
             public static final double WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
             public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
 
-            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_DIAMETER_FT * Math.PI * WHEEL_REV_TO_ENC_REV_LOW;
+            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_DIAMETER_FT * Math.PI / WHEEL_REV_TO_ENC_REV_HIGH;
             public static final double ENC_UNITS_TO_FPS = ENC_UNITS_TO_FEET * 1000;
             //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 18.0F;

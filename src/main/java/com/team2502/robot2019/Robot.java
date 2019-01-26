@@ -57,6 +57,8 @@ public class Robot extends TimedRobot
         CARGO_ACTIVE = new CargoSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
+
+        NAVX.reset();
     }
 
 

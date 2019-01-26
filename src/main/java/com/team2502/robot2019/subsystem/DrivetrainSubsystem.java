@@ -49,6 +49,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     private final BaseResource resource = new BaseResource();
     private final UpdateableGroup updateableGroup;
+    private final ITranslationalDistanceSensor leftSensor;
+    private final ITranslationalDistanceSensor rightSensor;
 
     public DrivetrainSubsystem()
     {
@@ -57,19 +59,23 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
         frontRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
 
+        frontLeft.setSelectedSensorPosition(0);
+        frontLeft.setSensorPhase(true);
+        frontRight.setSelectedSensorPosition(0);
+
         left = MotorControllers.fromSeveralCTRE(frontLeft, 0, backLeft);
         right = MotorControllers.fromSeveralCTRE(frontRight, 0, backRight);
 
-        ITranslationalDistanceSensor leftSensor = Encoders.toTranslationalDistanceSensor(
+        leftSensor = Encoders.toTranslationalDistanceSensor(
                 Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET,
                 (long) Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS,
                 left
-                                                                                        );
-        ITranslationalDistanceSensor rightSensor = Encoders.toTranslationalDistanceSensor(
+                                                           );
+        rightSensor = Encoders.toTranslationalDistanceSensor(
                 Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET,
                 (long) Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS,
                 right
-                                                                                         );
+                                                            );
 
         rotEst = () -> MathUtils.Kinematics.navXToRad(Robot.NAVX.getAngle());
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
@@ -264,7 +270,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public boolean update()
     {
         boolean ret = updateableGroup.update();
-        System.out.println(locEst.estimateLocation());
+//        System.out.println(locEst.estimateLocation());
 //        System.out.println("locEst.estimateLocation() = " + locEst.estimateLocation());
 //        System.out.println("locEst.estimateHeading() = " + locEst.estimateHeading());
         return ret;
