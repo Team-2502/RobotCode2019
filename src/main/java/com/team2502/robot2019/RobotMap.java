@@ -31,6 +31,7 @@ public class RobotMap
         public static final class Button
         {
             public static final int BUTTON_HASH_PUSHER = 1;
+            public static final int BUTTON_ABORT_AUTO = 11;
             public static final int RUN_CARGO_ACTIVE = 4;
             public static final int RUN_CARGO_ACTIVE_BKWDS = 6;
 

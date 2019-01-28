@@ -1,5 +1,6 @@
 package com.team2502.robot2019;
 
+import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
 import com.team2502.robot2019.command.teleop.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import edu.wpi.first.wpilibj.Joystick;
@@ -47,6 +48,7 @@ public final class OI
     public static final Button RUN_CARGO_ACTIVE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE);
     public static final Button RUN_CARGO_ACTIVE_BKWDS = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS);
 
+    public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ABORT_AUTO);
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -56,6 +58,7 @@ public final class OI
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
         RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS));
         RUN_CARGO_ACTIVE_BKWDS.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
+        BUTTON_ABORT_AUTO.whenPressed(new AbortAutoCommand());
     }
 
     /**
