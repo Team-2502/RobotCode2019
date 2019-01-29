@@ -31,7 +31,6 @@ public class Constants
      */
     public static class Autonomous
     {
-
         private Autonomous() { }
     }
 
