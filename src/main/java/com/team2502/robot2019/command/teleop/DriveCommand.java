@@ -15,8 +15,8 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        double leftVolts = OI.JOYSTICK_DRIVE_LEFT.getY();
-        double rightVolts = OI.JOYSTICK_DRIVE_RIGHT.getY();
+        double leftVolts = -OI.JOYSTICK_DRIVE_LEFT.getY();
+        double rightVolts = -OI.JOYSTICK_DRIVE_RIGHT.getY();
 
         leftVolts = leftVolts * leftVolts * Math.signum(leftVolts);
         rightVolts = rightVolts * rightVolts * Math.signum(rightVolts);

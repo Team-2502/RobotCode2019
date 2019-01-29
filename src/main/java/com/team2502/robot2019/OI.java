@@ -45,10 +45,13 @@ public final class OI
      */
     public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HASH_PUSHER);
 
-    public static final Button RUN_CARGO_ACTIVE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE);
-    public static final Button RUN_CARGO_ACTIVE_BKWDS = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS);
-
     public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ABORT_AUTO);
+
+    public static final Button RUN_CARGO_ACTIVE_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_TOP);
+    public static final Button RUN_CARGO_ACTIVE_BKWDS_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_TOP);
+
+    public static final Button RUN_CARGO_ACTIVE_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BOTTOM);
+    public static final Button RUN_CARGO_ACTIVE_BKWDS_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_BOTTOM);
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -56,9 +59,14 @@ public final class OI
     static
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
-        RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS));
-        RUN_CARGO_ACTIVE_BKWDS.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
         BUTTON_ABORT_AUTO.whenPressed(new AbortAutoCommand());
+
+        // Put button actions here
+        RUN_CARGO_ACTIVE_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, true));
+        RUN_CARGO_ACTIVE_BKWDS_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS, true));
+
+        RUN_CARGO_ACTIVE_BOTTOM.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, false));
+        RUN_CARGO_ACTIVE_BKWDS_BOTTOM.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS, false));
     }
 
     /**
