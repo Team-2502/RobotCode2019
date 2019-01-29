@@ -22,4 +22,15 @@ public class VisionData
     {
         return angle;
     }
+
+
+    @Override
+    public String toString()
+    {
+        final StringBuilder sb = new StringBuilder("VisionData{");
+        sb.append("pos=").append(pos);
+        sb.append(", angle=").append(angle);
+        sb.append('}');
+        return sb.toString();
+    }
 }
