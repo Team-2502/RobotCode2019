@@ -15,14 +15,17 @@ public class VisionWebsocket
     private VisionData visionData;
 
     public VisionWebsocket() throws IOException
+    {this("team2502-tinker.local", 5800);}
+
+    public VisionWebsocket(String host, int port) throws IOException
     {
-        socket = new Socket("team2502-tinker.local",5800);
+        socket = new Socket(host,port);
         out = new PrintWriter(socket.getOutputStream(), true);
         reader = new InputStreamReader(socket.getInputStream());
         in = new BufferedReader(reader);
     }
 
-    private VisionData updateVisionData()
+    public VisionData updateVisionData()
     {
         // TODO: socket stuff...
 

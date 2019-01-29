@@ -10,10 +10,10 @@ import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
 
 import java.util.concurrent.TimeUnit;
 
-public class VoltageDriveAction extends PeriodicAction implements Runnable
+public class VelocityDriveAction extends PeriodicAction implements Runnable
 {
-    private final double leftVolts;
-    private final double rightVolts;
+    private final double leftVel;
+    private final double rightVel;
     private final boolean brake;
 
     private final Stopwatch stopwatch;
@@ -22,27 +22,27 @@ public class VoltageDriveAction extends PeriodicAction implements Runnable
     private IDriveTrain dt;
 
     /**
-     * @param leftVolts
-     * @param rightVolts
+     * @param leftVel
+     * @param rightVel
      * @param time       Amount of time to run for (seconds)
      */
-    public VoltageDriveAction(double leftVolts, double rightVolts, double time)
-    {this(leftVolts, rightVolts, time, TimeUnit.SECONDS, true, RealClock.CLOCK, Robot.DRIVE_TRAIN); }
+    public VelocityDriveAction(double leftVel, double rightVel, double time)
+    {this(leftVel, rightVel, time, TimeUnit.SECONDS, true, RealClock.CLOCK, Robot.DRIVE_TRAIN); }
 
 
     /**
-     * @param leftVolts
-     * @param rightVolts
+     * @param leftVel
+     * @param rightVel
      * @param time       Amount of time to run for (seconds)
      */
-    public VoltageDriveAction(double leftVolts, double rightVolts, double time, TimeUnit timeUnit, boolean brake, IClock clock, IDriveTrain dt)
+    public VelocityDriveAction(double leftVel, double rightVel, double time, TimeUnit timeUnit, boolean brake, IClock clock, IDriveTrain dt)
     {
         super(Constants.DEFAULT_ACTION_PERIOD, Constants.DEFAULT_ACTION_PERIOD_UNIT);
         this.time = time;
         this.timeUnit = timeUnit;
 
-        this.leftVolts = leftVolts;
-        this.rightVolts = rightVolts;
+        this.leftVel = leftVel;
+        this.rightVel = rightVel;
         this.brake = brake;
 
         stopwatch = new Stopwatch(clock);
@@ -83,6 +83,6 @@ public class VoltageDriveAction extends PeriodicAction implements Runnable
     @Override
     public void run()
     {
-        dt.runMotorsVoltage(leftVolts, rightVolts);
+        dt.runMotorsVelocity(leftVel, rightVel);
     }
 }

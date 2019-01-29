@@ -1,5 +1,7 @@
 package com.team2502.robot2019;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public final class DashboardData
      */
     static void update()
     {
+        Shuffleboard.update();
         for(DashboardUpdater subsystem : updaters) { subsystem.updateDashboard(); }
         updateNavX();
 //        ppRecord();

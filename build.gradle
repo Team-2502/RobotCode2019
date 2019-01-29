@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id 'org.jetbrains.kotlin.jvm' version '1.3.10'
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
 }
 
@@ -36,7 +37,7 @@ deploy {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+//    maven { url 'https://jitpack.io' }
     maven { url 'http://devsite.ctr-electronics.com/maven/release/' }
     maven { url 'http://www.kauailabs.com/maven2'}
     flatDir {
@@ -47,6 +48,16 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
+
+    testImplementation(
+            'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    )
+    testRuntimeOnly(
+            'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    )
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
@@ -57,15 +68,17 @@ dependencies {
     compile 'com.kauailabs.navx.frc:navx-java:3.1.344'
 
 //    compile 'openrio.mirror.third.ctre:CTRE-phoenix-java:5.2.1.1' # ummmmm keep this commented
-    testCompile 'junit:junit:4.12'
+//    testCompile 'junit:junit:4.12'
 
 //    implementation 'com.github.ezAuton:ezAuton-Core:accf07eaab'
 
-    compile 'com.github.ezAuton.ezAuton:ezAuton-Core:accf07eaab'
-    compile 'com.github.ezAuton.ezAuton:ezAuton-WPILib:accf07eaab'
+//    compile 'com.github.ezAuton.ezAuton:ezAuton-Core:accf07eaab'
+//    compile 'com.github.ezAuton.ezAuton:ezAuton-WPILib:accf07eaab'
 
     compile name: 'ezAuton-Core-1.0-SNAPSHOT'
     compile name: 'ezAuton-WPILib-1.0-SNAPSHOT'
+
+
 
 }
 
@@ -79,4 +92,18 @@ jar {
 
 wrapper {
     gradleVersion = '5.0'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

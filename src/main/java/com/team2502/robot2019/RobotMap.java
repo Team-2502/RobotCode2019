@@ -7,7 +7,8 @@ package com.team2502.robot2019;
 public class RobotMap
 {
 
-    private RobotMap() {
+    private RobotMap()
+    {
 
     }
 
@@ -20,13 +21,23 @@ public class RobotMap
         public static final int JOYSTICK_DRIVE_RIGHT = 0;
         public static final int JOYSTICK_FUNCTION = 2;
 
-        private Joystick() { }
+        private Joystick()
+        {
+        }
 
         /**
          * Define Button ID's, which should be used in OI.java
          */
         public static final class Button
         {
+            public static final int BUTTON_HASH_PUSHER = 1;
+            public static final int BUTTON_ABORT_AUTO = 11;
+
+            public static final int RUN_CARGO_ACTIVE_BOTTOM = 3;
+            public static final int RUN_CARGO_ACTIVE_BKWDS_BOTTOM = 5;
+
+            public static final int RUN_CARGO_ACTIVE_TOP = 4;
+            public static final int RUN_CARGO_ACTIVE_BKWDS_TOP = 6;
             private Button() { }
         }
     }
@@ -41,6 +52,8 @@ public class RobotMap
         public static final int DRIVE_TRAIN_FRONT_LEFT = 3;
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
 
+        public static final int CARGO_LOWER_BELT = 5;
+        public static final int CARGO_UPPER_BELT = 8;
 
         private Motor() { }
     }
@@ -48,8 +61,14 @@ public class RobotMap
     /**
      * Define Solenoid ID's
      */
-    public static final class Solenoid
+    public class Solenoid
     {
+        /*
+         * HATCH_INTAKE ------ 4
+         */
+
+        public static final int HATCH_INTAKE = 4;
+
         private Solenoid() { }
     }
 }
