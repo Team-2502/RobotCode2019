@@ -20,7 +20,7 @@ public class CargoActiveCommand extends Command {
     }
 
     @Override
-    protected boolean isFinished() {return true;}
+    protected boolean isFinished() {return false;}
 
     @Override
     protected void end(){Robot.CARGO_ACTIVE.stopIntake();}
