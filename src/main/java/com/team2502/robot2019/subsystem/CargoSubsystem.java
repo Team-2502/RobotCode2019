@@ -29,5 +29,16 @@ public class CargoSubsystem extends Subsystem
     }
 
     @Override
-    protected void initDefaultCommand(){}
+    protected void initDefaultCommand() {}
+
+    public void runTop(double speed)
+    {
+        upperBelt.set(ControlMode.PercentOutput, speed);
+    }
+
+    public void runBottom(double speed)
+    {
+        lowerBelt.set(ControlMode.PercentOutput, -speed);
+
+    }
 }

@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class CargoActiveCommand extends Command {
 
+    private final boolean top;
     private double speed;
 
-    public CargoActiveCommand(double speed)
+    public CargoActiveCommand(double speed, boolean top)
     {
+        this.top = top;
         requires(Robot.CARGO_ACTIVE);
         this.speed = speed;
     }
@@ -16,7 +18,13 @@ public class CargoActiveCommand extends Command {
     @Override
     protected void execute()
     {
-        Robot.CARGO_ACTIVE.runIntake(speed);
+        if(top)
+        {
+            Robot.CARGO_ACTIVE.runTop(speed);
+        }
+        else {
+            Robot.CARGO_ACTIVE.runBottom(speed);
+        }
     }
 
     @Override

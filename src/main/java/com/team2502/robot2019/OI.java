@@ -36,9 +36,11 @@ public final class OI
     // Names are self explanatory
     // Convention: Button variable names here should be the same as ID names in RobotMap
 
-    public static final Button RUN_CARGO_ACTIVE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE);
-    public static final Button RUN_CARGO_ACTIVE_BKWDS = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS);
+    public static final Button RUN_CARGO_ACTIVE_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_TOP);
+    public static final Button RUN_CARGO_ACTIVE_BKWDS_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_TOP);
 
+    public static final Button RUN_CARGO_ACTIVE_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BOTTOM);
+    public static final Button RUN_CARGO_ACTIVE_BKWDS_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_BOTTOM);
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -46,8 +48,11 @@ public final class OI
     static
     {
         // Put button actions here
-        RUN_CARGO_ACTIVE.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS));
-        RUN_CARGO_ACTIVE_BKWDS.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
+        RUN_CARGO_ACTIVE_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, true));
+        RUN_CARGO_ACTIVE_BKWDS_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS, true));
+
+        RUN_CARGO_ACTIVE_BOTTOM.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, false));
+        RUN_CARGO_ACTIVE_BKWDS_BOTTOM.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS, false));
     }
 
     /**

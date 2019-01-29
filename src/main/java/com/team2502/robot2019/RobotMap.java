@@ -27,8 +27,11 @@ public class RobotMap
          */
         public static final class Button
         {
-            public static final int RUN_CARGO_ACTIVE = 4;
-            public static final int RUN_CARGO_ACTIVE_BKWDS = 6;
+            public static final int RUN_CARGO_ACTIVE_BOTTOM = 3;
+            public static final int RUN_CARGO_ACTIVE_BKWDS_BOTTOM = 5;
+
+            public static final int RUN_CARGO_ACTIVE_TOP = 4;
+            public static final int RUN_CARGO_ACTIVE_BKWDS_TOP = 6;
 
             private Button() { }
         }
