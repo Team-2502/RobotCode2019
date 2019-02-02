@@ -18,6 +18,7 @@ import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
+import com.team2502.robot2019.command.vision.AlwaysListeningCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
@@ -99,6 +100,7 @@ public class Robot extends TimedRobot
         CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3));
 
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        Scheduler.getInstance().add(new AlwaysListeningCommand());
 //        Scheduler.getInstance().add(PPTest());
 
     }

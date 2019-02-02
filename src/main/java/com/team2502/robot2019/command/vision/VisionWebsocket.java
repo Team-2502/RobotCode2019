@@ -49,7 +49,6 @@ public class VisionWebsocket
                 visionData = new VisionData(x,y,angle);
             }catch(NumberFormatException ignored) { }
         }
-
         return visionData;
     }
 

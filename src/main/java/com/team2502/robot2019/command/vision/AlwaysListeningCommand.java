@@ -9,6 +9,10 @@ public class AlwaysListeningCommand extends Command {
 
     VisionWebsocket socket = null;
 
+    public AlwaysListeningCommand() {
+        setRunWhenDisabled(false);
+    }
+
     @Override
     protected void initialize() {
         super.initialize();
@@ -27,8 +31,22 @@ public class AlwaysListeningCommand extends Command {
     {
         VisionData data = socket.updateVisionData();
         System.out.println(data);
+
     }
 
     @Override
-    protected boolean isFinished(){ return false; }
+    protected void end() {
+        super.end();
+
+        try {
+            socket.shutdown();
+
+        }
+        catch (IOException e) {
+            System.out.println("Shutdown failed");
+        }
+    }
+
+    @Override
+    protected boolean isFinished() { return false; }
 }
