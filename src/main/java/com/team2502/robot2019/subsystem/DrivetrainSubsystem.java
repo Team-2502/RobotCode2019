@@ -47,6 +47,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private double kD;
     private double kF;
 
+    private boolean forward = true;
+
     private final BaseResource resource = new BaseResource();
     private final UpdateableGroup updateableGroup;
     private final ITranslationalDistanceSensor leftSensor;
@@ -127,8 +129,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public void runMotorsVoltage(double leftVolts, double rightVolts)
     {
 //        runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
-        left.runVoltage(leftVolts);
-        right.runVoltage(rightVolts);
+        left.runVoltage(forward ? leftVolts : -leftVolts);
+        right.runVoltage(forward ? rightVolts : -rightVolts);
     }
 
     @Override
@@ -274,5 +276,15 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 //        System.out.println("locEst.estimateLocation() = " + locEst.estimateLocation());
 //        System.out.println("locEst.estimateHeading() = " + locEst.estimateHeading());
         return ret;
+    }
+
+    public boolean isForward()
+    {
+        return forward;
+    }
+
+    public void setForward(boolean forward)
+    {
+        this.forward = forward;
     }
 }
