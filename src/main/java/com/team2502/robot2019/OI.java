@@ -54,7 +54,7 @@ public final class OI
     public static final Button RUN_CARGO_ACTIVE_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BOTTOM);
     public static final Button RUN_CARGO_ACTIVE_BKWDS_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_BOTTOM);
 
-    public static final Button SWTICH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
+    public static final Button SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -63,7 +63,7 @@ public final class OI
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
         BUTTON_ABORT_AUTO.whenPressed(new AbortAutoCommand());
-        SWTICH_DIRECTION.whenPressed(new SwitchDriveCommand());
+        SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
 
         // Put button actions here
         RUN_CARGO_ACTIVE_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, true));
