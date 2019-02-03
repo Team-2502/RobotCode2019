@@ -129,8 +129,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public void runMotorsVoltage(double leftVolts, double rightVolts)
     {
 //        runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
-        left.runVoltage(forward ? leftVolts : -leftVolts);
-        right.runVoltage(forward ? rightVolts : -rightVolts);
+//        left.runVoltage(forward ? leftVolts : -rightVolts);
+//        right.runVoltage(forward ? rightVolts : -leftVolts);
+        left.runVoltage(leftVolts);
+        right.runVoltage(rightVolts);
     }
 
     @Override
