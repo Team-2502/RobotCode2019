@@ -2,8 +2,12 @@ package com.team2502.robot2019.subsystem.vision;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.Semaphore;
 
 public class VisionWebsocket
 {
@@ -14,12 +18,22 @@ public class VisionWebsocket
 
     private VisionData visionData;
 
+    private static Semaphore socketLock = new Semaphore(1);
+
     public VisionWebsocket() throws IOException
     {this("team2502-tinker.local", 5800);}
 
     public VisionWebsocket(String host, int port) throws IOException
     {
-        socket = new Socket(host,port);
+        try
+        {
+            socketLock.acquire();
+        }
+        catch(InterruptedException e)
+        {
+            throw new IOException(e);
+        }
+        socket = new Socket(host, port);
         out = new PrintWriter(socket.getOutputStream(), true);
         reader = new InputStreamReader(socket.getInputStream());
         in = new BufferedReader(reader);
@@ -30,24 +44,30 @@ public class VisionWebsocket
         // TODO: socket stuff...
 
         final String input;
-        try {
+        try
+        {
             input = in.readLine();
-        }catch(IOException e) {
+        }
+        catch(IOException e)
+        {
             return visionData;
         }
 
         if(input == null)
-            return visionData;
+        { return visionData; }
 
         final String[] args = input.split(",");
-        if(args.length == 3) {
-            try {
+        if(args.length == 3)
+        {
+            try
+            {
                 final Double x = Double.parseDouble(args[0]);
                 final Double y = Double.parseDouble(args[1]);
                 final Double angle = Double.parseDouble(args[2]);
 
-                visionData = new VisionData(x,y,angle);
-            }catch(NumberFormatException ignored) { }
+                visionData = new VisionData(x, y, angle);
+            }
+            catch(NumberFormatException ignored) { }
         }
         return visionData;
     }
@@ -64,6 +84,7 @@ public class VisionWebsocket
 
     public void shutdown() throws IOException
     {
+        socketLock.release();
         reader.close();
         in.close();
         out.close();
