@@ -1,4 +1,4 @@
-package com.team2502.robot2019.command.vision;
+package com.team2502.robot2019.subsystem.vision;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 

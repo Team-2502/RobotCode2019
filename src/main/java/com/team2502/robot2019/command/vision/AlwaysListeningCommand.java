@@ -1,5 +1,7 @@
 package com.team2502.robot2019.command.vision;
 
+import com.team2502.robot2019.subsystem.vision.VisionData;
+import com.team2502.robot2019.subsystem.vision.VisionWebsocket;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.io.IOException;
