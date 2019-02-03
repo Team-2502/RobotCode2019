@@ -1,7 +1,9 @@
 package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
-import com.team2502.robot2019.command.teleop.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.CargoActive.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.CargoActive.CargoBottomCommand;
+import com.team2502.robot2019.command.teleop.CargoActive.CargoTopCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
 import edu.wpi.first.wpilibj.Joystick;
@@ -66,11 +68,11 @@ public final class OI
         SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
 
         // Put button actions here
-        RUN_CARGO_ACTIVE_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, true));
-        RUN_CARGO_ACTIVE_BKWDS_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS, true));
+        RUN_CARGO_ACTIVE_TOP.whileHeld(new CargoTopCommand(Constants.Physical.CargoActive.SPEED_FWDS));
+        RUN_CARGO_ACTIVE_BKWDS_TOP.whileHeld(new CargoTopCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
 
-        RUN_CARGO_ACTIVE_BOTTOM.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWDS, false));
-        RUN_CARGO_ACTIVE_BKWDS_BOTTOM.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BKWDS, false));
+        RUN_CARGO_ACTIVE_BOTTOM.whileHeld(new CargoBottomCommand(Constants.Physical.CargoActive.SPEED_FWDS));
+        RUN_CARGO_ACTIVE_BKWDS_BOTTOM.whileHeld(new CargoBottomCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
     }
 
     /**

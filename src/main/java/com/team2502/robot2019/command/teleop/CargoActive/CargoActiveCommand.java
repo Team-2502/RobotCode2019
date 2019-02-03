@@ -1,8 +1,9 @@
-package com.team2502.robot2019.command.teleop;
+package com.team2502.robot2019.command.teleop.CargoActive;
 
 import com.team2502.robot2019.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
+@Deprecated
 public class CargoActiveCommand extends Command {
 
     private final boolean top;
