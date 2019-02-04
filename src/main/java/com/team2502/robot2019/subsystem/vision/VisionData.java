@@ -8,7 +8,8 @@ public class VisionData
     private final double angle;
 
 
-    public VisionData(double x, double y, double angle) {
+    public VisionData(double x, double y, double angle)
+    {
         this.pos = new ImmutableVector(x, y);
         this.angle = angle;
     }
@@ -23,6 +24,10 @@ public class VisionData
         return angle;
     }
 
+    public boolean isMeaningful()
+    {
+        return pos.equals(new ImmutableVector(-9001, -9001)) && angle == -9001;
+    }
 
     @Override
     public String toString()
