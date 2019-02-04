@@ -19,6 +19,7 @@ import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
+import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
 import edu.wpi.first.wpilibj.Compressor;
@@ -43,6 +44,7 @@ public class Robot extends TimedRobot
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE_SOLENOID;
     public static CargoSubsystem CARGO_ACTIVE;
+    public static ClimberSubsystem CLIMBER;
     public static Compressor COMPRESSOR;
     /**
      * This function is run when the robot is first started up and should be
@@ -56,6 +58,7 @@ public class Robot extends TimedRobot
         DRIVE_TRAIN = new DrivetrainSubsystem();
         HATCH_INTAKE_SOLENOID = new HatchIntakeSolenoid();
         CARGO_ACTIVE = new CargoSubsystem();
+        CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
 
         AutoSwitcher.putToSmartDashboard();

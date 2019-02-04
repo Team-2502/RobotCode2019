@@ -1,9 +1,9 @@
 package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
-import com.team2502.robot2019.command.teleop.CargoActive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.CargoActive.CargoBottomCommand;
 import com.team2502.robot2019.command.teleop.CargoActive.CargoTopCommand;
+import com.team2502.robot2019.command.teleop.ClimberCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
 import edu.wpi.first.wpilibj.Joystick;
@@ -46,15 +46,17 @@ public final class OI
      *
      * @see OI
      */
-    public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HASH_PUSHER);
+    public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HATCH_PUSHER);
 
     public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ABORT_AUTO);
 
-    public static final Button RUN_CARGO_ACTIVE_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_TOP);
-    public static final Button RUN_CARGO_ACTIVE_BKWDS_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_TOP);
+    public static final Button RUN_CARGO_ACTIVE_FWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_FWD_TOP);
+    public static final Button RUN_CARGO_ACTIVE_BWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BWD_TOP);
+    public static final Button RUN_CARGO_ACTIVE_FWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_FWD_BOTTOM);
+    public static final Button RUN_CARGO_ACTIVE_BWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BWD_BOTTOM);
 
-    public static final Button RUN_CARGO_ACTIVE_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BOTTOM);
-    public static final Button RUN_CARGO_ACTIVE_BKWDS_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BKWDS_BOTTOM);
+    public static final Button BUTTON_CLIMBER_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_FWD);
+    public static final Button BUTTON_CLIMBER_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_BWD);
 
     public static final Button SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
     /*
@@ -68,11 +70,14 @@ public final class OI
         SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
 
         // Put button actions here
-        RUN_CARGO_ACTIVE_TOP.whileHeld(new CargoTopCommand(Constants.Physical.CargoActive.SPEED_FWDS));
-        RUN_CARGO_ACTIVE_BKWDS_TOP.whileHeld(new CargoTopCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
+        RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoTopCommand(Constants.Physical.CargoActive.SPEED_FWDS));
+        RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoTopCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
 
-        RUN_CARGO_ACTIVE_BOTTOM.whileHeld(new CargoBottomCommand(Constants.Physical.CargoActive.SPEED_FWDS));
-        RUN_CARGO_ACTIVE_BKWDS_BOTTOM.whileHeld(new CargoBottomCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
+        RUN_CARGO_ACTIVE_FWD_BOTTOM.whileHeld(new CargoBottomCommand(Constants.Physical.CargoActive.SPEED_FWDS));
+        RUN_CARGO_ACTIVE_BWD_BOTTOM.whileHeld(new CargoBottomCommand(Constants.Physical.CargoActive.SPEED_BKWDS));
+
+        BUTTON_CLIMBER_FWD.whileHeld(new ClimberCommand(true));
+        BUTTON_CLIMBER_BWD.whileHeld(new ClimberCommand(false));
     }
 
     /**
