@@ -8,6 +8,9 @@ public class AbortAutoCommand extends InstantCommand
     public AbortAutoCommand() { }
 
     @Override
-    protected void execute() { /*Scheduler.getInstance().removeAll();*/ }
+    protected void execute()
+    {
+        Scheduler.getInstance().removeAll();
+    }
 
 }
