@@ -42,6 +42,11 @@ public class RobotMap
 
             public static final int BUTTON_CLIMBER_FWD = 11;
             public static final int BUTTON_CLIMBER_BWD = 12;
+            public static final int BUTTON_CLIMBER_LEFT_FWD = 7;
+            public static final int BUTTON_CLIMBER_LEFT_BWD = 9;
+            public static final int BUTTON_CLIMBER_RIGHT_FWD = 8;
+            public static final int BUTTON_CLIMBER_RIGHT_BWD = 10;
+
             private Button() { }
         }
     }

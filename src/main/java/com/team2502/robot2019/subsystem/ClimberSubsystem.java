@@ -7,6 +7,14 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ClimberSubsystem extends Subsystem
 {
+    public enum ClimberSide
+    {
+        RIGHT,
+        LEFT,
+        BOTH
+    }
+
+
     private final WPI_TalonSRX leftClimber;
     private final WPI_TalonSRX rightClimber;
 
@@ -16,10 +24,21 @@ public class ClimberSubsystem extends Subsystem
         rightClimber = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_RIGHT);
     }
 
-    public void climb(boolean forwards)
+    public void climb(ClimberSide sides, boolean forwards)
     {
-        leftClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
-        rightClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+        switch (sides)
+        {
+            case RIGHT:
+                rightClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+                break;
+            case LEFT:
+                leftClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+                break;
+            case BOTH:
+                leftClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+                rightClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+                break;
+        }
     }
 
     public void stop()
