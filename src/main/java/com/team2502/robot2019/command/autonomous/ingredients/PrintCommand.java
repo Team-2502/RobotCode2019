@@ -8,6 +8,7 @@ public class PrintCommand extends Command
 
     private String message;
     private int num_of_prints = 0;
+    private int time_elapsed = 0;
 
     public PrintCommand(String message)
     {
@@ -27,9 +28,14 @@ public class PrintCommand extends Command
     @Override
     protected void execute()
     {
-        System.out.println(message + " " + num_of_prints);
-        new WaitCommand(500);
-        num_of_prints++;
+        if (time_elapsed % 25 == 0)
+        {
+            System.out.println(message + " " + num_of_prints);
+            num_of_prints++;
+        }
+
+        time_elapsed ++;
+
     }
 
     @Override
