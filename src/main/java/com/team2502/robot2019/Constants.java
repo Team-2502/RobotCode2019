@@ -32,6 +32,8 @@ public class Constants
     public static class Autonomous
     {
 
+        public static final double MAX_TURN_ERROR = 1D;
+
         private Autonomous() { }
     }
 

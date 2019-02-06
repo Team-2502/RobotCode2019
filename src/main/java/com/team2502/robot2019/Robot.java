@@ -7,6 +7,7 @@
 
 package com.team2502.robot2019;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
@@ -27,7 +28,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 public class Robot extends TimedRobot
 {
 
-    public static AHRS NAVX;
+    public static PigeonIMU PIGEON;
+//    public static AHRS NAVX;
     public static DrivetrainSubsystem DRIVE_TRAIN;
 
     /**
@@ -37,7 +39,8 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
-        NAVX = new AHRS(SPI.Port.kMXP);
+        //NAVX = new AHRS(SPI.Port.kMXP);
+        PIGEON = new PigeonIMU(0);
         DRIVE_TRAIN = new DrivetrainSubsystem();
 
         AutoSwitcher.putToSmartDashboard();

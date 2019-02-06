@@ -44,6 +44,11 @@ public final class DashboardData
 //        SmartDashboard.putNumber("NavX: Z Displacement", Robot.NAVX.getDisplacementZ());
     }
 
+    private static void updatePigeonIMU()
+    {
+
+    }
+
 
     /**
      * An interface to allow you to automatically update stuff on the Smart Dashboard.
