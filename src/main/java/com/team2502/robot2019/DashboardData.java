@@ -1,5 +1,7 @@
 package com.team2502.robot2019;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,8 @@ public final class DashboardData
     static void update()
     {
         for(DashboardUpdater subsystem : updaters) { subsystem.updateDashboard(); }
-        updateNavX();
+        updatePigeonIMU();
+//        updateNavX();
 //        ppRecord();
     }
 
@@ -46,7 +49,7 @@ public final class DashboardData
 
     private static void updatePigeonIMU()
     {
-
+        SmartDashboard.putNumber("PigeonIMU Yaw:", Robot.PIGEON.getAbsoluteCompassHeading());
     }
 
 
