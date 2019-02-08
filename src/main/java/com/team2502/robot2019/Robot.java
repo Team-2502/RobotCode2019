@@ -22,6 +22,7 @@ import com.team2502.robot2019.command.vision.AlwaysListeningCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -52,6 +53,8 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         NAVX = new AHRS(SPI.Port.kMXP);
+
+        CameraServer.getInstance().startAutomaticCapture();
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
         HATCH_INTAKE_SOLENOID = new HatchIntakeSolenoid();
