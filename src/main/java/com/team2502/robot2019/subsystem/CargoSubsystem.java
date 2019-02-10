@@ -7,6 +7,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class CargoSubsystem extends Subsystem
 {
+    public enum Belt
+    {
+        TOP,
+        BOTTOM,
+        BOTH;
+    }
 
     private final WPI_TalonSRX upperBelt;
     private final WPI_TalonSRX lowerBelt;
@@ -17,7 +23,20 @@ public class CargoSubsystem extends Subsystem
         lowerBelt = new WPI_TalonSRX(RobotMap.Motor.CARGO_LOWER_BELT);
     }
 
-    public void runIntake(double speed)
+    public void runIntake(Belt belt, double speed) {
+        switch(belt) {
+            case TOP:
+                runTop(speed);
+                break;
+            case BOTTOM:
+                runBottom(speed);
+                break;
+            case BOTH:
+                runBoth(speed);
+                break;
+        }
+    }
+    public void runBoth(double speed)
     {
         upperBelt.set(ControlMode.PercentOutput, speed);
         lowerBelt.set(ControlMode.PercentOutput, -speed);
@@ -25,7 +44,7 @@ public class CargoSubsystem extends Subsystem
 
     public void stopIntake()
     {
-        runIntake(0D);
+        runBoth(0D);
     }
 
     @Override

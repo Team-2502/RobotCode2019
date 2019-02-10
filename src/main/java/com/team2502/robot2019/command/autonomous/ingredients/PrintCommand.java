@@ -1,11 +1,14 @@
 package com.team2502.robot2019.command.autonomous.ingredients;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class PrintCommand extends Command
 {
 
     private String message;
+    private int num_of_prints = 0;
+    private int time_elapsed = 0;
 
     public PrintCommand(String message)
     {
@@ -25,7 +28,14 @@ public class PrintCommand extends Command
     @Override
     protected void execute()
     {
-        System.out.println(message);
+        if (time_elapsed % 25 == 0)
+        {
+            System.out.println(message + " " + num_of_prints);
+            num_of_prints++;
+        }
+
+        time_elapsed ++;
+
     }
 
     @Override

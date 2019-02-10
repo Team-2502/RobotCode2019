@@ -30,14 +30,23 @@ public class RobotMap
          */
         public static final class Button
         {
-            public static final int BUTTON_HASH_PUSHER = 1;
+            public static final int BUTTON_HATCH_PUSHER = 1;
+            public static final int BUTTON_SWITCH_DIRECTION = 1;
             public static final int BUTTON_ABORT_AUTO = 11;
 
-            public static final int RUN_CARGO_ACTIVE_BOTTOM = 3;
-            public static final int RUN_CARGO_ACTIVE_BKWDS_BOTTOM = 5;
+            public static final int RUN_CARGO_ACTIVE_FWD_BOTTOM = 5;
+            public static final int RUN_CARGO_ACTIVE_BWD_BOTTOM = 3;
 
-            public static final int RUN_CARGO_ACTIVE_TOP = 4;
-            public static final int RUN_CARGO_ACTIVE_BKWDS_TOP = 6;
+            public static final int RUN_CARGO_ACTIVE_FWD_TOP = 4;
+            public static final int RUN_CARGO_ACTIVE_BWD_TOP = 6;
+
+            public static final int BUTTON_CLIMBER_FWD = 11;
+            public static final int BUTTON_CLIMBER_BWD = 12;
+            public static final int BUTTON_CLIMBER_LEFT_FWD = 7;
+            public static final int BUTTON_CLIMBER_LEFT_BWD = 9;
+            public static final int BUTTON_CLIMBER_RIGHT_FWD = 8;
+            public static final int BUTTON_CLIMBER_RIGHT_BWD = 10;
+
             private Button() { }
         }
     }
@@ -53,7 +62,10 @@ public class RobotMap
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
 
         public static final int CARGO_LOWER_BELT = 5;
-        public static final int CARGO_UPPER_BELT = 8;
+        public static final int CARGO_UPPER_BELT = 6;
+
+        public static final int CLIMBER_LEFT = 7;
+        public static final int CLIMBER_RIGHT = 8;
 
         private Motor() { }
     }
