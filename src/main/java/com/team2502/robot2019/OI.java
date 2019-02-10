@@ -1,9 +1,8 @@
 package com.team2502.robot2019;
 
+import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
 import com.team2502.robot2019.command.teleop.CargoActive.CargoActiveCommand;
-import com.team2502.robot2019.command.teleop.CargoActive.CargoBottomCommand;
-import com.team2502.robot2019.command.teleop.CargoActive.CargoTopCommand;
 import com.team2502.robot2019.command.teleop.ClimberCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
@@ -12,6 +11,7 @@ import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+
 
 /**
  * The Operator Interface class
@@ -66,6 +66,7 @@ public final class OI
     public static final Button BUTTON_CLIMBER_RIGHT_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_RIGHT_FWD);
     public static final Button BUTTON_CLIMBER_RIGHT_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_RIGHT_BWD);
 
+    public static final Button CAMERA = new JoystickButton(JOYSTICK_FUNCTION, 2);
 
     public static final Button SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
     /*
@@ -96,6 +97,9 @@ public final class OI
 
         BUTTON_CLIMBER_RIGHT_FWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.RIGHT, true));
         BUTTON_CLIMBER_RIGHT_BWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.RIGHT, false));
+
+        CAMERA.whenPressed(new LambdaCommand(() -> Robot.SERVER.setSource(Robot.CAMERA1)));
+        CAMERA.whenReleased(new LambdaCommand(() -> Robot.SERVER.setSource(Robot.CAMERA0)));
     }
 
     /**

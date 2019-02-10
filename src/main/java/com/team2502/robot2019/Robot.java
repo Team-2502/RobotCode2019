@@ -23,6 +23,8 @@ import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.SPI;
@@ -48,6 +50,10 @@ public class Robot extends TimedRobot
     public static CargoSubsystem CARGO_ACTIVE;
     public static ClimberSubsystem CLIMBER;
     public static Compressor COMPRESSOR;
+    public static UsbCamera CAMERA0;
+    public static UsbCamera CAMERA1;
+    public static VideoSink SERVER;
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -57,7 +63,12 @@ public class Robot extends TimedRobot
     {
         NAVX = new AHRS(SPI.Port.kMXP);
 
-        CameraServer.getInstance().startAutomaticCapture();
+        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
+        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
+        SERVER = CameraServer.getInstance().getServer();
+
+        SERVER.setSource(CAMERA0);
+
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
         HATCH_INTAKE_SOLENOID = new HatchIntakeSolenoid();
