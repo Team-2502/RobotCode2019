@@ -74,6 +74,8 @@ public class GoToTargetCommand extends Command
             double botheading = Robot.DRIVE_TRAIN.getRotEstimator().estimateHeading();
 
             lastAbsoluteTargetPos = MathUtils.LinearAlgebra.rotate2D(lastTargetLocEstimation.getPos(), botheading).add(Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation());
+//            System.out.println("newVisionData.isMeaningful() = " + newVisionData.isMeaningful());
+//            System.out.println("lastAbsoluteTargetPos = " + lastAbsoluteTargetPos);
             lastAbsoluteTargetAngle = botheading + lastTargetLocEstimation.getAngle();
         }
         if(lastTargetLocEstimation == null)
@@ -97,18 +99,23 @@ public class GoToTargetCommand extends Command
 
 //        IPathSegment next = path.getNext();
 
-            ImmutableVector next = quinticSpline.get(0.1);
+            ImmutableVector next = quinticSpline.get(0.3);
+            System.out.println("target = " + next);
 
-            Robot.DRIVE_TRAIN.driveTowardTransLoc(0.5, next);
+            Robot.DRIVE_TRAIN.driveTowardTransLoc(3, next);
         } catch(NullPointerException e) {
-            DriverStation.reportError("whoops 2", false);
+            DriverStation.reportError("Could not find target", e.getStackTrace());
+            System.out.println("lastAbsoluteTargetPos = " + lastAbsoluteTargetPos);
+            System.out.println("newVisionData = " + newVisionData);
+            System.out.println("meaningful = " + newVisionData.isMeaningful());
         }
     }
 
     @Override
     protected boolean isFinished()
     {
-        return lastAbsoluteTargetPos != null &&  (stop || Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation().dist(lastAbsoluteTargetPos) <= 1); // within a foot
+        return false;
+//        return lastAbsoluteTargetPos != null &&  (stop || Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation().dist(lastAbsoluteTargetPos) <= 1); // within a foot
     }
 
     @Override

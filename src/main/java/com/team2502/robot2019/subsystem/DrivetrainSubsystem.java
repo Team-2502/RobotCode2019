@@ -45,7 +45,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private final IVelocityEstimator velEst;
 
 
-    private double kP = 0.1;
+    private double kP = 0.2;
     private double kI = 0;
     private double kD = 0;
     private double kF = 0.114;
@@ -69,30 +69,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontRight.setSelectedSensorPosition(0);
         frontRight.setSensorPhase(true);
 
-        left = new ITypicalMotor() {
-            public void runVelocity(double targetVelocity) {
-                this.makeSlavesFollowMaster();
-                frontRight.set(ControlMode.Velocity, -targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
-            }
+        frontLeft.configClosedloopRamp(0.05);
+        frontRight.configClosedloopRamp(0.05);
 
-            public void runVoltage(double targetVoltage) {
-                this.makeSlavesFollowMaster();
-                frontRight.set(ControlMode.PercentOutput, targetVoltage);
-            }
-
-            public double getPosition() {
-                return (double)frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
-            }
-
-            public double getVelocity() {
-                return (double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
-            }
-
-            private void makeSlavesFollowMaster() {
-                backRight.follow(frontRight);
-            }
-        };
-
+        frontLeft.configOpenloopRamp(0.05);
+        frontRight.configOpenloopRamp(0.05);
 
         right = new ITypicalMotor() {
             public void runVelocity(double targetVelocity) {
@@ -102,19 +83,44 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
             public void runVoltage(double targetVoltage) {
                 this.makeSlavesFollowMaster();
-                frontRight.set(ControlMode.PercentOutput, targetVoltage);
+                frontRight.set(ControlMode.PercentOutput, -targetVoltage);
             }
 
             public double getPosition() {
-                return (double)frontRight.getSelectedSensorPosition(0)  * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+                return -(double)frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
             }
 
             public double getVelocity() {
-                return (double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+                return -(double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
             }
 
             private void makeSlavesFollowMaster() {
                 backRight.follow(frontRight);
+            }
+        };
+
+
+        left = new ITypicalMotor() {
+            public void runVelocity(double targetVelocity) {
+                this.makeSlavesFollowMaster();
+                frontLeft.set(ControlMode.Velocity, -targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+            }
+
+            public void runVoltage(double targetVoltage) {
+                this.makeSlavesFollowMaster();
+                frontLeft.set(ControlMode.PercentOutput, -targetVoltage);
+            }
+
+            public double getPosition() {
+                return -(double)frontLeft.getSelectedSensorPosition(0)  * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+            }
+
+            public double getVelocity() {
+                return -(double)frontLeft.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+            }
+
+            private void makeSlavesFollowMaster() {
+                backLeft.follow(frontLeft);
             }
         };
 
@@ -179,7 +185,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     {
         double leftValEnc = leftVal / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
         double rightValEnc = rightVal / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
-        runMotors(ControlMode.Velocity, leftValEnc, rightValEnc);
+        runMotors(ControlMode.Velocity, -leftValEnc, -rightValEnc);
     }
 
     @Deprecated
@@ -348,8 +354,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Override
     public void updateDashboard()
     {
+        update();
         SmartDashboard.putNumber("left vel", leftSensor.getVelocity());
         SmartDashboard.putNumber("right vel", rightSensor.getVelocity());
+        SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
+        SmartDashboard.putNumber("right pos", frontRight.getSelectedSensorPosition());
         SmartDashboard.putString("loc", locEst.estimateLocation().toString());
     }
 }

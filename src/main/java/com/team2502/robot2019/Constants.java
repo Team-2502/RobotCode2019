@@ -64,7 +64,7 @@ public class Constants
             /**
              * Multiply by enc units to get feet
              */
-            public static final double ENC_UNITS_TO_FEET = WHEEL_DIAMETER_FT / (ENC_UNITS_PER_ROT);
+            public static final double ENC_UNITS_TO_FEET = (WHEEL_DIAMETER_FT  * Math.PI)/ (ENC_UNITS_PER_ROT);
 
             /**
              * Multiply by enc units/100 ms to get feet/sec
