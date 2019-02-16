@@ -91,9 +91,12 @@ public class GoToTargetCommand extends Command
 
         try
         {
+            ImmutableVector knotVecRobot = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), angle).div(3);
+            ImmutableVector knotVecTarget = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), lastAbsoluteTargetAngle).mul(3);
+
             QuinticSpline quinticSpline = new SplinePPWaypoint.Builder()
-                    .add(loc.get(0), loc.get(1), angle, speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
-                    .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), lastAbsoluteTargetAngle, speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
+                    .add(loc.get(0), loc.get(1), knotVecRobot.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
+                    .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), knotVecTarget.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
                     .buildSplines().get(0);
 //                .buildPathGenerator().generate(0.05);
 
