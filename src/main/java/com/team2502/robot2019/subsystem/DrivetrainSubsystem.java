@@ -1,6 +1,7 @@
 package com.team2502.robot2019.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.github.ezauton.core.action.require.BaseResource;
 import com.github.ezauton.core.actuators.IVelocityMotor;
@@ -18,20 +19,22 @@ import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.wpilib.motors.ITypicalMotor;
 import com.github.ezauton.wpilib.motors.MotorControllers;
 import com.team2502.robot2019.Constants;
+import com.team2502.robot2019.DashboardData;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.RobotMap;
 import com.team2502.robot2019.command.teleop.DriveCommand;
 import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
 import com.team2502.robot2019.utils.IPIDTunable;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriveTrain, Updateable
+public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriveTrain, Updateable, DashboardData.DashboardUpdater
 {
     private final WPI_TalonSRX backLeft;
     private final WPI_TalonSRX backRight;
 
-    private final WPI_TalonSRX frontLeft;
-    private final WPI_TalonSRX frontRight;
+    public final WPI_TalonSRX frontLeft;
+    public final WPI_TalonSRX frontRight;
 
     private final ITypicalMotor left;
     private final ITypicalMotor right;
@@ -42,10 +45,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private final IVelocityEstimator velEst;
 
 
-    private double kP;
-    private double kI;
-    private double kD;
-    private double kF;
+    private double kP = 0.1;
+    private double kI = 0;
+    private double kD = 0;
+    private double kF = 0.114;
 
     private boolean forward = true;
 
@@ -53,6 +56,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private final UpdateableGroup updateableGroup;
     private final ITranslationalDistanceSensor leftSensor;
     private final ITranslationalDistanceSensor rightSensor;
+    private int maxVel = 0;
 
     public DrivetrainSubsystem()
     {
@@ -62,20 +66,66 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
 
         frontLeft.setSelectedSensorPosition(0);
-        frontLeft.setSensorPhase(true);
         frontRight.setSelectedSensorPosition(0);
+        frontRight.setSensorPhase(true);
 
-        left = MotorControllers.fromSeveralCTRE(frontLeft, 0, backLeft);
-        right = MotorControllers.fromSeveralCTRE(frontRight, 0, backRight);
+        left = new ITypicalMotor() {
+            public void runVelocity(double targetVelocity) {
+                this.makeSlavesFollowMaster();
+                frontRight.set(ControlMode.Velocity, -targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+            }
+
+            public void runVoltage(double targetVoltage) {
+                this.makeSlavesFollowMaster();
+                frontRight.set(ControlMode.PercentOutput, targetVoltage);
+            }
+
+            public double getPosition() {
+                return (double)frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+            }
+
+            public double getVelocity() {
+                return (double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+            }
+
+            private void makeSlavesFollowMaster() {
+                backRight.follow(frontRight);
+            }
+        };
+
+
+        right = new ITypicalMotor() {
+            public void runVelocity(double targetVelocity) {
+                this.makeSlavesFollowMaster();
+                frontRight.set(ControlMode.Velocity, -targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+            }
+
+            public void runVoltage(double targetVoltage) {
+                this.makeSlavesFollowMaster();
+                frontRight.set(ControlMode.PercentOutput, targetVoltage);
+            }
+
+            public double getPosition() {
+                return (double)frontRight.getSelectedSensorPosition(0)  * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+            }
+
+            public double getVelocity() {
+                return (double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+            }
+
+            private void makeSlavesFollowMaster() {
+                backRight.follow(frontRight);
+            }
+        };
 
         leftSensor = Encoders.toTranslationalDistanceSensor(
-                Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET,
-                (long) Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS,
+                1,
+                1,
                 left
                                                            );
         rightSensor = Encoders.toTranslationalDistanceSensor(
-                Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET,
-                (long) Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS,
+                1,
+                1,
                 right
                                                             );
 
@@ -95,7 +145,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
             {
                 return (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
             }
-        }); //new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
+        });
+//        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
         locEst.reset();
 
 
@@ -106,6 +157,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         backRight.follow(frontRight);
 
         updateableGroup = new UpdateableGroup(locEst);
+
+        DashboardData.addUpdater(this);
+
+        applyPID();
     }
 
     @Override
@@ -122,7 +177,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     public void runMotorsVelocity(double leftVal, double rightVal)
     {
-        runMotors(ControlMode.Velocity, leftVal, rightVal); //TODO: feet per second -> native units per 100 ms conversion
+        double leftValEnc = leftVal / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+        double rightValEnc = rightVal / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+        runMotors(ControlMode.Velocity, leftValEnc, rightValEnc);
     }
 
     @Deprecated
@@ -239,6 +296,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     public void applyPID()
     {
+        frontLeft.selectProfileSlot(0, 0);
+        frontRight.selectProfileSlot(0, 0);
+
         frontLeft.config_kP(0, kP, Constants.INIT_TIMEOUT);
         frontLeft.config_kI(0, kI, Constants.INIT_TIMEOUT);
         frontLeft.config_kD(0, kD, Constants.INIT_TIMEOUT);
@@ -253,7 +313,6 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
-        System.out.println("driveTowardTransLoc()");
         return trtls.driveTowardTransLoc(speed, loc);
     }
 
@@ -273,11 +332,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Override
     public boolean update()
     {
-        boolean ret = updateableGroup.update();
-//        System.out.println(locEst.estimateLocation());
-//        System.out.println("locEst.estimateLocation() = " + locEst.estimateLocation());
-//        System.out.println("locEst.estimateHeading() = " + locEst.estimateHeading());
-        return ret;
+        return updateableGroup.update();
     }
 
     public boolean isForward()
@@ -288,5 +343,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public void setForward(boolean forward)
     {
         this.forward = forward;
+    }
+
+    @Override
+    public void updateDashboard()
+    {
+        SmartDashboard.putNumber("left vel", leftSensor.getVelocity());
+        SmartDashboard.putNumber("right vel", rightSensor.getVelocity());
+        SmartDashboard.putString("loc", locEst.estimateLocation().toString());
     }
 }

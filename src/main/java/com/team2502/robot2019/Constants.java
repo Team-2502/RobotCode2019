@@ -35,6 +35,8 @@ public class Constants
      */
     public static class Autonomous
     {
+        public static final String COPROCESSOR_MDNS_ADDR = "raspberrypi.local";
+
         public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
             return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
         }
@@ -57,8 +59,20 @@ public class Constants
             public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
 
-            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_DIAMETER_FT * Math.PI / WHEEL_REV_TO_ENC_REV_HIGH;
-            public static final double ENC_UNITS_TO_FPS = ENC_UNITS_TO_FEET * 1000;
+            public static final double ENC_UNITS_PER_ROT = 8099;
+
+            /**
+             * Multiply by enc units to get feet
+             */
+            public static final double ENC_UNITS_TO_FEET = WHEEL_DIAMETER_FT / (ENC_UNITS_PER_ROT);
+
+            /**
+             * Multiply by enc units/100 ms to get feet/sec
+             */
+            public static final double ENC_UNITS_TO_FPS = 10 * ENC_UNITS_TO_FEET;
+
+
+
             //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 18.0F;
 

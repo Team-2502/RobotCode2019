@@ -9,16 +9,21 @@ package com.team2502.robot2019;
 
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
+import com.github.ezauton.core.action.IAction;
 import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
 //import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
+import com.team2502.robot2019.command.autonomous.ingredients.PointDriveAction;
+import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.command.vision.AlwaysListeningCommand;
+import com.team2502.robot2019.command.vision.GoToTargetCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
@@ -27,10 +32,12 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -118,16 +125,39 @@ public class Robot extends TimedRobot
 
         CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3));
 
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
-        Scheduler.getInstance().add(new AlwaysListeningCommand());
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+
+        Scheduler.getInstance().add(PPTest());
+        try
+        {
+            Scheduler.getInstance().add(new VelocityDriveCommand(.5, .5, 3));
+//            ActionGroup group = new ActionGroup();
+//            PointDriveAction pdAction = new PointDriveAction(10, new ImmutableVector(0, 10), 10);
+//            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update));
+//            group.addSequential((IAction) pdAction);
+//            Scheduler.getInstance().add(new CommandCreator(group));
+//            Scheduler.getInstance().add(new GoToTargetCommand());
+//            BackgroundAction loc = new BackgroundAction(5, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update);
+//            ActionGroup group = new ActionGroup();
+//            group.with(loc);
+//            group.addSequential((IAction) new GoToTargetCommand());
+//            group.addSequential((IAction) new PointDriveAction(10, new ImmutableVector(0, 10), 15));
+//            Scheduler.getInstance().add(new CommandCreator(group));
+        }
+        catch(Exception e)
+        {
+            DriverStation.reportError("whoops!!!!", e.getStackTrace());
+        }
 //        Scheduler.getInstance().add(PPTest());
 
     }
 
     private CommandCreator PPTest() {
         PPWaypoint[] waypoints = new PPWaypoint.Builder()
-                .add(0, 0, 16, 13, -12)
-                .add(0, 4, 16, 13, -12)
+                .add(0, 0, 1.6, 13, -12)
+                .add(0, 4, 1.6, 13, -12)
+                .add(4, 4, 1.6, 13, -12)
+                .add(4, 0, 1.6, 13, -12)
                 .buildArray();
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
         Path path = pathGenerator.generate(0.05);
