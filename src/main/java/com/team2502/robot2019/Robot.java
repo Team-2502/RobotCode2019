@@ -71,11 +71,11 @@ public class Robot extends TimedRobot
     {
         NAVX = new AHRS(SPI.Port.kMXP);
 
-        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
-        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
-        SERVER = CameraServer.getInstance().getServer();
+//        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
+//        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
+//        SERVER = CameraServer.getInstance().getServer();
 
-        SERVER.setSource(CAMERA0);
+//        SERVER.setSource(CAMERA0);
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
@@ -126,9 +126,9 @@ public class Robot extends TimedRobot
 //        Scheduler.getInstance().add(PPTest());
         try
         {
-//            Scheduler.getInstance().add(new VelocityDriveCommand(.5, .5, 3))
-//            Scheduler.getInstance().add(new PointDriveCommand(3,
-//                                                              new ImmutableVector(-5,1),
+//            Scheduler.getInstance().add(new VelocityDriveCommand(.5, .5, 3));
+//            Scheduler.getInstance().add(new PointDriveCommand(5,
+//                                                              new ImmutableVector(4,1),
 //                                                              40,
 //                                                              true));
 //            ActionGroup group = new ActionGroup();

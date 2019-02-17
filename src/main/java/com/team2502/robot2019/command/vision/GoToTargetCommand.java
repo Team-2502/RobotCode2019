@@ -3,6 +3,7 @@ package com.team2502.robot2019.command.vision;
 import com.github.ezauton.core.pathplanning.IPathSegment;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.QuinticSpline;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
@@ -35,15 +36,16 @@ public class GoToTargetCommand extends Command
     @Override
     protected void initialize()
     {
+        DriverStation.reportWarning("Go to target initialized", false);
         try
         {
             socket = new VisionWebsocket();
         }
         catch(IOException e)
         {
-            e.printStackTrace();
+            DriverStation.reportError("whoops 3 potential precursor", e.getStackTrace());
         }
-        speed = Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 1);
+        speed = Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
 
     @Override
@@ -54,7 +56,10 @@ public class GoToTargetCommand extends Command
         try
         {
             newVisionData = socket.updateVisionData();
-        } catch (NullPointerException e) {
+        }
+        catch(NullPointerException e)
+        {
+            DriverStation.reportError("whoops 3", e.getStackTrace());
             try
             {
                 socket = new VisionWebsocket();
@@ -65,7 +70,6 @@ public class GoToTargetCommand extends Command
             }
 
             newVisionData = socket.updateVisionData();
-
         }
         if(newVisionData.isMeaningful())
         {
@@ -89,28 +93,46 @@ public class GoToTargetCommand extends Command
 
 //        Path path =
 
+        PurePursuitMovementStrategy strategy = null;
         try
         {
             ImmutableVector knotVecRobot = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), angle).div(3);
             ImmutableVector knotVecTarget = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), lastAbsoluteTargetAngle).mul(3);
 
-            QuinticSpline quinticSpline = new SplinePPWaypoint.Builder()
-                    .add(loc.get(0), loc.get(1), knotVecRobot.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
-                    .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), knotVecTarget.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
-                    .buildSplines().get(0);
-//                .buildPathGenerator().generate(0.05);
+//            QuinticSpline quinticSpline =
+            Path path =
+                    new SplinePPWaypoint.Builder()
+                            .add(loc.get(0), loc.get(1), knotVecRobot.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
+                            .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), knotVecTarget.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
+//                    .buildSplines().get(0)
+                            .buildPathGenerator().generate(0.05);
 
 //        IPathSegment next = path.getNext();
 
-            ImmutableVector next = quinticSpline.get(0.3);
-            System.out.println("target = " + next);
+//            ImmutableVector next = quinticSpline.get(0.3);
+//            System.out.println("target = " + next);
 
-            Robot.DRIVE_TRAIN.driveTowardTransLoc(3, next);
-        } catch(NullPointerException e) {
+
+//            Robot.DRIVE_TRAIN.driveTowardTransLoc(5, next);
+
+            strategy = new PurePursuitMovementStrategy(path, 1 / 12D);
+            strategy.update(Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation(), 2);
+            IPathSegment current = path.getCurrent();
+            ImmutableVector closestPoint = current.getClosestPoint(loc);
+            double absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint);
+            double speedUsed = current.getSpeed(absoluteDistanceUsed);
+
+
+            Robot.DRIVE_TRAIN.driveTowardTransLoc(4, strategy.getGoalPoint());
+        }
+        catch(NullPointerException e)
+        {
             DriverStation.reportError("Could not find target", e.getStackTrace());
             System.out.println("lastAbsoluteTargetPos = " + lastAbsoluteTargetPos);
             System.out.println("newVisionData = " + newVisionData);
             System.out.println("meaningful = " + newVisionData.isMeaningful());
+            System.out.println("strategy = " + strategy);
+            if(strategy != null)  System.out.println("strategpgp = " + strategy.getGoalPoint());
         }
     }
 

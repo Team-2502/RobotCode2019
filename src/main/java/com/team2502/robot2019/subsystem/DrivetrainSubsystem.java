@@ -3,6 +3,7 @@ package com.team2502.robot2019.subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.github.ezauton.core.action.require.BaseResource;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.localization.IRotationalLocationEstimator;
@@ -28,6 +29,8 @@ import com.team2502.robot2019.utils.IPIDTunable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.Arrays;
+
 public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriveTrain, Updateable, DashboardData.DashboardUpdater
 {
     private final WPI_TalonSRX backLeft;
@@ -43,6 +46,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private final EncoderRotationEstimator locEst;
     private final IRotationalLocationEstimator rotEst;
     private final IVelocityEstimator velEst;
+
+    private final PigeonIMU pigeonIMU;
 
 
     private double kP = 0.2;
@@ -65,9 +70,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
         frontRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_RIGHT);
 
+        pigeonIMU = new PigeonIMU(backLeft);
+
         frontLeft.setSelectedSensorPosition(0);
         frontRight.setSelectedSensorPosition(0);
-        frontRight.setSensorPhase(true);
+        frontLeft.setSensorPhase(true);
 
         frontLeft.configClosedloopRamp(0.05);
         frontRight.configClosedloopRamp(0.05);
@@ -135,7 +142,12 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
                 right
                                                             );
 
-        rotEst = () -> MathUtils.Kinematics.navXToRad(Robot.NAVX.getAngle());
+        pigeonIMU.setYaw(0);
+        rotEst = () -> {
+            double[] ypr = new double[3];
+            pigeonIMU.getYawPitchRoll(ypr);
+            return -MathUtils.Kinematics.navXToRad(ypr[0]);
+        };
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
 
         locEst = new EncoderRotationEstimator(rotEst, new ITranslationalDistanceSensor()
@@ -183,9 +195,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     public void runMotorsVelocity(double leftVal, double rightVal)
     {
-        double leftValEnc = leftVal / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
-        double rightValEnc = rightVal / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
-        runMotors(ControlMode.Velocity, -leftValEnc, -rightValEnc);
+        left.runVelocity(leftVal);
+        right.runVelocity(rightVal);
     }
 
     @Deprecated
@@ -355,6 +366,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public void updateDashboard()
     {
         update();
+        SmartDashboard.putNumber("rot", rotEst.estimateHeading());
         SmartDashboard.putNumber("left vel", leftSensor.getVelocity());
         SmartDashboard.putNumber("right vel", rightSensor.getVelocity());
         SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());

@@ -59,7 +59,7 @@ public class Constants
             public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
 
-            public static final double ENC_UNITS_PER_ROT = 8099;
+            public static final double ENC_UNITS_PER_ROT = 4096;
 
             /**
              * Multiply by enc units to get feet
