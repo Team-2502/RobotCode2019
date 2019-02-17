@@ -78,20 +78,20 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         right = new ITypicalMotor() {
             public void runVelocity(double targetVelocity) {
                 this.makeSlavesFollowMaster();
-                frontRight.set(ControlMode.Velocity, -targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+                frontRight.set(ControlMode.Velocity, targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
             }
 
             public void runVoltage(double targetVoltage) {
                 this.makeSlavesFollowMaster();
-                frontRight.set(ControlMode.PercentOutput, -targetVoltage);
+                frontRight.set(ControlMode.PercentOutput, targetVoltage);
             }
 
             public double getPosition() {
-                return -(double)frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+                return (double)frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
             }
 
             public double getVelocity() {
-                return -(double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+                return (double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
             }
 
             private void makeSlavesFollowMaster() {
@@ -103,20 +103,20 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         left = new ITypicalMotor() {
             public void runVelocity(double targetVelocity) {
                 this.makeSlavesFollowMaster();
-                frontLeft.set(ControlMode.Velocity, -targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+                frontLeft.set(ControlMode.Velocity, targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
             }
 
             public void runVoltage(double targetVoltage) {
                 this.makeSlavesFollowMaster();
-                frontLeft.set(ControlMode.PercentOutput, -targetVoltage);
+                frontLeft.set(ControlMode.PercentOutput, targetVoltage);
             }
 
             public double getPosition() {
-                return -(double)frontLeft.getSelectedSensorPosition(0)  * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+                return (double)frontLeft.getSelectedSensorPosition(0)  * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
             }
 
             public double getVelocity() {
-                return -(double)frontLeft.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+                return (double)frontLeft.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
             }
 
             private void makeSlavesFollowMaster() {
