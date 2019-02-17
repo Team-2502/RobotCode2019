@@ -6,6 +6,7 @@ import com.team2502.robot2019.command.teleop.CargoActive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.ClimberCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
+import com.team2502.robot2019.command.vision.GoToTargetCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -51,8 +52,7 @@ public final class OI
      */
     public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HATCH_PUSHER);
 
-    public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ABORT_AUTO);
-
+    public static final Button BUTTON_AUTO_MANAGEMENT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_AUTO);
     public static final Button RUN_CARGO_ACTIVE_FWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_FWD_TOP);
     public static final Button RUN_CARGO_ACTIVE_BWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BWD_TOP);
 
@@ -78,7 +78,10 @@ public final class OI
     static
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
-        BUTTON_ABORT_AUTO.whenPressed(new AbortAutoCommand());
+
+        BUTTON_AUTO_MANAGEMENT.whenPressed(new GoToTargetCommand());
+        BUTTON_AUTO_MANAGEMENT.whenReleased(new AbortAutoCommand());
+
         SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
 
         // CARGO MANIPULATOR
