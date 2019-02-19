@@ -71,11 +71,11 @@ public class Robot extends TimedRobot
     {
         NAVX = new AHRS(SPI.Port.kMXP);
 
-//        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
-//        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
-//        SERVER = CameraServer.getInstance().getServer();
+        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
+        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
+        SERVER = CameraServer.getInstance().getServer();
 
-//        SERVER.setSource(CAMERA0);
+        SERVER.setSource(CAMERA0);
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
