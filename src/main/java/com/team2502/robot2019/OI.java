@@ -3,11 +3,11 @@ package com.team2502.robot2019;
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
-import com.team2502.robot2019.command.teleop.ClimberCommand;
+import com.team2502.robot2019.command.teleop.Climber.ClimbCommand;
+import com.team2502.robot2019.command.teleop.Climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
-import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -59,12 +59,10 @@ public final class OI
     public static final Button RUN_CARGO_ACTIVE_FWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_FWD_BOTTOM);
     public static final Button RUN_CARGO_ACTIVE_BWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BWD_BOTTOM);
 
-    public static final Button BUTTON_CLIMBER_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_FWD);
-    public static final Button BUTTON_CLIMBER_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_BWD);
-    public static final Button BUTTON_CLIMBER_LEFT_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_LEFT_FWD);
-    public static final Button BUTTON_CLIMBER_LEFT_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_LEFT_BWD);
-    public static final Button BUTTON_CLIMBER_RIGHT_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_RIGHT_FWD);
-    public static final Button BUTTON_CLIMBER_RIGHT_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_RIGHT_BWD);
+    public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMB_UP);
+    public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMB_DOWN);
+    public static final Button BUTTON_CRAWL_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_FWD);
+    public static final Button BUTTON_CRAWL_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_BWD);
 
     public static final Button CAMERA = new JoystickButton(JOYSTICK_FUNCTION, 2);
 
@@ -90,15 +88,14 @@ public final class OI
 
 
         // CLIMBER
-        BUTTON_CLIMBER_FWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.BOTH, true));
-        BUTTON_CLIMBER_BWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.BOTH, false));
+        BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true));
+        BUTTON_CLIMB_DOWN.whileHeld(new ClimbCommand(false));
 
-        BUTTON_CLIMBER_LEFT_FWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.LEFT, true));
-        BUTTON_CLIMBER_LEFT_BWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.LEFT, false));
+        BUTTON_CRAWL_FWD.whileHeld(new CrawlCommand(true));
+        BUTTON_CRAWL_BWD.whileHeld(new CrawlCommand(false));
 
-        BUTTON_CLIMBER_RIGHT_FWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.RIGHT, true));
-        BUTTON_CLIMBER_RIGHT_BWD.whileHeld(new ClimberCommand(ClimberSubsystem.ClimberSide.RIGHT, false));
 
+        // CAMERA
         CAMERA.whenPressed(new LambdaCommand(() -> {
             if (camera1Selected)
             {
