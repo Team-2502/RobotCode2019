@@ -99,31 +99,21 @@ public class GoToTargetCommand extends Command
             ImmutableVector knotVecRobot = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), angle).div(3);
             ImmutableVector knotVecTarget = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), lastAbsoluteTargetAngle).mul(3);
 
-//            QuinticSpline quinticSpline =
             Path path =
                     new SplinePPWaypoint.Builder()
                             .add(loc.get(0), loc.get(1), knotVecRobot.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
                             .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), knotVecTarget.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
-//                    .buildSplines().get(0)
                             .buildPathGenerator().generate(0.05);
-
-//        IPathSegment next = path.getNext();
-
-//            ImmutableVector next = quinticSpline.get(0.3);
-//            System.out.println("target = " + next);
-
-
-//            Robot.DRIVE_TRAIN.driveTowardTransLoc(5, next);
 
             strategy = new PurePursuitMovementStrategy(path, 1 / 12D);
             strategy.update(Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation(), 2);
             IPathSegment current = path.getCurrent();
             ImmutableVector closestPoint = current.getClosestPoint(loc);
-            double absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint);
-            double speedUsed = current.getSpeed(absoluteDistanceUsed);
+//            double absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint);
+//            double speedUsed = current.getSpeed(absoluteDistanceUsed);
 
 
-            Robot.DRIVE_TRAIN.driveTowardTransLoc(4, strategy.getGoalPoint());
+            Robot.DRIVE_TRAIN.driveTowardTransLoc(speed, strategy.getGoalPoint());
         }
         catch(NullPointerException e)
         {
