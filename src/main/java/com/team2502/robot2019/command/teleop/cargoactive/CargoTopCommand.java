@@ -1,4 +1,4 @@
-package com.team2502.robot2019.command.teleop.CargoActive;
+package com.team2502.robot2019.command.teleop.cargoactive;
 
 import com.team2502.robot2019.Robot;
 import edu.wpi.first.wpilibj.command.Command;

@@ -2,7 +2,7 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
-import com.team2502.robot2019.command.teleop.CargoActive.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.Climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.Climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
