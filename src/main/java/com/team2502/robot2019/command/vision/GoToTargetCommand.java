@@ -43,9 +43,9 @@ public class GoToTargetCommand extends Command
         }
         catch(IOException e)
         {
-            DriverStation.reportError("whoops 3 potential precursor", e.getStackTrace());
+            DriverStation.reportError("Failed to create socket (whoops 3 potential precursor)", e.getStackTrace());
         }
-        speed = Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
+        speed = 5;       // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class GoToTargetCommand extends Command
         }
         catch(NullPointerException e)
         {
-            DriverStation.reportError("whoops 3", e.getStackTrace());
+            DriverStation.reportError("Null pointer in sockets (whoops 3)", e.getStackTrace());
             try
             {
                 socket = new VisionWebsocket();

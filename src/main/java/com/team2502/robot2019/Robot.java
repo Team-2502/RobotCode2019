@@ -146,7 +146,7 @@ public class Robot extends TimedRobot
         }
         catch(Exception e)
         {
-            DriverStation.reportError("whoops!!!!", e.getStackTrace());
+            DriverStation.reportError("Failed to init autonomous (whoops!!!!)", e.getStackTrace());
         }
 //        Scheduler.getInstance().add(PPTest());
 
