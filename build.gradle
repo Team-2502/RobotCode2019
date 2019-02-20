@@ -40,9 +40,6 @@ repositories {
 //    maven { url 'https://jitpack.io' }
     maven { url 'http://devsite.ctr-electronics.com/maven/release/' }
     maven { url 'http://www.kauailabs.com/maven2'}
-    flatDir {
-        dirs 'libs'
-    }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
