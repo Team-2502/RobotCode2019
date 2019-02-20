@@ -4,8 +4,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class HatchIntakeCommand extends InstantCommand {
 
-    public HatchIntakeCommand() { }
-    { requires(Robot.HATCH_INTAKE_SOLENOID); }
+    public HatchIntakeCommand() { requires(Robot.HATCH_INTAKE_SOLENOID); }
 
     @Override
     protected void execute(){ Robot.HATCH_INTAKE_SOLENOID.toggleHatchIntake(); }

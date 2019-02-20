@@ -7,44 +7,45 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ClimberSubsystem extends Subsystem
 {
-    public enum ClimberSide
-    {
-        RIGHT,
-        LEFT,
-        BOTH
-    }
-
-
-    private final WPI_TalonSRX leftClimber;
-    private final WPI_TalonSRX rightClimber;
+    private final WPI_TalonSRX climber;
+    private final WPI_TalonSRX rightClaw;
+    private final WPI_TalonSRX leftClaw;
 
     public ClimberSubsystem()
     {
-        leftClimber = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_LEFT);
-        rightClimber = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_RIGHT);
+        climber = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_RIGHT);
+
+        rightClaw = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_CLAW_RIGHT);
+        leftClaw = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_CLAW_LEFT);
     }
 
-    public void climb(ClimberSide sides, boolean forwards)
+    public void climb(boolean forwards)
     {
-        switch (sides)
-        {
-            case RIGHT:
-                rightClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
-                break;
-            case LEFT:
-                leftClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
-                break;
-            case BOTH:
-                leftClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
-                rightClimber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
-                break;
-        }
+        climber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+    }
+
+    public void stopClimb()
+    {
+        climber.set(ControlMode.PercentOutput, 0.0D);
+    }
+
+    public void crawl(boolean forwards)
+    {
+        leftClaw.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+        rightClaw.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+    }
+
+    public void stopCrawl()
+    {
+        leftClaw.set(ControlMode.PercentOutput, 0.0D);
+        rightClaw.set(ControlMode.PercentOutput, 0.0D);
     }
 
     public void stop()
     {
-        leftClimber.set(ControlMode.PercentOutput, 0.0D);
-        rightClimber.set(ControlMode.PercentOutput, 0.0D);
+        climber.set(ControlMode.PercentOutput, 0.0D);
+        leftClaw.set(ControlMode.PercentOutput, 0.0D);
+        rightClaw.set(ControlMode.PercentOutput, 0.0D);
     }
 
     @Override
