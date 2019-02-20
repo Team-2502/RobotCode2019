@@ -64,19 +64,8 @@ dependencies {
     compile 'com.ctre.phoenix:wpiapi-java:5.12.0'
     compile 'com.kauailabs.navx.frc:navx-java:3.1.344'
 
-//    compile 'openrio.mirror.third.ctre:CTRE-phoenix-java:5.2.1.1' # ummmmm keep this commented
-//    testCompile 'junit:junit:4.12'
-
-//    implementation 'com.github.ezAuton:ezAuton-Core:accf07eaab'
-
-//    compile 'com.github.ezAuton.ezAuton:ezAuton-Core:accf07eaab'
-//    compile 'com.github.ezAuton.ezAuton:ezAuton-WPILib:accf07eaab'
-
-    compile name: 'ezAuton-Core-1.0-SNAPSHOT'
-    compile name: 'ezAuton-WPILib-1.0-SNAPSHOT'
-
-
-
+    compile 'com.github.ezauton:Core:1.0-SNAPSHOT'
+    compile 'com.github.ezauton:WPILib:1.0-SNAPSHOT'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
