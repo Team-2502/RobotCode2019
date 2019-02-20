@@ -64,7 +64,7 @@ public final class OI
     public static final Button BUTTON_CRAWL_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_FWD);
     public static final Button BUTTON_CRAWL_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_BWD);
 
-    public static final Button CAMERA = new JoystickButton(JOYSTICK_FUNCTION, 2);
+    public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, 2);
 
     public static final Button SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
 
@@ -95,18 +95,19 @@ public final class OI
         BUTTON_CRAWL_BWD.whileHeld(new CrawlCommand(false));
 
 
-        // CAMERA
-        CAMERA.whenPressed(new LambdaCommand(() -> {
-            if (camera1Selected % 3 == 0)
+        // BUTTON_SWITCH_CAMERA
+        BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {
+            switch (camera1Selected = camera1Selected % 3)
             {
-                Robot.SERVER.setSource(Robot.CAMERA0);
-            }
-            else if (camera1Selected % 3 == 1)
-            {
-                Robot.SERVER.setSource(Robot.CAMERA1);
-            }
-            else {
-                Robot.SERVER.setSource(Robot.CAMERA2);
+                case 0:
+                    Robot.SERVER.setSource(Robot.CAMERA0);
+                    break;
+                case 1:
+                    Robot.SERVER.setSource(Robot.CAMERA1);
+                    break;
+                case 2:
+                    Robot.SERVER.setSource(Robot.CAMERA2);
+                    break;
             }
             camera1Selected++;
         }));
