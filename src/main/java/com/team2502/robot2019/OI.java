@@ -68,7 +68,7 @@ public final class OI
 
     public static final Button SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
 
-    public static boolean camera1Selected = false;
+    public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -97,13 +97,18 @@ public final class OI
 
         // CAMERA
         CAMERA.whenPressed(new LambdaCommand(() -> {
-            if (camera1Selected)
+            if (camera1Selected % 3 == 0)
             {
                 Robot.SERVER.setSource(Robot.CAMERA0);
-            } else {
+            }
+            else if (camera1Selected % 3 == 1)
+            {
                 Robot.SERVER.setSource(Robot.CAMERA1);
             }
-            camera1Selected = !camera1Selected;
+            else {
+                Robot.SERVER.setSource(Robot.CAMERA2);
+            }
+            camera1Selected++;
         }));
     }
 
