@@ -31,13 +31,13 @@ Make sure both the ezAuton repository and RobotCode2019 are cloned into the same
  
  - Clone ezAuton repository
  
- ![Imgur](https://i.imgur.com/TV4WcnH.jpg)
+ <img src="https://i.imgur.com/TV4WcnH.jpg" width="498" height="318" />
  
   - File -> Clone Repo
  
  - Clone RobotCode2019 repository to same directory
- 
- ![Imgur](https://i.imgur.com/BN0kRNt.jpg)
+
+ <img src="https://i.imgur.com/BN0kRNt.jpg" width="498" height="318" />
  
 **Opening in Intellij**
  
@@ -47,7 +47,7 @@ Make sure both the ezAuton repository and RobotCode2019 are cloned into the same
  
  - Import the project from the external model `Gradle`
  
-  ![Imgur](https://i.imgur.com/qPqQpUv.jpg)
+  ![Imgur](https://i.imgur.com/qPqQpUv.jpg?1)
  
  - Select `Use auto-import`
  
