@@ -64,11 +64,11 @@ public final class OI
     public static final Button BUTTON_CRAWL_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_FWD);
     public static final Button BUTTON_CRAWL_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_BWD);
 
-    public static final Button CAMERA = new JoystickButton(JOYSTICK_FUNCTION, 2);
+    public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, 2);
 
     public static final Button SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
 
-    public static boolean camera1Selected = false;
+    public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
      * Called the "static initialization constructor"
@@ -98,15 +98,21 @@ public final class OI
         BUTTON_CRAWL_BWD.whileHeld(new CrawlCommand(false));
 
 
-        // CAMERA
-        CAMERA.whenPressed(new LambdaCommand(() -> {
-            if (camera1Selected)
+        // BUTTON_SWITCH_CAMERA
+        BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {
+            switch (camera1Selected = camera1Selected % 3)
             {
-                Robot.SERVER.setSource(Robot.CAMERA0);
-            } else {
-                Robot.SERVER.setSource(Robot.CAMERA1);
+                case 0:
+                    Robot.SERVER.setSource(Robot.CAMERA0);
+                    break;
+                case 1:
+                    Robot.SERVER.setSource(Robot.CAMERA1);
+                    break;
+                case 2:
+                    Robot.SERVER.setSource(Robot.CAMERA2);
+                    break;
             }
-            camera1Selected = !camera1Selected;
+            camera1Selected++;
         }));
     }
 
