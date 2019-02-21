@@ -122,7 +122,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     public void runMotorsVelocity(double leftVal, double rightVal)
     {
-        runMotors(ControlMode.Velocity, leftVal, rightVal); //TODO: feet per second -> native units per 100 ms conversion
+        runMotors(ControlMode.Velocity, leftVal * Constants.PER100MS_TO_SECONDS * Constants.Physical.Encoder.RAW_UNIT_PER_FT,
+                rightVal * Constants.PER100MS_TO_SECONDS * Constants.Physical.Encoder.RAW_UNIT_PER_FT);
     }
 
     @Deprecated
