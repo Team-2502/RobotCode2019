@@ -8,6 +8,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.team2502.robot2019.Constants;
+import com.team2502.robot2019.OI;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
 import com.team2502.robot2019.subsystem.vision.VisionWebsocket;
@@ -27,9 +28,11 @@ public class GoToTargetCommand extends Command
     private VisionWebsocket socket;
     private boolean stop;
     private double speed;
+    private boolean change_speed_enabled;
 
     public GoToTargetCommand()
     {
+        this.change_speed_enabled = Robot.DRIVE_TRAIN.change_auto_align_speed_enabled;
         requires(Robot.DRIVE_TRAIN);
     }
 
@@ -45,12 +48,18 @@ public class GoToTargetCommand extends Command
         {
             DriverStation.reportError("Failed to create socket (whoops 3 potential precursor)", e.getStackTrace());
         }
-        speed = 5;       // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
+
+        speed = 5;    // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
 
     @Override
     protected void execute()
     {
+        if (change_speed_enabled)
+        {
+            speed = -OI.JOYSTICK_DRIVE_RIGHT.getZ();
+        }
+
         Robot.DRIVE_TRAIN.update();
         VisionData newVisionData;
         try

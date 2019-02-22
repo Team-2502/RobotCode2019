@@ -56,6 +56,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private double kF = 0.114;
 
     private boolean forward = true;
+    public boolean change_auto_align_speed_enabled = false;
 
     private final BaseResource resource = new BaseResource();
     private final UpdateableGroup updateableGroup;

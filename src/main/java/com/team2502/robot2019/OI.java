@@ -53,6 +53,8 @@ public final class OI
     public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HATCH_PUSHER);
 
     public static final Button BUTTON_ENABLE_AUTO_ALIGN = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ENABLE_AUTO_ALIGN);
+    public static final Button BUTTON_ENABLE_CHANGE_AUTO_SPEED = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ENABLE_CHANGE_AUTO_SPEED);
+
     public static final Button RUN_CARGO_ACTIVE_FWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_FWD_TOP);
     public static final Button RUN_CARGO_ACTIVE_BWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.RUN_CARGO_ACTIVE_BWD_TOP);
 
@@ -79,6 +81,10 @@ public final class OI
 
         BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetCommand());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
+
+        BUTTON_ENABLE_CHANGE_AUTO_SPEED.whenPressed(new LambdaCommand(() ->
+        { Robot.DRIVE_TRAIN.change_auto_align_speed_enabled = !Robot.DRIVE_TRAIN.change_auto_align_speed_enabled; }
+        ));
 
         SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
 
