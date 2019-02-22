@@ -108,18 +108,24 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         updateableGroup = new UpdateableGroup(locEst);
     }
 
-    @Override
-    protected void initDefaultCommand()
-    {
-        setDefaultCommand(new DriveCommand()); //TODO: DriveCommand
-    }
-
+    /**
+     * Runs the drive train motors with the specified control mode, at the specified speeds for each side.
+     * @param controlMode the control mode to use.
+     * @see com.ctre.phoenix.motorcontrol
+     * @param leftVal value/speed for left side of DT.
+     * @param rightVal value/speed for right side of DT.
+     */
     public void runMotors(ControlMode controlMode, double leftVal, double rightVal)
     {
         frontLeft.set(controlMode, leftVal);
         frontRight.set(controlMode, rightVal);
     }
 
+    /**
+     * Runs the drive train in velocity mode (values are native encoder units per 100ms)
+     * @param leftVal speed of left side of DT in FT/SEC.
+     * @param rightVal speed of right side of DT in FT/SEC.
+     */
     public void runMotorsVelocity(double leftVal, double rightVal)
     {
         runMotors(ControlMode.Velocity, leftVal * Constants.PER100MS_TO_SECONDS * Constants.Physical.Encoder.RAW_UNIT_PER_FT,
@@ -289,5 +295,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public void setForward(boolean forward)
     {
         this.forward = forward;
+    }
+
+    @Override
+    protected void initDefaultCommand()
+    {
+        setDefaultCommand(new DriveCommand());
     }
 }
