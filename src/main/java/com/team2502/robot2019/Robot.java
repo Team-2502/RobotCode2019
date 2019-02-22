@@ -60,6 +60,7 @@ public class Robot extends TimedRobot
     public static Compressor COMPRESSOR;
     public static UsbCamera CAMERA0;
     public static UsbCamera CAMERA1;
+    public static UsbCamera CAMERA2;
     public static VideoSink SERVER;
 
     /**
@@ -73,6 +74,7 @@ public class Robot extends TimedRobot
 
         CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
         CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
+        CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
         SERVER = CameraServer.getInstance().getServer();
 
         SERVER.setSource(CAMERA0);
@@ -146,7 +148,7 @@ public class Robot extends TimedRobot
         }
         catch(Exception e)
         {
-            DriverStation.reportError("whoops!!!!", e.getStackTrace());
+            DriverStation.reportError("Failed to init autonomous (whoops!!!!)", e.getStackTrace());
         }
 //        Scheduler.getInstance().add(PPTest());
 
