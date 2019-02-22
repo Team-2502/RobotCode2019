@@ -27,6 +27,7 @@ public class GoToTargetCommand extends Command
     private QuinticSpline lastSpline;
     private VisionWebsocket socket;
     private boolean stop;
+    private double maxSpeed;
     private double speed;
     private boolean change_speed_enabled;
 
@@ -49,16 +50,13 @@ public class GoToTargetCommand extends Command
             DriverStation.reportError("Failed to create socket (whoops 3 potential precursor)", e.getStackTrace());
         }
 
-        speed = 5;    // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
+        maxSpeed = 5; // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
 
     @Override
     protected void execute()
     {
-        if (change_speed_enabled)
-        {
-            speed = -OI.JOYSTICK_DRIVE_RIGHT.getZ();
-        }
+        speed = change_speed_enabled ? -OI.JOYSTICK_DRIVE_RIGHT.getZ() * maxSpeed : maxSpeed;
 
         Robot.DRIVE_TRAIN.update();
         VisionData newVisionData;
