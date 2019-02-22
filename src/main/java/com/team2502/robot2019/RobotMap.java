@@ -32,7 +32,8 @@ public class RobotMap
         {
             public static final int BUTTON_HATCH_PUSHER = 1;
             public static final int BUTTON_SWITCH_DIRECTION = 1;
-            public static final int BUTTON_ABORT_AUTO = 11;
+            public static final int BUTTON_ENABLE_AUTO_ALIGN = 1;
+            public static final int BUTTON_ENABLE_CHANGE_AUTO_SPEED = 7;
 
             public static final int RUN_CARGO_ACTIVE_FWD_BOTTOM = 5;
             public static final int RUN_CARGO_ACTIVE_BWD_BOTTOM = 3;
