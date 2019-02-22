@@ -103,7 +103,7 @@ public class Robot extends TimedRobot
     public void robotPeriodic()
     {
         DashboardData.update();
-        Scheduler.getInstance().run(); // Does nothing when disabled
+        Scheduler.getInstance().run(); // Runs Teleop when enabled, disabled when disabled
     }
 
     /**
@@ -198,7 +198,7 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
-
+        HATCH_INTAKE_SOLENOID.setHatchIntake(false);
     }
 
     @Override
