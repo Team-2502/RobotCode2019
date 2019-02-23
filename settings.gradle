@@ -1,13 +1,11 @@
 import java.nio.file.Files
-import java.nio.file.Paths
-
 rootProject.name = 'RobotCode2019'
 
-def currentDir = Paths.get("").toAbsolutePath()
+def currentDir = rootProject.projectDir.toPath()
 def parent = currentDir.parent
 def ezAuton = parent.resolve("ezAuton")
 
 if(!Files.isDirectory(ezAuton)){
-    throw IllegalStateException("You must clone the ezAuton repo and put it in the same directory as the one which contains RobotCode2019. Clone from https://github.com/ezAuton/ezAuton")
+    throw new IllegalStateException("You must clone the ezAuton repo and put it in the same directory as the one which contains RobotCode2019. Clone from https://github.com/ezAuton/ezAuton")
 }
 includeBuild(ezAuton)
