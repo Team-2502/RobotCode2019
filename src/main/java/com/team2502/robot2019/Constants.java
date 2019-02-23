@@ -89,6 +89,10 @@ public class Constants
 
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
+            public static final double DEFAULT_KF = 0.114;
+            public static final int DEFAULT_KD = 0;
+            public static final int DEFAULT_KI = 0;
+            public static final double DEFAULT_KP = 0.2;
 
             private DriveTrain() { }
 

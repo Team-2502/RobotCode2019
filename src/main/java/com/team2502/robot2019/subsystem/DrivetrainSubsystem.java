@@ -50,10 +50,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private final PigeonIMU pigeonIMU;
 
 
-    private double kP = 0.2;
-    private double kI = 0;
-    private double kD = 0;
-    private double kF = 0.114;
+    private double kP = Constants.Physical.DriveTrain.DEFAULT_KP;
+    private double kI = Constants.Physical.DriveTrain.DEFAULT_KI;
+    private double kD = Constants.Physical.DriveTrain.DEFAULT_KD;
+    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF;
 
     private boolean forward = true;
 
