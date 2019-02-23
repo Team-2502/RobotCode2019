@@ -52,7 +52,7 @@ public class VoltageDriveAction extends PeriodicAction implements Runnable
             if(brake) {
                 dt.runMotorsVoltage(0, 0);
             }
-            dt.give();
+            dt.giveBack();
         });
 
         addRunnable(this);
