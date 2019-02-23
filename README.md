@@ -17,10 +17,7 @@ This project uses [ezAuton](https://github.com/ezAuton/ezAuton)
 #### Cloning
 ##### Via command line
 
-Make sure both the ezAuton repository and RobotCode2019 are cloned into the same directory
 - `git clone https://github.com/Team-2502/RobotCode2019.git`
-
-- `git clone https://github.com/ezAuton/ezAuton.git`
 
 - `cd RobotCode2019`
 
@@ -30,13 +27,7 @@ Make sure both the ezAuton repository and RobotCode2019 are cloned into the same
  
  - `File -> Clone Repo
  
- - Clone ezAuton repository
- 
- <img src="https://i.imgur.com/TV4WcnH.jpg" width="498" height="318" />
- 
-  - File -> Clone Repo
- 
- - Clone RobotCode2019 repository to same directory
+ - Clone RobotCode2019 repository
 
  <img src="https://i.imgur.com/BN0kRNt.jpg" width="498" height="318" />
 
@@ -46,7 +37,7 @@ Make sure both the ezAuton repository and RobotCode2019 are cloned into the same
  
  - File -> New -> Project From Existing Sources...
  
- - Select only the `RobotCode2019` directory, NOT the directory which contains both ezAuton and RobotCode2019, and open
+ - Select the `RobotCode2019` directory
  
  - Import the project from the external model `Gradle`
  
