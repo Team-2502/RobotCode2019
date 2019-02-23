@@ -88,10 +88,20 @@ public class PathTest
                         .add(4, 14.7, 0, 0, 13, -12)
                         .buildPathGenerator().generate(0.05),
                 new SplinePPWaypoint.Builder()
-                        .add(4, 14.7, Math.PI, -10, 13, -12)
+                        .add(4, 14.7, -3 * Math.PI/4, -10, 13, -12)
                         .add(7.75, 5, Math.PI, -10, 13, -12)
-                        .add(7.75, 0, Math.PI, 0, 13, -12)
-
+                        .add(7.75, 0, Math.PI, -2, 13, -12)
+                        .buildPathGenerator().generate(0.05),
+                new SplinePPWaypoint.Builder()
+                        .add(7.75, 0, 0, 10, 13, -12)
+                        .add(7.75, 5, 0, 10, 13, -12)
+                        .add(4, 14.7, 0, 10, 13, -12)
+                        .buildPathGenerator().generate(0.05),
+                new SplinePPWaypoint.Builder()
+                        .add(4, 14.7, 0, -10, 13, -12)
+                        .add(3.5, 12.5, Math.PI / 2, -5, 13, -120)
+                        .add(-4.562307, 16.241188, 0, -5, 13, -13)
+                        .add(-4.562307, 18.241188, 0, 0, 13, -13)
                         .buildPathGenerator().generate(0.05)
                                         );
 
@@ -112,12 +122,13 @@ public class PathTest
         recording.addSubRecording(tankRobot);
 
 
-        group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, driveTrain::update, recording::update))
+        group.with(new BackgroundAction(1, TimeUnit.MILLISECONDS, driveTrain::update))
+             .with(new BackgroundAction(7, TimeUnit.MILLISECONDS, recording::update))
              .addSequential(ppCommands);
 
 
         simulation.add(group)
-                  .runSimulation(100, TimeUnit.SECONDS);
+                  .runSimulation(45, TimeUnit.SECONDS);
 
         try
         {
