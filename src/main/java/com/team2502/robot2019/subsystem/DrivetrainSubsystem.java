@@ -1,7 +1,6 @@
 package com.team2502.robot2019.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.github.ezauton.core.action.require.BaseResource;
@@ -10,7 +9,6 @@ import com.github.ezauton.core.localization.IRotationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator;
-import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
@@ -18,18 +16,14 @@ import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.wpilib.motors.ITypicalMotor;
-import com.github.ezauton.wpilib.motors.MotorControllers;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.DashboardData;
-import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.RobotMap;
 import com.team2502.robot2019.command.teleop.DriveCommand;
 import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
 import com.team2502.robot2019.utils.IPIDTunable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.util.Arrays;
 
 public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriveTrain, Updateable, DashboardData.DashboardUpdater
 {
@@ -82,51 +76,63 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontLeft.configOpenloopRamp(0.05);
         frontRight.configOpenloopRamp(0.05);
 
-        right = new ITypicalMotor() {
-            public void runVelocity(double targetVelocity) {
+        right = new ITypicalMotor()
+        {
+            public void runVelocity(double targetVelocity)
+            {
                 this.makeSlavesFollowMaster();
-                frontRight.set(ControlMode.Velocity, targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+                frontRight.set(ControlMode.Velocity, targetVelocity / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
             }
 
-            public void runVoltage(double targetVoltage) {
+            public void runVoltage(double targetVoltage)
+            {
                 this.makeSlavesFollowMaster();
                 frontRight.set(ControlMode.PercentOutput, targetVoltage);
             }
 
-            public double getPosition() {
-                return (double)frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+            public double getPosition()
+            {
+                return (double) frontRight.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
             }
 
-            public double getVelocity() {
-                return (double)frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+            public double getVelocity()
+            {
+                return (double) frontRight.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
             }
 
-            private void makeSlavesFollowMaster() {
+            private void makeSlavesFollowMaster()
+            {
                 backRight.follow(frontRight);
             }
         };
 
 
-        left = new ITypicalMotor() {
-            public void runVelocity(double targetVelocity) {
+        left = new ITypicalMotor()
+        {
+            public void runVelocity(double targetVelocity)
+            {
                 this.makeSlavesFollowMaster();
-                frontLeft.set(ControlMode.Velocity, targetVelocity/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
+                frontLeft.set(ControlMode.Velocity, targetVelocity / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS);
             }
 
-            public void runVoltage(double targetVoltage) {
+            public void runVoltage(double targetVoltage)
+            {
                 this.makeSlavesFollowMaster();
                 frontLeft.set(ControlMode.PercentOutput, targetVoltage);
             }
 
-            public double getPosition() {
-                return (double)frontLeft.getSelectedSensorPosition(0)  * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+            public double getPosition()
+            {
+                return (double) frontLeft.getSelectedSensorPosition(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
             }
 
-            public double getVelocity() {
-                return (double)frontLeft.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
+            public double getVelocity()
+            {
+                return (double) frontLeft.getSelectedSensorVelocity(0) * Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS;
             }
 
-            private void makeSlavesFollowMaster() {
+            private void makeSlavesFollowMaster()
+            {
                 backLeft.follow(frontLeft);
             }
         };
@@ -181,18 +187,26 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         applyPID();
     }
 
-    @Override
-    protected void initDefaultCommand()
-    {
-        setDefaultCommand(new DriveCommand()); //TODO: DriveCommand
-    }
-
+    /**
+     * Runs the drive train motors with the specified control mode, at the specified speeds for each side.
+     *
+     * @param controlMode the control mode to use.
+     * @param leftVal     value/speed for left side of DT.
+     * @param rightVal    value/speed for right side of DT.
+     * @see com.ctre.phoenix.motorcontrol
+     */
     public void runMotors(ControlMode controlMode, double leftVal, double rightVal)
     {
         frontLeft.set(controlMode, leftVal);
         frontRight.set(controlMode, rightVal);
     }
 
+    /**
+     * Runs the drive train in velocity mode (values are native encoder units per 100ms)
+     *
+     * @param leftVal  speed of left side of DT in FT/SEC.
+     * @param rightVal speed of right side of DT in FT/SEC.
+     */
     public void runMotorsVelocity(double leftVal, double rightVal)
     {
         left.runVelocity(leftVal);
@@ -202,9 +216,6 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     @Deprecated
     public void runMotorsVoltage(double leftVolts, double rightVolts)
     {
-//        runMotors(ControlMode.PercentOutput, leftVolts, rightVolts);
-//        left.runVoltage(forward ? leftVolts : -rightVolts);
-//        right.runVoltage(forward ? rightVolts : -leftVolts);
         left.runVoltage(leftVolts);
         right.runVoltage(rightVolts);
     }
@@ -372,5 +383,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
         SmartDashboard.putNumber("right pos", frontRight.getSelectedSensorPosition());
         SmartDashboard.putString("loc", locEst.estimateLocation().toString());
+    }
+
+    protected void initDefaultCommand()
+    {
+        setDefaultCommand(new DriveCommand());
     }
 }

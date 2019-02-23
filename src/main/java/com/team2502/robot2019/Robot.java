@@ -9,21 +9,17 @@ package com.team2502.robot2019;
 
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.action.PurePursuitAction;
+import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.simulation.ActionScheduler;
+import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
-//import com.team2502.robot2019.command.autonomous.ingredients.PrintAction;
-import com.team2502.robot2019.command.autonomous.ingredients.PointDriveAction;
-import com.team2502.robot2019.command.autonomous.ingredients.PointDriveCommand;
-import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
-import com.team2502.robot2019.command.vision.AlwaysListeningCommand;
 import com.team2502.robot2019.command.vision.GoToTargetCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
@@ -38,7 +34,6 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,6 +48,7 @@ public class Robot extends TimedRobot
 
     public static AHRS NAVX;
 
+    public static ActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE_SOLENOID;
     public static CargoSubsystem CARGO_ACTIVE;
@@ -123,7 +119,7 @@ public class Robot extends TimedRobot
     public void autonomousInit()
     {
 
-//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+        CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3), Robot.ACTION_SCHEDULER);
 
 //        Scheduler.getInstance().add(PPTest());
         try
@@ -165,12 +161,12 @@ public class Robot extends TimedRobot
         Path path = pathGenerator.generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
-        PPCommand pp = new PPCommand(10, TimeUnit.MILLISECONDS, ppMoveStrat, DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(DRIVE_TRAIN), DRIVE_TRAIN);
+        PurePursuitAction pp = new PurePursuitAction(10, TimeUnit.MILLISECONDS, ppMoveStrat, DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(DRIVE_TRAIN), DRIVE_TRAIN);
         BackgroundAction loc = new BackgroundAction(5, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update);
         ActionGroup group = new ActionGroup();
         group.with(loc);
         group.addSequential(pp);
-        return new CommandCreator(group);
+        return new CommandCreator(group, Robot.ACTION_SCHEDULER);
     }
 
     /**

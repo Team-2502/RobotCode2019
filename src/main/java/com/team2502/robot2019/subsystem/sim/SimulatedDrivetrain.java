@@ -107,4 +107,9 @@ public class SimulatedDrivetrain implements IDriveTrain
     {
         return updateableGroup.update();
     }
+
+    public TankRobotTransLocDriveable getTankRobotTransLocDriveable()
+    {
+        return tankRobotTransLocDriveable;
+    }
 }

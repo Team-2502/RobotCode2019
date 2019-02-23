@@ -27,6 +27,8 @@ public class Constants
     public static final int INIT_TIMEOUT = 10;
     public static final int LOOP_TIMEOUT = 0;
 
+    public static final int PER100MS_TO_SECONDS = 10;
+
     public static final long DEFAULT_ACTION_PERIOD = 20;
     public static final TimeUnit DEFAULT_ACTION_PERIOD_UNIT = TimeUnit.MILLISECONDS;
 
@@ -53,8 +55,11 @@ public class Constants
         public static class DriveTrain implements ITankRobotConstants
         {
             //TODO: Measure wheels
-            public static final double WHEEL_DIAMETER_INCH = 6.25;
+            public static final double WHEEL_DIAMETER_INCH = 6.0F;
             public static final double WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
+
+            public static final double WHEEL_CIRCUMFERENCE_INCH = WHEEL_DIAMETER_INCH * Math.PI;
+            public static final double WHEEL_CIRCUMFERENCE_FT = WHEEL_CIRCUMFERENCE_INCH / 12F;
 
             public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
             public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
@@ -84,9 +89,8 @@ public class Constants
              */
             public static final double THRESHOLD = 1e-2;
 
-            //TODO: Measure
-            public static final double LATERAL_WHEEL_DIST_FT = 3;
-
+            public static final double LATERAL_WHEEL_DIST_FT = 30D/12;
+            public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
             public static final double DEFAULT_KF = 0.114;
@@ -122,8 +126,9 @@ public class Constants
             public static final double EVEL_TO_RPM = (600.0F / ENC_RES);
 
             public static final double RAW_UNIT_PER_ROT = ENC_RES;
+            public static final double RAW_UNIT_PER_FT = ENC_RES / DriveTrain.WHEEL_CIRCUMFERENCE_FT;
 
-            private Encoder() { }
+            public Encoder() { }
         }
     }
 

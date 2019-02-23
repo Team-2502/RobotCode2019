@@ -34,16 +34,18 @@ public class RobotMap
             public static final int BUTTON_SWITCH_DIRECTION = 1;
             public static final int BUTTON_ENABLE_AUTO_ALIGN = 1;
 
-            public static final int RUN_CARGO_ACTIVE_FWD_BOTTOM = 5;
-            public static final int RUN_CARGO_ACTIVE_BWD_BOTTOM = 3;
+            public static final int BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = 5;
+            public static final int BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = 3;
 
-            public static final int RUN_CARGO_ACTIVE_FWD_TOP = 4;
-            public static final int RUN_CARGO_ACTIVE_BWD_TOP = 6;
+            public static final int BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = 4;
+            public static final int BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = 6;
 
             public static final int BUTTON_CLIMB_UP = 11;
             public static final int BUTTON_CLIMB_DOWN = 12;
             public static final int BUTTON_CRAWL_FWD = 7;
             public static final int BUTTON_CRAWL_BWD = 9;
+
+            public static final int BUTTON_SWITCH_CAMERA = 2;
 
             private Button() { }
         }

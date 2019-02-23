@@ -43,15 +43,12 @@ public interface IDriveTrain extends TranslationalLocationDriveable, IResource, 
     }
 
     @Override
-    default void give() {
-        getResource().give();
+    default void giveBack() {
+        getResource().giveBack();
     }
 
     @Override
-    default boolean isTaken()
-    {
-        return getResource().isTaken();
-    }
+    default boolean isTakenByAnyone() { return getResource().isTakenByAnyone(); }
 
     @Override
     default void assertPossession() throws IllegalStateException {
