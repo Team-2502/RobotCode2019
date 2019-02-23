@@ -70,18 +70,18 @@ public class AutoSwitcher
             Path path = pathGenerator.generate(0.05);
 
             PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
-            PPCommand pp = new PPCommand(10, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
+            PurePursuitAction pp = new PurePursuitAction(10, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
 
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
-            group.addSequential((IAction) pp);//new PointDriveAction(.05, new ImmutableVector(3, 10), 3));
+            group.addSequential(pp);//new PointDriveAction(.05, new ImmutableVector(3, 10), 3));
             group.addSequential((IAction) new VoltageDriveAction(-0.3, -0.3, 3));
-            return new CommandCreator(group);
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
             ActionGroup group = new ActionGroup();
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
             group.addSequential((IAction) new VoltageDriveAction(0.3, 0.3, 3));
-            return new CommandCreator(group);
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         });
 
 
