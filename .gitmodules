@@ -1,0 +1,3 @@
+[submodule "ezAuton"]
+	path = ezAuton
+	url = https://github.com/ezAuton/ezAuton
