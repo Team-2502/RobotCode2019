@@ -39,6 +39,12 @@ public final class OI
      */
     public static final Joystick JOYSTICK_FUNCTION = new Joystick(RobotMap.Joystick.JOYSTICK_FUNCTION);
 
+    /**
+     * Represents the DDR "Joystick"
+     *
+     * @see OI
+     */
+    public static final Joystick DDR_PAD = new Joystick(RobotMap.Joystick.DDR_PAD);
 
     // Start defining buttons to be using
     // Names are self explanatory
@@ -119,5 +125,27 @@ public final class OI
      * When this is called, Java loads the static bits of this class and runs the static init constructor above.
      */
     public static void init() {}
+
+    public static String getJoystickInfo(Joystick joystick)
+    {
+        int buttonCount = joystick.getButtonCount();
+        StringBuilder joystickInfo = new StringBuilder();
+
+        joystickInfo.append("JoyStick Name: ").append(joystick.getName()).append("\n");
+        joystickInfo.append("XYZ Channel: ").append(joystick.getXChannel()).append(" ").append(joystick.getYChannel()).append(" ").append(joystick.getZChannel());
+
+        if(joystick.getAxisCount() > 0 ) joystickInfo.append(" Axises: ").append(joystick.getAxisCount()).append("\n");
+        joystickInfo.append("Button being pressed: ");
+
+        for(int i=0; i<buttonCount; i++)
+        {
+            if(joystick.getRawButton(i))
+            {
+                joystickInfo.append(i).append(" ");
+            }
+        }
+
+        return joystickInfo.toString();
+    }
 
 }

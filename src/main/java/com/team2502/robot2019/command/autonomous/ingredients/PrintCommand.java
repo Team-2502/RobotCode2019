@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class PrintCommand extends Command
 {
 
-    private String message;
+    private Object message;
     private int num_of_prints = 0;
     private int time_elapsed = 0;
 
-    public PrintCommand(String message)
+    public PrintCommand(Object message)
     {
         this.message = message;
 
@@ -30,7 +30,7 @@ public class PrintCommand extends Command
     {
         if (time_elapsed % 25 == 0)
         {
-            System.out.println(message + " " + num_of_prints);
+            System.out.println(message.toString() + " " + num_of_prints);
             num_of_prints++;
         }
 

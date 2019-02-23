@@ -20,6 +20,7 @@ public class RobotMap
         public static final int JOYSTICK_DRIVE_LEFT = 1;
         public static final int JOYSTICK_DRIVE_RIGHT = 0;
         public static final int JOYSTICK_FUNCTION = 2;
+        public static final int DDR_PAD = 3;
 
         private Joystick()
         {

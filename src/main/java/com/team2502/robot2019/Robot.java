@@ -81,6 +81,7 @@ public class Robot extends TimedRobot
         AutoSwitcher.putToSmartDashboard();
 
         NAVX.reset();
+        System.out.println("Type: " + OI.JOYSTICK_FUNCTION.getType() + " Button count: " + OI.JOYSTICK_FUNCTION.getButtonCount());
     }
 
 
@@ -98,6 +99,7 @@ public class Robot extends TimedRobot
     {
         DashboardData.update();
         Scheduler.getInstance().run(); // Runs Teleop when enabled, disabled when disabled
+        System.out.println(OI.getJoystickInfo(OI.JOYSTICK_FUNCTION));
     }
 
     /**
