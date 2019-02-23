@@ -1,6 +1,6 @@
 package com.team2502.robot2019.command.vision;
 
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.QuinticSpline;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
@@ -65,7 +65,7 @@ public class GoToTargetCommand extends Command
                 .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), lastAbsoluteTargetAngle, speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
                 .buildPathGenerator().generate(0.05);
 
-        IPathSegment next = path.getNext();
+        PathSegment next = path.getNext();
 
         Robot.DRIVE_TRAIN.driveTowardTransLoc(next.getSpeed(0.5), next.getTo());
     }

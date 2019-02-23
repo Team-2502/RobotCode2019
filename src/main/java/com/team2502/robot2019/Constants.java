@@ -1,8 +1,8 @@
 package com.team2502.robot2019;
 
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
-import com.github.ezauton.core.robot.ITankRobotConstants;
-import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
+import com.github.ezauton.core.robot.TankRobotConstants;
+import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class Constants
      */
     public static class Autonomous
     {
-        public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
+        public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
             return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
@@ -50,7 +50,7 @@ public class Constants
         /**
          * Contains encoder conversion constants and details about the drivetrain wheels
          */
-        public static class DriveTrain implements ITankRobotConstants
+        public static class DriveTrain implements TankRobotConstants
         {
             //TODO: Measure wheels
             public static final double WHEEL_DIAMETER_INCH = 6.0F;

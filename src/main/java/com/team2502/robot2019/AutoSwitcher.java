@@ -6,17 +6,13 @@ import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
-import com.team2502.robot2019.command.autonomous.ingredients.PointDriveAction;
-import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveAction;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -74,13 +70,13 @@ public class AutoSwitcher
 
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
             group.addSequential(pp);//new PointDriveAction(.05, new ImmutableVector(3, 10), 3));
-            group.addSequential((IAction) new VoltageDriveAction(-0.3, -0.3, 3));
+            group.addSequential((Action) new VoltageDriveAction(-0.3, -0.3, 3));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
             ActionGroup group = new ActionGroup();
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
-            group.addSequential((IAction) new VoltageDriveAction(0.3, 0.3, 3));
+            group.addSequential((Action) new VoltageDriveAction(0.3, 0.3, 3));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         });
 
