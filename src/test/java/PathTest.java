@@ -3,6 +3,7 @@ import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
+import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
@@ -29,7 +30,7 @@ public class PathTest
     @BeforeEach
     public void init()
     {
-        simulation = new TimeWarpedSimulation(10.0);
+        simulation = new TimeWarpedSimulation(10);
         driveTrain = new SimulatedDrivetrain(simulation.getClock());
         lookahead = Constants.Autonomous.getLookaheadBounds(driveTrain);
 
@@ -88,7 +89,7 @@ public class PathTest
                         .add(4, 14.7, 0, 0, 13, -12)
                         .buildPathGenerator().generate(0.05),
                 new SplinePPWaypoint.Builder()
-                        .add(4, 14.7, -3 * Math.PI/4, -10, 13, -12)
+                        .add(4, 14.7, -3 * Math.PI / 4, -10, 13, -12)
                         .add(7.75, 5, Math.PI, -10, 13, -12)
                         .add(7.75, 0, Math.PI, -2, 13, -12)
                         .buildPathGenerator().generate(0.05),
@@ -105,6 +106,46 @@ public class PathTest
                         .buildPathGenerator().generate(0.05)
                                         );
 
+        testPath(paths, "testRightHab2Front");
+    }
+
+    @Test
+    public void testRightHab2Rocket()
+    {
+        List<Path> paths = Arrays.asList(
+                new SplinePPWaypoint.Builder()
+                        .add(0, 0, 0, 10, 13, -12)
+                        .add(0, 9, 0, 10, 13, -13)
+                        .add(6.5, 24.15, .34 * Math.PI, 0, 13, -12)
+                        .buildPathGenerator()
+                        .generate(0.05),
+                new PPWaypoint.Builder()
+                        .add(6.5, 24.15, -5, 13, -12)
+                        .add(8.5, 20, 0, 13, -12)
+                        .buildPathGenerator().generate(0.05),
+                new PPWaypoint.Builder()
+                        .add(8.5, 20, 10, 13, -12)
+                        .add(6.5, 24.15, 0, 13, -12)
+                        .buildPathGenerator().generate(0.05),
+                new SplinePPWaypoint.Builder()
+                        .add(6.5, 24.15, Math.PI, -15, 13, -12)
+                        .add(7.75, 0, Math.PI, -1, 13, -12)
+                        .buildPathGenerator().generate(0.05),
+                new SplinePPWaypoint.Builder()
+                        .add(7.75, 0, 0, 15, 13, -12)
+                        .add(3.75, 10, Math.PI / 2, 1, 13, -12)
+                        .buildPathGenerator().generate(0.05),
+                new SplinePPWaypoint.Builder()
+                        .add(3.75, 10, 3 * Math.PI / 2, -10, 13, -12)
+                        .add(8.5, 17, 1.66 * Math.PI, -15, 13, -12)
+                        .buildPathGenerator().generate(0.05)
+                                        );
+
+        testPath(paths, "testRightHab2Rocket");
+    }
+
+    private void testPath(List<Path> paths, String name)
+    {
         Recording recording = new Recording();
         ActionGroup group = new ActionGroup();
         ActionGroup ppCommands = new ActionGroup();
@@ -128,11 +169,11 @@ public class PathTest
 
 
         simulation.add(group)
-                  .runSimulation(45, TimeUnit.SECONDS);
+                  .runSimulation(30, TimeUnit.SECONDS);
 
         try
         {
-            recording.save("testRightHab2Front.json");
+            recording.save(name + ".json");
         }
         catch(IOException e)
         {
