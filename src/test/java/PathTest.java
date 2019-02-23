@@ -1,6 +1,6 @@
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
@@ -18,7 +18,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class PathTest
 {
@@ -37,16 +39,16 @@ public class PathTest
 
     private class PPPair
     {
-        private final PPCommand command;
+        private final PurePursuitAction command;
         private final PurePursuitRecorder purePursuitRecorder;
 
-        public PPPair(PPCommand command, PurePursuitRecorder purePursuitRecorder)
+        public PPPair(PurePursuitAction command, PurePursuitRecorder purePursuitRecorder)
         {
             this.command = command;
             this.purePursuitRecorder = purePursuitRecorder;
         }
 
-        public PPCommand getCommand()
+        public PurePursuitAction getCommand()
         {
             return command;
         }
@@ -61,7 +63,7 @@ public class PathTest
     {
         PurePursuitMovementStrategy ppms = new PurePursuitMovementStrategy(path, 0.01);
         return new PPPair(
-                new PPCommand(20, TimeUnit.MILLISECONDS, ppms, driveTrain.getLocEstimator(), lookahead, driveTrain.getTankRobotTransLocDriveable()),
+                new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppms, driveTrain.getLocEstimator(), lookahead, driveTrain.getTankRobotTransLocDriveable()),
                 new PurePursuitRecorder(simulation.getClock(), path, ppms)
         );
     }
@@ -127,8 +129,19 @@ public class PathTest
              .addSequential(ppCommands);
 
 
-        simulation.add(group)
-                  .runSimulation(45, TimeUnit.SECONDS);
+        try
+        {
+            simulation.add(group)
+                      .runSimulation(45, TimeUnit.SECONDS);
+        }
+        catch(TimeoutException e)
+        {
+            e.printStackTrace();
+        }
+        catch(ExecutionException e)
+        {
+            e.printStackTrace();
+        }
 
         try
         {
