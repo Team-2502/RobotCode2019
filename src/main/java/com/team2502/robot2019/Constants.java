@@ -91,8 +91,8 @@ public class Constants
 
         public static class CargoActive
         {
-            public static final double SPEED_FWDS = 1.0D;
-            public static final double SPEED_BKWDS = -1.0D;
+            public static final double SPEED_FWDS = -1.0D;
+            public static final double SPEED_BKWDS = 1.0D;
         }
 
         public static class Encoder

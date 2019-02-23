@@ -37,8 +37,8 @@ public class RobotMap
             public static final int BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = 5;
             public static final int BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = 3;
 
-            public static final int BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = 4;
-            public static final int BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = 6;
+            public static final int RUN_CARGO_ACTIVE_FWD_TOP = 6;
+            public static final int RUN_CARGO_ACTIVE_BWD_TOP = 4;
 
             public static final int BUTTON_CLIMB_UP = 11;
             public static final int BUTTON_CLIMB_DOWN = 12;
