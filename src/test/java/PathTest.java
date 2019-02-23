@@ -112,7 +112,7 @@ public class PathTest
     }
 
     @Test
-    public void testRightHab2Rocket()
+    public void testRightHab2Rocket() throws TimeoutException, ExecutionException
     {
         List<Path> paths = Arrays.asList(
                 new SplinePPWaypoint.Builder()
@@ -146,7 +146,7 @@ public class PathTest
         testPath(paths, "testRightHab2Rocket");
     }
 
-    private void testPath(List<Path> paths, String name)
+    private void testPath(List<Path> paths, String name) throws TimeoutException, ExecutionException
     {
         Recording recording = new Recording();
         ActionGroup group = new ActionGroup();
