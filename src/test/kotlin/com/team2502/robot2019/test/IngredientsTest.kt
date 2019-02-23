@@ -24,7 +24,7 @@ class IngredientsTest {
 
         val actionGroup = ActionGroup()
                 .with(BackgroundAction(10, TimeUnit.MILLISECONDS, Runnable { driveTrain.update() }))
-                .addSequential(VoltageDriveAction(1.0, 1.0, 1.0, TimeUnit.SECONDS, true, sim.clock, driveTrain) as IAction)
+                .addSequential(VoltageDriveAction(1.0, 1.0, 1.0, TimeUnit.SECONDS, true, sim.clock, driveTrain) as Action)
 
         sim.add(actionGroup).runSimulation(5, TimeUnit.SECONDS)
 

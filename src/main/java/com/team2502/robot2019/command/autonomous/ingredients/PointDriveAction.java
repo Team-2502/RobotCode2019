@@ -2,12 +2,12 @@ package com.team2502.robot2019.command.autonomous.ingredients;
 
 import com.github.ezauton.core.action.PeriodicAction;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.Robot;
-import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
+import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +18,7 @@ public class PointDriveAction extends PeriodicAction implements Runnable
     private final double speed;
     private final double time;
     private final TimeUnit timeUnit;
-    private IDriveTrain dt;
+    private DriveTrain dt;
 
     /**
      * @param timeout       Amount of timeout to run for (seconds)
@@ -32,7 +32,7 @@ public class PointDriveAction extends PeriodicAction implements Runnable
      * @param rightVel
      * @param time       Amount of time to run for (seconds)
      */
-    public PointDriveAction(double speed, ImmutableVector loc, double time, TimeUnit timeUnit, boolean brake, IClock clock, IDriveTrain dt)
+    public PointDriveAction(double speed, ImmutableVector loc, double time, TimeUnit timeUnit, boolean brake, Clock clock, DriveTrain dt)
     {
         super(Constants.DEFAULT_ACTION_PERIOD, Constants.DEFAULT_ACTION_PERIOD_UNIT);
         this.speed = speed;
