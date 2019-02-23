@@ -54,7 +54,7 @@ class IngredientsTest {
 
         group
                 .with(BackgroundAction(10, TimeUnit.MILLISECONDS, Runnable { driveTrain.update() }))
-                .addSequential(PPCommand(10, TimeUnit.MILLISECONDS, ppstrat, driveTrain.locEstimator, lookaheadBounds, driveTrain))
+                .addSequential(PurePursuitAction(10, TimeUnit.MILLISECONDS, ppstrat, driveTrain.locEstimator, lookaheadBounds, driveTrain))
 
         sim.add(group).runSimulation(10, TimeUnit.SECONDS)
 
