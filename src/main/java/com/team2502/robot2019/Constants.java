@@ -75,9 +75,8 @@ public class Constants
              */
             public static final double THRESHOLD = 1e-2;
 
-            //TODO: Measure
-            public static final double LATERAL_WHEEL_DIST_FT = 3;
-
+            public static final double LATERAL_WHEEL_DIST_FT = 30D/12;
+            public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
 
