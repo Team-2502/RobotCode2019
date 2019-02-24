@@ -11,6 +11,8 @@ import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
 import com.team2502.robot2019.subsystem.vision.VisionWebsocket;
+
+import com.team2502.robot2019.utils.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -22,6 +24,8 @@ public class GoToTargetCommand extends Command
 
     private ImmutableVector lastAbsoluteTargetPos;
     private double lastAbsoluteTargetAngle;
+
+    private CircularBuffer angleBuffer = new CircularBuffer(6);
 
     private QuinticSpline lastSpline;
     private VisionWebsocket socket;
@@ -43,7 +47,8 @@ public class GoToTargetCommand extends Command
         }
         catch(IOException e)
         {
-            DriverStation.reportError("Failed to create socket (whoops 3 potential precursor)", e.getStackTrace());
+            DriverStation.reportError("Failed to create socket (whoops 3 potential precursor), socket port = " + Constants.Autonomous.PORT + ", mdns = " + Constants.Autonomous.COPROCESSOR_MDNS_ADDR, e.getStackTrace());
+            super.cancel();
         }
         speed = 5;       // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
@@ -81,6 +86,7 @@ public class GoToTargetCommand extends Command
 //            System.out.println("newVisionData.isMeaningful() = " + newVisionData.isMeaningful());
 //            System.out.println("lastAbsoluteTargetPos = " + lastAbsoluteTargetPos);
             lastAbsoluteTargetAngle = botheading + lastTargetLocEstimation.getAngle();
+            angleBuffer.addValue(lastAbsoluteTargetAngle);
         }
         if(lastTargetLocEstimation == null)
         {
@@ -96,15 +102,28 @@ public class GoToTargetCommand extends Command
         PurePursuitMovementStrategy strategy = null;
         try
         {
-            ImmutableVector knotVecRobot = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), angle).div(3);
-            ImmutableVector knotVecTarget = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), lastAbsoluteTargetAngle).mul(3);
+//            ImmutableVector knotVecRobot = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), angle);
+//            ImmutableVector knotVecTarget = MathUtils.LinearAlgebra.rotate2D(new ImmutableVector(0, 1), lastAbsoluteTargetAngle).mul(3);
 
-            Path path =
-                    new SplinePPWaypoint.Builder()
-                            .add(loc.get(0), loc.get(1), knotVecRobot.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
-                            .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), knotVecTarget.get(0), knotVecRobot.get(1), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
-                            .buildPathGenerator().generate(0.05);
-
+            SplinePPWaypoint.Builder splineBuilder = new SplinePPWaypoint.Builder()
+                    .add(loc.get(0), loc.get(1), angle, speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL)
+                    .add(lastAbsoluteTargetPos.get(0), lastAbsoluteTargetPos.get(1), angleBuffer.getAverage(), speed, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, -Constants.Physical.DriveTrain.MAX_FPS2_ACCEL);
+            QuinticSpline spline = splineBuilder.buildSplines().get(0);
+            System.out.println("spline.getEquation() = " + spline.getEquation());
+            System.out.println("lastAbsoluteTargetAngle = " + lastAbsoluteTargetAngle);
+            System.out.println("angleBuffer = " + angleBuffer.getAverage());
+            System.out.println("lastAbsoluteTargetAngleUnrounded = " + (angle + lastTargetLocEstimation.getAngle()));
+            System.out.println("angle = " + angle);
+            Path path = null;
+            try
+            {
+                path =
+                        splineBuilder
+                                .buildPathGenerator().generate(0.05);
+            } catch (IllegalArgumentException e) {
+                DriverStation.reportWarning("No segments in path", e.getStackTrace());
+                super.cancel();
+            }
             strategy = new PurePursuitMovementStrategy(path, 1 / 12D);
             strategy.update(Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation(), 2);
             IPathSegment current = path.getCurrent();

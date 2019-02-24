@@ -22,7 +22,7 @@ public class VisionWebsocket
     private static Semaphore socketLock = new Semaphore(1);
 
     public VisionWebsocket() throws IOException
-    {this(Constants.Autonomous.COPROCESSOR_MDNS_ADDR, 5800);}
+    {this(Constants.Autonomous.COPROCESSOR_MDNS_ADDR, Constants.Autonomous.PORT);}
 
     public VisionWebsocket(String host, int port) throws IOException
     {
