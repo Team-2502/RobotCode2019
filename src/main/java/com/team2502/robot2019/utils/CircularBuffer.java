@@ -1,6 +1,7 @@
 package com.team2502.robot2019.utils;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Implements a simple circular buffer.
@@ -31,6 +32,17 @@ public class CircularBuffer
         if(mSamples.isEmpty())
         { return 0.0; }
         return mSum / mSamples.size();
+    }
+
+    public double getMedian() {
+        List<Double> doubleList = (List<Double>) mSamples.clone();
+        doubleList.sort(Double::compare);
+        try
+        {
+            return doubleList.get(doubleList.size() / 2);
+        } catch (IndexOutOfBoundsException e) {
+            return 0;
+        }
     }
 
     public void recomputeAverage()

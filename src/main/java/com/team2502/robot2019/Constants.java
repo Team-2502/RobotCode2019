@@ -41,7 +41,7 @@ public class Constants
         public static final int PORT = 5800;
 
         public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
-            return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
+            return new LookaheadBounds(1, 3, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
     }
@@ -90,7 +90,7 @@ public class Constants
              */
             public static final double THRESHOLD = 1e-2;
 
-            public static final double LATERAL_WHEEL_DIST_FT = 30D/12;
+            public static final double LATERAL_WHEEL_DIST_FT = 27D/12;
             public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();

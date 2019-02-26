@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.concurrent.TimeUnit;
 
@@ -66,14 +67,16 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
+        SmartDashboard.putNumber("knotVec0Mult", 1);
+        SmartDashboard.putNumber("knotVec1Mult", 3);
         NAVX = new AHRS(SPI.Port.kMXP);
 
-        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
-        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
-        CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
-        SERVER = CameraServer.getInstance().getServer();
-
-        SERVER.setSource(CAMERA0);
+//        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
+//        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
+//        CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
+//        SERVER = CameraServer.getInstance().getServer();
+//
+//        SERVER.setSource(CAMERA0);
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();

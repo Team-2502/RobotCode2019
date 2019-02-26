@@ -10,7 +10,9 @@ public class AbortAutoCommand extends InstantCommand
     @Override
     protected void execute()
     {
+        Scheduler.getInstance().disable();
         Scheduler.getInstance().removeAll();
+        Scheduler.getInstance().enable();
     }
 
 }
