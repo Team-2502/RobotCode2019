@@ -59,10 +59,9 @@ public class Constants
             public static final double WHEEL_CIRCUMFERENCE_INCH = WHEEL_DIAMETER_INCH * Math.PI;
             public static final double WHEEL_CIRCUMFERENCE_FT = WHEEL_CIRCUMFERENCE_INCH / 12F;
 
-            public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
-            public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
+            public static final double WHEEL_REV_TO_ENC_REV = 1.0F;
 
-            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_DIAMETER_FT * Math.PI / WHEEL_REV_TO_ENC_REV_HIGH;
+            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_CIRCUMFERENCE_FT / WHEEL_REV_TO_ENC_REV;
             public static final double ENC_UNITS_TO_FPS = ENC_UNITS_TO_FEET * 1000;
             //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 18.0F;
@@ -75,7 +74,7 @@ public class Constants
              */
             public static final double THRESHOLD = 1e-2;
 
-            public static final double LATERAL_WHEEL_DIST_FT = 30D/12;
+            public static final double LATERAL_WHEEL_DIST_FT = 25.5D / 12;
             public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
