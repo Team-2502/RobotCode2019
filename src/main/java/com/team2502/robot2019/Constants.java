@@ -52,7 +52,6 @@ public class Constants
          */
         public static class DriveTrain implements TankRobotConstants
         {
-            //TODO: Measure wheels
             public static final double WHEEL_DIAMETER_INCH = 6.0F;
             public static final double WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
