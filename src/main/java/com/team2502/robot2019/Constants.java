@@ -37,7 +37,7 @@ public class Constants
      */
     public static class Autonomous
     {
-        public static final String COPROCESSOR_MDNS_ADDR = "raspberrypi.local";
+        public static final String COPROCESSOR_MDNS_ADDR = "10.25.2.69";
 
         public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
             return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
