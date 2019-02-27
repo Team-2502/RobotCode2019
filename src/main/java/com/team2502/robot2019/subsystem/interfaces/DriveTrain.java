@@ -1,22 +1,21 @@
 package com.team2502.robot2019.subsystem.interfaces;
 
-import com.github.ezauton.core.action.require.IResource;
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.localization.IRotationalLocationEstimator;
-import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
+import com.github.ezauton.core.action.require.Resource;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
+import com.github.ezauton.core.localization.TranslationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
-import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
-import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
+import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;
 
 /**
  * For the purposes of ezAuton + simulation
  */
-public interface IDriveTrain extends TranslationalLocationDriveable, IResource, Updateable
+public interface DriveTrain extends TranslationalLocationDriveable, Resource, Updateable
 {
     default void runMotorsVelocity(double leftVel, double rightVel) {
-        IVelocityMotor left = getLeft();
-        IVelocityMotor right = getRight();
+        VelocityMotor left = getLeft();
+        VelocityMotor right = getRight();
 
         left.runVelocity(leftVel);
         right.runVelocity(rightVel);
@@ -24,17 +23,17 @@ public interface IDriveTrain extends TranslationalLocationDriveable, IResource, 
 
     void runMotorsVoltage(double leftVolts, double rightVolts);
 
-    IVelocityMotor getLeft();
+    VelocityMotor getLeft();
 
-    IVelocityMotor getRight();
+    VelocityMotor getRight();
 
-    ITranslationalLocationEstimator getLocEstimator();
+    TranslationalLocationEstimator getLocEstimator();
 
-    IRotationalLocationEstimator getRotEstimator();
+    RotationalLocationEstimator getRotEstimator();
 
-    IVelocityEstimator getVelocityEstimator();
+    VelocityEstimator getVelocityEstimator();
 
-    IResource getResource();
+    Resource getResource();
 
     @Override
     default void take() throws InterruptedException

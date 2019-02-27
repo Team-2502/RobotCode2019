@@ -1,23 +1,23 @@
 package com.team2502.robot2019.subsystem.sim;
 
 import com.github.ezauton.core.action.require.BaseResource;
-import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.actuators.implementations.SimulatedMotor;
-import com.github.ezauton.core.localization.IRotationalLocationEstimator;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
-import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.team2502.robot2019.Constants;
-import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
+import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 
 
 //TODO: Implement
-public class SimulatedDrivetrain implements IDriveTrain
+public class SimulatedDrivetrain implements DriveTrain
 {
 
     private final SimulatedMotor left;
@@ -25,14 +25,14 @@ public class SimulatedDrivetrain implements IDriveTrain
 
     private final BaseResource resource = new BaseResource();
     private final TankRobotEncoderEncoderEstimator locEst;
-    private final ITranslationalDistanceSensor leftTds;
-    private final ITranslationalDistanceSensor rightTds;
+    private final TranslationalDistanceSensor leftTds;
+    private final TranslationalDistanceSensor rightTds;
 
     private final TankRobotTransLocDriveable tankRobotTransLocDriveable;
 
     private final UpdateableGroup updateableGroup;
 
-    public SimulatedDrivetrain(IClock clock)
+    public SimulatedDrivetrain(Clock clock)
     {
         left = new SimulatedMotor(clock, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, 0.05, Constants.Physical.DriveTrain.MAX_FPS_SPEED, 12 / Constants.Physical.DriveTrain.MAX_FPS_SPEED);
         right = new SimulatedMotor(clock, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL, 0.05, Constants.Physical.DriveTrain.MAX_FPS_SPEED, 12 / Constants.Physical.DriveTrain.MAX_FPS_SPEED);
@@ -55,13 +55,13 @@ public class SimulatedDrivetrain implements IDriveTrain
     }
 
     @Override
-    public IVelocityMotor getLeft()
+    public VelocityMotor getLeft()
     {
         return left;
     }
 
     @Override
-    public IVelocityMotor getRight()
+    public VelocityMotor getRight()
     {
         return right;
     }
@@ -73,13 +73,13 @@ public class SimulatedDrivetrain implements IDriveTrain
     }
 
     @Override
-    public IRotationalLocationEstimator getRotEstimator()
+    public RotationalLocationEstimator getRotEstimator()
     {
         return locEst;
     }
 
     @Override
-    public IVelocityEstimator getVelocityEstimator()
+    public VelocityEstimator getVelocityEstimator()
     {
         return locEst;
     }

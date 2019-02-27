@@ -17,7 +17,7 @@ This project uses [ezAuton](https://github.com/ezAuton/ezAuton)
 #### Cloning
 ##### Via command line
 
-- `git clone https://github.com/Team-2502/RobotCode2019.git`
+- `git clone --recursive https://github.com/Team-2502/RobotCode2019`
 
 - `cd RobotCode2019`
 

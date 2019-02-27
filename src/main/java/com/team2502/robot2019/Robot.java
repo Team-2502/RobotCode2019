@@ -46,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 public class Robot extends TimedRobot
 {
 
+    @Deprecated
     public static AHRS NAVX;
 
     public static ActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);

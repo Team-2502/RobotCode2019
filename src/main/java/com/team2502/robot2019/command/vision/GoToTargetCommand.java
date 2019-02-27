@@ -1,6 +1,6 @@
 package com.team2502.robot2019.command.vision;
 
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.QuinticSpline;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
@@ -107,11 +107,12 @@ public class GoToTargetCommand extends Command
 
             strategy = new PurePursuitMovementStrategy(path, 1 / 12D);
             strategy.update(Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation(), 2);
-            IPathSegment current = path.getCurrent();
+            PathSegment current = path.getCurrent();
             ImmutableVector closestPoint = current.getClosestPoint(loc);
 //            double absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint);
 //            double speedUsed = current.getSpeed(absoluteDistanceUsed);
 
+        PathSegment next = path.getNext();
 
             Robot.DRIVE_TRAIN.driveTowardTransLoc(speed, strategy.getGoalPoint());
         }

@@ -4,28 +4,29 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.github.ezauton.core.action.require.BaseResource;
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.localization.IRotationalLocationEstimator;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
-import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import com.github.ezauton.wpilib.motors.ITypicalMotor;
+import com.github.ezauton.wpilib.motors.TypicalMotor;
+import com.github.ezauton.wpilib.motors.MotorControllers;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.DashboardData;
 import com.team2502.robot2019.RobotMap;
 import com.team2502.robot2019.command.teleop.DriveCommand;
-import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
+import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 import com.team2502.robot2019.utils.IPIDTunable;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriveTrain, Updateable, DashboardData.DashboardUpdater
+public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, DriveTrain, Updateable, DashboardData.DashboardUpdater
 {
     private final WPI_TalonSRX backLeft;
     private final WPI_TalonSRX backRight;
@@ -33,13 +34,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     public final WPI_TalonSRX frontLeft;
     public final WPI_TalonSRX frontRight;
 
-    private final ITypicalMotor left;
-    private final ITypicalMotor right;
+    private final TypicalMotor left;
+    private final TypicalMotor right;
 
     private final TankRobotTransLocDriveable trtls;
     private final EncoderRotationEstimator locEst;
-    private final IRotationalLocationEstimator rotEst;
-    private final IVelocityEstimator velEst;
+    private final RotationalLocationEstimator rotEst;
+    private final VelocityEstimator velEst;
 
     private final PigeonIMU pigeonIMU;
 
@@ -53,9 +54,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
     private final BaseResource resource = new BaseResource();
     private final UpdateableGroup updateableGroup;
-    private final ITranslationalDistanceSensor leftSensor;
-    private final ITranslationalDistanceSensor rightSensor;
     private int maxVel = 0;
+    private final TranslationalDistanceSensor leftSensor;
+    private final TranslationalDistanceSensor rightSensor;
 
     public DrivetrainSubsystem()
     {
@@ -76,7 +77,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontLeft.configOpenloopRamp(0.05);
         frontRight.configOpenloopRamp(0.05);
 
-        right = new ITypicalMotor()
+        right = new TypicalMotor()
         {
             public void runVelocity(double targetVelocity)
             {
@@ -107,7 +108,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         };
 
 
-        left = new ITypicalMotor()
+        left = new TypicalMotor()
         {
             public void runVelocity(double targetVelocity)
             {
@@ -156,7 +157,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         };
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
 
-        locEst = new EncoderRotationEstimator(rotEst, new ITranslationalDistanceSensor()
+        locEst = new EncoderRotationEstimator(rotEst, new TranslationalDistanceSensor()
         {
             @Override
             public double getPosition()
@@ -221,13 +222,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     }
 
     @Override
-    public IVelocityMotor getLeft()
+    public VelocityMotor getLeft()
     {
         return left;
     }
 
     @Override
-    public IVelocityMotor getRight()
+    public VelocityMotor getRight()
     {
         return right;
     }
@@ -239,13 +240,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     }
 
     @Override
-    public IRotationalLocationEstimator getRotEstimator()
+    public RotationalLocationEstimator getRotEstimator()
     {
         return rotEst;
     }
 
     @Override
-    public IVelocityEstimator getVelocityEstimator()
+    public VelocityEstimator getVelocityEstimator()
     {
         return velEst;
     }

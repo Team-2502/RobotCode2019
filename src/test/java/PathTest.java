@@ -129,8 +129,19 @@ public class PathTest
              .addSequential(PurePursuitActions);
 
 
-        simulation.add(group)
-                  .runSimulation(45, TimeUnit.SECONDS);
+        try
+        {
+            simulation.add(group)
+                      .runSimulation(45, TimeUnit.SECONDS);
+        }
+        catch(TimeoutException e)
+        {
+            e.printStackTrace();
+        }
+        catch(ExecutionException e)
+        {
+            e.printStackTrace();
+        }
 
         try
         {

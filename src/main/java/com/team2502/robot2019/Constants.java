@@ -1,8 +1,8 @@
 package com.team2502.robot2019;
 
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
-import com.github.ezauton.core.robot.ITankRobotConstants;
-import com.team2502.robot2019.subsystem.interfaces.IDriveTrain;
+import com.github.ezauton.core.robot.TankRobotConstants;
+import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +39,7 @@ public class Constants
     {
         public static final String COPROCESSOR_MDNS_ADDR = "10.25.2.69";
 
-        public static LookaheadBounds getLookaheadBounds(IDriveTrain dt) {
+        public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
             return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
@@ -52,17 +52,15 @@ public class Constants
         /**
          * Contains encoder conversion constants and details about the drivetrain wheels
          */
-        public static class DriveTrain implements ITankRobotConstants
+        public static class DriveTrain implements TankRobotConstants
         {
-            //TODO: Measure wheels
             public static final double WHEEL_DIAMETER_INCH = 6.0F;
             public static final double WHEEL_DIAMETER_FT = WHEEL_DIAMETER_INCH / 12F;
 
             public static final double WHEEL_CIRCUMFERENCE_INCH = WHEEL_DIAMETER_INCH * Math.PI;
             public static final double WHEEL_CIRCUMFERENCE_FT = WHEEL_CIRCUMFERENCE_INCH / 12F;
 
-            public static final double WHEEL_REV_TO_ENC_REV_LOW = 4.285F;
-            public static final double WHEEL_REV_TO_ENC_REV_HIGH = 2.083F;
+            public static final double WHEEL_REV_TO_ENC_REV = 1.0F;
 
             public static final double ENC_UNITS_PER_ROT = 4096;
 
@@ -76,8 +74,6 @@ public class Constants
              */
             public static final double ENC_UNITS_TO_FPS = 10 * ENC_UNITS_TO_FEET;
 
-
-
             //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 18.0F;
 
@@ -89,7 +85,7 @@ public class Constants
              */
             public static final double THRESHOLD = 1e-2;
 
-            public static final double LATERAL_WHEEL_DIST_FT = 30D/12;
+            public static final double LATERAL_WHEEL_DIST_FT = 25.5D / 12;
             public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
@@ -109,8 +105,8 @@ public class Constants
 
         public static class CargoActive
         {
-            public static final double SPEED_FWDS = 1.0D;
-            public static final double SPEED_BKWDS = -1.0D;
+            public static final double SPEED_FWDS = -1.0D;
+            public static final double SPEED_BKWDS = 1.0D;
         }
 
         public static class Encoder
