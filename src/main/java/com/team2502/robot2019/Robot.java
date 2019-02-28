@@ -7,6 +7,7 @@
 
 package com.team2502.robot2019;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.kauailabs.navx.frc.AHRS;
@@ -29,7 +30,8 @@ public class Robot extends TimedRobot
 {
 
     public static PigeonIMU PIGEON;
-//    public static AHRS NAVX;
+    public static TalonSRX RIGHT_SIDE;
+    public static TalonSRX LEFT_SIDE;
     public static DrivetrainSubsystem DRIVE_TRAIN;
 
     /**
@@ -39,8 +41,9 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
-        //NAVX = new AHRS(SPI.Port.kMXP);
         PIGEON = new PigeonIMU(0);
+        RIGHT_SIDE = new TalonSRX(1);
+        LEFT_SIDE = new TalonSRX(2);
         DRIVE_TRAIN = new DrivetrainSubsystem();
 
         AutoSwitcher.putToSmartDashboard();

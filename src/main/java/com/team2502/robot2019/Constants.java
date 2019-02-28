@@ -31,8 +31,21 @@ public class Constants
      */
     public static class Autonomous
     {
+        public static class PigeonPID // Literally only exists for separation and easy removal (if necessary)
+        {
+            public static final int CONFIG_TIMEOUT_MS = 30; //For use with the the PIGEON_IMU and Talons
+            public static final int PIGEON_UNITS_PER_ROTATION = 8192; // DO NOT CHANGE
+            public static final double TURN_TRAVEL_UNITS_PER_ROTATION = 3600;
 
-        public static final double MAX_TURN_ERROR = 1D;
+            //PID Slots 0-3
+            public static final int PID_TURNING_SLOT = 1;
+            //                                                                 (kIzone must be int, just cast it)
+            //                                            kP     kI     kD      kIzone   peakOut
+            public static final double[] TURNING_GAINS = {2.0,   0.0,   4.0,    200,     1.00}; //TODO Optimize
+
+            public static final int MAX_ERR_THRESHOLD = 2;
+        }
+
 
         private Autonomous() { }
     }
