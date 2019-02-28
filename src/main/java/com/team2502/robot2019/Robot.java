@@ -30,8 +30,6 @@ public class Robot extends TimedRobot
 {
 
     public static PigeonIMU PIGEON;
-    public static TalonSRX RIGHT_SIDE;
-    public static TalonSRX LEFT_SIDE;
     public static DrivetrainSubsystem DRIVE_TRAIN;
 
     /**
@@ -42,8 +40,6 @@ public class Robot extends TimedRobot
     public void robotInit()
     {
         PIGEON = new PigeonIMU(0);
-        RIGHT_SIDE = new TalonSRX(1);
-        LEFT_SIDE = new TalonSRX(2);
         DRIVE_TRAIN = new DrivetrainSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
