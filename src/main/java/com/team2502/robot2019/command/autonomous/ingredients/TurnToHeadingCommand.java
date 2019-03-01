@@ -37,36 +37,36 @@ public class TurnToHeadingCommand extends Command
 
         //Config sensor feedback
         Robot.DRIVE_TRAIN.getFrontRight().configRemoteFeedbackFilter(Robot.PIGEON.getDeviceID(), RemoteSensorSource.Pigeon_Yaw, 0);
-        Robot.DRIVE_TRAIN.getFrontRight().configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, 1, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);// pidIx for aux PigeonPID index
-        Robot.DRIVE_TRAIN.getFrontRight().configSelectedFeedbackCoefficient(Constants.Autonomous.PigeonPID.TURN_TRAVEL_UNITS_PER_ROTATION/ Constants.Autonomous.PigeonPID.PIGEON_UNITS_PER_ROTATION, 1, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
+        Robot.DRIVE_TRAIN.getFrontRight().configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, 1, Constants.INIT_TIMEOUT);// pidIx for aux PigeonPID index
+        Robot.DRIVE_TRAIN.getFrontRight().configSelectedFeedbackCoefficient(Constants.Autonomous.PigeonPID.TURN_TRAVEL_UNITS_PER_ROTATION/ Constants.Autonomous.PigeonPID.PIGEON_UNITS_PER_ROTATION, 1, Constants.INIT_TIMEOUT);
 
         //Config output & sensor direction
         Robot.DRIVE_TRAIN.getFrontRight().setSensorPhase(true); // Must be set before setInverted()
         Robot.DRIVE_TRAIN.getFrontLeft().setSensorPhase(true);
-        Robot.DRIVE_TRAIN.getFrontRight().setInverted(false); // TODO Change if necessary
+        Robot.DRIVE_TRAIN.getFrontRight().setInverted(true);
         Robot.DRIVE_TRAIN.getFrontLeft().setInverted(false);
 
-        Robot.DRIVE_TRAIN.getFrontRight().setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 20, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 20, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 20, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.PIGEON.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR,5, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
+        Robot.DRIVE_TRAIN.getFrontRight().setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, 20, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 20, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, 20, Constants.INIT_TIMEOUT);
+        Robot.PIGEON.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR,5, Constants.INIT_TIMEOUT);
 
-        Robot.DRIVE_TRAIN.getFrontRight().configNeutralDeadband(0.001, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontLeft().configNeutralDeadband(0.001, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
+        Robot.DRIVE_TRAIN.getFrontRight().configNeutralDeadband(0.001, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontLeft().configNeutralDeadband(0.001, Constants.INIT_TIMEOUT);
 
         //Config peak outputs
-        Robot.DRIVE_TRAIN.getFrontRight().configPeakOutputForward(+1.0, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontLeft().configPeakOutputForward(+1.0, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().configPeakOutputReverse(-1.0, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontLeft().configPeakOutputReverse(-1.0, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
+        Robot.DRIVE_TRAIN.getFrontRight().configPeakOutputForward(+1.0, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontLeft().configPeakOutputForward(+1.0, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().configPeakOutputReverse(-1.0, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontLeft().configPeakOutputReverse(-1.0, Constants.INIT_TIMEOUT);
 
         //Set turn constants
-        Robot.DRIVE_TRAIN.getFrontRight().config_kP(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, Constants.Autonomous.PigeonPID.TURNING_GAINS[0], Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().config_kI(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, Constants.Autonomous.PigeonPID.TURNING_GAINS[1], Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().config_kD(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, Constants.Autonomous.PigeonPID.TURNING_GAINS[2], Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().config_kF(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, baseSpeed, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS);
-        Robot.DRIVE_TRAIN.getFrontRight().config_IntegralZone(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, (int) Constants.Autonomous.PigeonPID.TURNING_GAINS[3], Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS); //
-        Robot.DRIVE_TRAIN.getFrontRight().configAllowableClosedloopError(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, 0, Constants.Autonomous.PigeonPID.CONFIG_TIMEOUT_MS); // 0 Is an ID
+        Robot.DRIVE_TRAIN.getFrontRight().config_kP(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, Constants.Autonomous.PigeonPID.TURNING_GAINS[0], Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().config_kI(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, Constants.Autonomous.PigeonPID.TURNING_GAINS[1], Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().config_kD(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, Constants.Autonomous.PigeonPID.TURNING_GAINS[2], Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().config_kF(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, baseSpeed, Constants.INIT_TIMEOUT);
+        Robot.DRIVE_TRAIN.getFrontRight().config_IntegralZone(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, (int) Constants.Autonomous.PigeonPID.TURNING_GAINS[3], Constants.INIT_TIMEOUT); //
+        Robot.DRIVE_TRAIN.getFrontRight().configAllowableClosedloopError(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, 0, Constants.INIT_TIMEOUT); // 0 Is an ID
 
     }
 
@@ -74,15 +74,16 @@ public class TurnToHeadingCommand extends Command
     protected void execute()
     {
         Robot.DRIVE_TRAIN.getFrontRight().selectProfileSlot(Constants.Autonomous.PigeonPID.PID_TURNING_SLOT, 1);
-        Robot.DRIVE_TRAIN.getFrontRight().set(ControlMode.PercentOutput, Constants.Autonomous.PigeonPID.TURNING_GAINS[4], DemandType.AuxPID, targetAngle);
+        Robot.DRIVE_TRAIN.getFrontRight().set(ControlMode.PercentOutput, baseSpeed, DemandType.AuxPID, targetAngle);
         Robot.DRIVE_TRAIN.getFrontLeft().set(ControlMode.PercentOutput, -Robot.DRIVE_TRAIN.getFrontRight().getMotorOutputPercent());
-        currentAngle = Robot.PIGEON.getAbsoluteCompassHeading(); // getAbsoluteCompassHeading returns a double 0-360
+        currentAngle = Robot.PIGEON.getAbsoluteCompassHeading(); // getAbsoluteCompassHeading() returns a double 0-360
     }
 
     @Override
     protected void end()
     {
-        Robot.DRIVE_TRAIN.runMotorsVelocity(0,0);
+        Robot.DRIVE_TRAIN.runMotorsVelocity(0, 0);
+
         Robot.DRIVE_TRAIN.getFrontRight().configFactoryDefault();
         Robot.DRIVE_TRAIN.getFrontLeft().configFactoryDefault();
     }
