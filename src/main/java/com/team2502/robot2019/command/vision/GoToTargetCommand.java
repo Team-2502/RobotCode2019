@@ -25,11 +25,14 @@ public class GoToTargetCommand extends Command
 
     private QuinticSpline lastSpline;
     private VisionWebsocket socket;
-    private boolean stop;
+    boolean stop;
     private double speed;
+
+    private VisionData newVisionData;
 
     public GoToTargetCommand()
     {
+        stop = false;
         requires(Robot.DRIVE_TRAIN);
     }
 
@@ -44,6 +47,7 @@ public class GoToTargetCommand extends Command
         catch(IOException e)
         {
             DriverStation.reportError("Failed to create socket (whoops 3 potential precursor)", e.getStackTrace());
+            stop = true;
         }
         speed = 5;       // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
@@ -52,7 +56,6 @@ public class GoToTargetCommand extends Command
     protected void execute()
     {
         Robot.DRIVE_TRAIN.update();
-        VisionData newVisionData;
         try
         {
             newVisionData = socket.updateVisionData();
@@ -67,6 +70,7 @@ public class GoToTargetCommand extends Command
             catch(IOException e1)
             {
                 e1.printStackTrace();
+                stop = true;
             }
 
             newVisionData = socket.updateVisionData();
@@ -84,6 +88,7 @@ public class GoToTargetCommand extends Command
         }
         if(lastTargetLocEstimation == null)
         {
+            System.out.println("Last Target Location is null!\nHave new values been supplied from the Pi?");
             stop = true;
         }
 
@@ -124,19 +129,23 @@ public class GoToTargetCommand extends Command
             System.out.println("meaningful = " + newVisionData.isMeaningful());
             System.out.println("strategy = " + strategy);
             if(strategy != null)  System.out.println("strategpgp = " + strategy.getGoalPoint());
+
+            stop = true;
         }
     }
 
     @Override
     protected boolean isFinished()
     {
-        return false;
+        return stop;
 //        return lastAbsoluteTargetPos != null &&  (stop || Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation().dist(lastAbsoluteTargetPos) <= 1); // within a foot
     }
 
     @Override
     protected void end()
     {
+        stop = true;
+
         try
         {
             socket.shutdown();
