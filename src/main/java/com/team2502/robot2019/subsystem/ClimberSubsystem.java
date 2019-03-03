@@ -6,12 +6,13 @@ import com.team2502.robot2019.RobotMap;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * Robot climber consists of a winch CIM on a gearbox and two
+ * Robot climberRight consists of a winch CIM on a gearbox and two
  * window motors that "crawl" forwards when the robot has been lifted.
  */
 public class ClimberSubsystem extends Subsystem
 {
-    private final WPI_TalonSRX climber;
+    private final WPI_TalonSRX climberRight;
+    private final WPI_TalonSRX climberLeft;
     private final WPI_TalonSRX rightClaw;
     private final WPI_TalonSRX leftClaw;
 
@@ -20,10 +21,14 @@ public class ClimberSubsystem extends Subsystem
      */
     public ClimberSubsystem()
     {
-        climber = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_RIGHT);
+        climberRight = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_RIGHT);
+        climberLeft = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_LEFT);
 
         rightClaw = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_CLAW_RIGHT);
         leftClaw = new WPI_TalonSRX(RobotMap.Motor.CLIMBER_CLAW_LEFT);
+
+        climberRight.setInverted(true);
+        climberLeft.setInverted(false);
     }
 
     /**
@@ -36,7 +41,18 @@ public class ClimberSubsystem extends Subsystem
      */
     public void climb(boolean forwards)
     {
-        climber.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+        climberRight.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+        climberLeft.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+    }
+
+    public void onlyRightClimb(boolean forwards)
+    {
+        climberRight.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
+    }
+
+    public void onlyLeftClimb(boolean forwards)
+    {
+        climberLeft.set(ControlMode.PercentOutput, forwards ? 1.0D : -1.0D);
     }
 
     /**
@@ -44,7 +60,8 @@ public class ClimberSubsystem extends Subsystem
      */
     public void stopClimb()
     {
-        climber.set(ControlMode.PercentOutput, 0.0D);
+        climberRight.set(ControlMode.PercentOutput, 0.0D);
+        climberLeft.set(ControlMode.PercentOutput, 0.0D);
     }
 
     /**
@@ -70,12 +87,13 @@ public class ClimberSubsystem extends Subsystem
     }
 
     /**
-     * Stops all motors in the climber subsystem by setting
+     * Stops all motors in the climberRight subsystem by setting
      * PercentOutput to 0.0.
      */
     public void stop()
     {
-        climber.set(ControlMode.PercentOutput, 0.0D);
+        climberRight.set(ControlMode.PercentOutput, 0.0D);
+        climberLeft.set(ControlMode.PercentOutput, 0.0D);
         leftClaw.set(ControlMode.PercentOutput, 0.0D);
         rightClaw.set(ControlMode.PercentOutput, 0.0D);
     }

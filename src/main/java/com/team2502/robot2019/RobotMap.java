@@ -42,6 +42,12 @@ public class RobotMap
 
             public static final int BUTTON_CLIMB_UP = 11;
             public static final int BUTTON_CLIMB_DOWN = 12;
+
+            public static final int BUTTON_LEFT_CLIMB_UP = 7;
+            public static final int BUTTON_LEFT_CLIMB_DOWN = 9;
+            public static final int BUTTON_RIGHT_CLIMB_UP = 8;
+            public static final int BUTTON_RIGHT_CLIMB_DOWN = 10;
+
             public static final int BUTTON_CRAWL_FWD = 7;
             public static final int BUTTON_CRAWL_BWD = 9;
 

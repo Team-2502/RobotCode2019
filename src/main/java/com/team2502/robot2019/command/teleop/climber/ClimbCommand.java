@@ -5,18 +5,41 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ClimbCommand extends Command
 {
-    private boolean forwards;
+    public enum Side
+    {
+        RIGHT,
+        LEFT,
+        BOTH
+    }
 
-    public ClimbCommand(boolean forwards)
+    private boolean forwards;
+    private Side side;
+
+    public ClimbCommand(boolean forwards, Side side)
     {
         requires(Robot.CLIMBER);
         this.forwards = forwards;
+        this.side = side;
     }
 
     @Override
     protected void execute()
     {
-        Robot.CLIMBER.climb(forwards);
+        switch(side)
+        {
+            case LEFT:
+                Robot.CLIMBER.onlyLeftClimb(forwards);
+                break;
+            case RIGHT:
+                Robot.CLIMBER.onlyRightClimb(forwards);
+                break;
+            case BOTH:
+                Robot.CLIMBER.climb(forwards);
+                break;
+            default:
+                Robot.CLIMBER.climb(forwards);
+                break;
+        }
     }
 
     @Override

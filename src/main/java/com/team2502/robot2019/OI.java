@@ -61,6 +61,12 @@ public final class OI
 
     public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMB_UP);
     public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMB_DOWN);
+
+    public static final Button BUTTON_CLIMB_RIGHT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_UP);
+    public static final Button BUTTON_CLIMB_RIGHT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_DOWN);
+    public static final Button BUTTON_CLIMB_LEFT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_UP);
+    public static final Button BUTTON_CLIMB_LEFT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_DOWN);
+
     public static final Button BUTTON_CRAWL_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_FWD);
     public static final Button BUTTON_CRAWL_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CRAWL_BWD);
 
@@ -88,8 +94,14 @@ public final class OI
 
 
         // CLIMBER
-        BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true));
-        BUTTON_CLIMB_DOWN.whileHeld(new ClimbCommand(false));
+        BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true, ClimbCommand.Side.BOTH));
+        BUTTON_CLIMB_DOWN.whileHeld(new ClimbCommand(false, ClimbCommand.Side.BOTH));
+
+        BUTTON_CLIMB_RIGHT_UP.whileHeld(new ClimbCommand(true, ClimbCommand.Side.RIGHT));
+        BUTTON_CLIMB_RIGHT_DOWN.whileHeld(new ClimbCommand(false, ClimbCommand.Side.RIGHT));
+
+        BUTTON_CLIMB_LEFT_UP.whileHeld(new ClimbCommand(true, ClimbCommand.Side.LEFT));
+        BUTTON_CLIMB_LEFT_DOWN.whileHeld(new ClimbCommand(false, ClimbCommand.Side.LEFT));
 
         BUTTON_CRAWL_FWD.whileHeld(new CrawlCommand(true));
         BUTTON_CRAWL_BWD.whileHeld(new CrawlCommand(false));
