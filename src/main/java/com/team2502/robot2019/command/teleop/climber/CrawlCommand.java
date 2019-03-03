@@ -5,23 +5,21 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class CrawlCommand extends Command
 {
-    private boolean forwards;
-
-    public CrawlCommand(boolean forwards)
+    public CrawlCommand()
     {
-        this.forwards = forwards;
+        requires(Robot.CRAWLER);
     }
 
     @Override
     protected void execute()
     {
-        Robot.CLIMBER.crawl(forwards);
+        Robot.CRAWLER.crawl();
     }
 
     @Override
     protected void end()
     {
-        Robot.CLIMBER.stopCrawl();
+        Robot.CRAWLER.stopCrawl();
     }
 
     @Override
