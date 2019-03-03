@@ -89,8 +89,20 @@ public class Constants
 
         public static class CargoActive
         {
-            public static final double SPEED_FWDS = -1.0D;
-            public static final double SPEED_BKWDS = 1.0D;
+            public static final double SPEED_FWD = -1.0D;
+            public static final double SPEED_BWD = 1.0D;
+        }
+
+        public static class Crawler
+        {
+            public static final double SPEED_FWD = 1.0D;
+            public static final double SPEED_BWD = -1.0D;
+        }
+
+        public static class Climber
+        {
+            public static final double SPEED_UP = 1.0D;
+            public static final double SPEED_DOWN = -1.0D;
         }
 
         public static class Encoder

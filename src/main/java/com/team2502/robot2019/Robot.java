@@ -24,7 +24,9 @@ import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.command.vision.AlwaysListeningCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
+import com.team2502.robot2019.subsystem.CrawlerSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
+import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
@@ -46,14 +48,17 @@ import java.util.concurrent.TimeUnit;
 public class Robot extends TimedRobot
 {
 
+
     @Deprecated
     public static AHRS NAVX;
 
     public static ActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
     public static DrivetrainSubsystem DRIVE_TRAIN;
-    public static HatchIntakeSolenoid HATCH_INTAKE_SOLENOID;
+    public static HatchIntakeSolenoid HATCH_INTAKE;
+    public static ClimbClawSolenoid CLIMB_CLAWS;
     public static CargoSubsystem CARGO_ACTIVE;
     public static ClimberSubsystem CLIMBER;
+    public static CrawlerSubsystem CRAWLER;
     public static Compressor COMPRESSOR;
     public static UsbCamera CAMERA0;
     public static UsbCamera CAMERA1;
@@ -78,10 +83,12 @@ public class Robot extends TimedRobot
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
-        HATCH_INTAKE_SOLENOID = new HatchIntakeSolenoid();
+        HATCH_INTAKE = new HatchIntakeSolenoid();
+        CLIMB_CLAWS = new ClimbClawSolenoid();
         CARGO_ACTIVE = new CargoSubsystem();
         CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
+        CRAWLER = new CrawlerSubsystem();
 
         AutoSwitcher.putToSmartDashboard();
 
@@ -175,7 +182,7 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
-        HATCH_INTAKE_SOLENOID.setHatchIntake(false);
+        HATCH_INTAKE.setHatchIntake(false);
     }
 
     @Override

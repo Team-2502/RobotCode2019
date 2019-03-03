@@ -48,10 +48,8 @@ public class RobotMap
             public static final int BUTTON_RIGHT_CLIMB_UP = 8;
             public static final int BUTTON_RIGHT_CLIMB_DOWN = 10;
 
-            public static final int BUTTON_CRAWL_FWD = 7;
-            public static final int BUTTON_CRAWL_BWD = 9;
-
             public static final int BUTTON_SWITCH_CAMERA = 2;
+            public static final int BUTTON_CRAWL = 1;
 
             private Button() { }
         }
@@ -88,6 +86,7 @@ public class RobotMap
          */
 
         public static final int HATCH_INTAKE = 4;
+        public static final int FLIP_OUTS = 3;
 
         private Solenoid() { }
     }
