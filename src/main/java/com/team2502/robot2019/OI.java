@@ -8,6 +8,8 @@ import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
 import com.team2502.robot2019.command.vision.GoToTargetCommand;
+import com.team2502.robot2019.command.vision.GoToTargetSimpleCommand;
+import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -78,7 +80,7 @@ public final class OI
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
 
-        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetCommand());
+        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidCommand());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 
         BUTTON_SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
