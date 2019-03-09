@@ -2,6 +2,7 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
@@ -71,6 +72,7 @@ public final class OI
 
     public static final Button BUTTON_SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
 
+    public static final Button BUTTON_APPLE = new JoystickButton(JOYSTICK_DRIVE_LEFT, 8);
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -93,6 +95,7 @@ public final class OI
         BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.BOTTOM, Constants.Physical.CargoActive.SPEED_BKWDS));
 
 
+        BUTTON_APPLE.whileHeld(new VelocityDriveCommand(4, 4, 1));
         // CLIMBER
         BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true));
         BUTTON_CLIMB_DOWN.whileHeld(new ClimbCommand(false));
