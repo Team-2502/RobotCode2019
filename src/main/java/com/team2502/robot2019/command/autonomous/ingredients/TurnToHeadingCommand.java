@@ -20,6 +20,7 @@ public class TurnToHeadingCommand extends Command
     {
         this.targetAngle = targetAngle;
         this.baseSpeed = baseSpeed;
+        requires(Robot.DRIVE_TRAIN);
     }
 
     @Override
