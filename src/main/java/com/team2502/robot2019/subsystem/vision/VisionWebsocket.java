@@ -51,6 +51,7 @@ public class VisionWebsocket
         }
         catch(IOException e)
         {
+            e.printStackTrace();
             return visionData;
         }
 

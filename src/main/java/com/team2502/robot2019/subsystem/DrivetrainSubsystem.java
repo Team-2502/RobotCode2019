@@ -47,7 +47,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
     private double kP = Constants.Physical.DriveTrain.DEFAULT_KP;
     private double kI = Constants.Physical.DriveTrain.DEFAULT_KI;
     private double kD = Constants.Physical.DriveTrain.DEFAULT_KD;
-    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF;
+    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT;
 
     private boolean forward = true;
 
@@ -75,6 +75,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
 
         frontLeft.configOpenloopRamp(0.05);
         frontRight.configOpenloopRamp(0.05);
+
 
         right = new ITypicalMotor()
         {
@@ -185,6 +186,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         DashboardData.addUpdater(this);
 
         applyPID();
+        frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT, Constants.INIT_TIMEOUT);
+        frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT, Constants.INIT_TIMEOUT);
+
+
     }
 
     /**
@@ -335,7 +340,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, IDriv
         frontRight.config_kP(0, kP, Constants.INIT_TIMEOUT);
         frontRight.config_kI(0, kI, Constants.INIT_TIMEOUT);
         frontRight.config_kD(0, kD, Constants.INIT_TIMEOUT);
-        frontRight.config_kF(0, kF, Constants.INIT_TIMEOUT);
+
     }
 
     @Override

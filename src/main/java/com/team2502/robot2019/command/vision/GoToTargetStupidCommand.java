@@ -11,22 +11,48 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.IOException;
 
+/**
+ * Works for the purpose of turning towards the vision target.
+ */
 public class GoToTargetStupidCommand extends Command
 {
+    /**
+     * Name of the SmartDashboard item that lets you change speed
+     */
+    private final String gttsc_speed = "gttsc_speed";
+
+    /**
+     * Instance of vision socket
+     */
     private VisionWebsocket socket;
-    // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
-    private double totalSpeed = 4;
+
+    /**
+     * SPeed the robot should go at
+     */
+    private double totalSpeed = 3;
+
+    /**
+     * Instance of the PID Controller
+     * <br>
+     * Manages how the robot turns based on the offset
+     */
     private PIDController pidController;
+
+    /**
+     * The desired difference between the wheel speeds. The PIDController writes to this AtomicDouble, then we read from it and drive accordingly.
+     */
     private final AtomicDouble desiredWheelDifferential = new AtomicDouble();
-    private double offset = 2.5;
+
+    /**
+     * The maximum possible offset that can occur. This has been measured to be 3 feet.
+     */
     private final double max_offset = 3;
-    private double lastPidGet;
 
     public GoToTargetStupidCommand()
     {
         requires(Robot.DRIVE_TRAIN);
 
-        pidController = new PIDController(0.2, 0, 0, new PIDSource() {
+        pidController = new PIDController(1.5, 0, 0, new PIDSource() {
             PIDSourceType sourceType = PIDSourceType.kDisplacement;
             @Override
             public void setPIDSourceType(PIDSourceType pidSource)
@@ -45,17 +71,15 @@ public class GoToTargetStupidCommand extends Command
             {
 
 //                if(socket.updateVisionData().isMeaningful())
-//                    lastPidGet = Math.min(max_offset, Math.max(-max_offset, socket.getPos().get(0)));
-                return 0;
-
-
-//                System.out.println("input = " + input);
+                double lastPidGet = Math.min(max_offset, Math.max(-max_offset, socket.getPos().get(0)));
+                System.out.println("lastPidGet = " + lastPidGet);
+                return lastPidGet;
             }
         }, desiredWheelDifferential::set);
 
-        pidController.setInputRange(-max_offset, max_offset);
-        pidController.setOutputRange(-totalSpeed, totalSpeed);
+
         SmartDashboard.putData("gototargetstupidcommand", pidController);
+        SmartDashboard.putNumber(gttsc_speed, totalSpeed);
     }
 
     @Override
@@ -69,10 +93,19 @@ public class GoToTargetStupidCommand extends Command
         catch(IOException e)
         {
             DriverStation.reportError("Failed to create socket (whoops 3 potential precursor), socket port = " + Constants.Autonomous.PORT + ", mdns = " + Constants.Autonomous.COPROCESSOR_MDNS_ADDR, e.getStackTrace());
+            DriverStation.reportWarning("Ensure that the pi is connected (ping " + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ") and that \n" +
+                                              "the vision script is running\n" +
+                                              "\t(ssh pi@" + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + " to ssh into pi\n" +
+                                              "\trun ps -e | grep pyth to check for python processes.", false);
             super.cancel();
         }
-
+        totalSpeed = SmartDashboard.getNumber(gttsc_speed, totalSpeed);
         pidController.setSetpoint(0);
+
+        pidController.setInputRange(-max_offset, max_offset);
+        pidController.setOutputRange(-totalSpeed, totalSpeed);
+        pidController.setAbsoluteTolerance(1/12D);
+
         pidController.enable();
     }
 
@@ -84,46 +117,23 @@ public class GoToTargetStupidCommand extends Command
         SmartDashboard.putNumber("socket", visionData.getPos().get(0));
         if(visionData.isMeaningful())
         {
-            double velRight = totalSpeed - desiredWheelDifferential.get()/2;
-            double velLeft = totalSpeed + desiredWheelDifferential.get()/2;
+            SmartDashboard.putBoolean("seesTarget", true);
+            double velRight = totalSpeed + desiredWheelDifferential.get()/2;
+            double velLeft = totalSpeed - desiredWheelDifferential.get()/2;
             SmartDashboard.putNumber("velLeft", velLeft);
             SmartDashboard.putNumber("velRight", velRight);
             Robot.DRIVE_TRAIN.runMotorsVelocity(velLeft, velRight);
-//            if(visionData.getPos().get(0) <= (1/12) && visionData.getPos().get(0) >= (-1/12))
-//            {
-//                // Go Straight
-//                ImmutableVector absLoc = MathUtils.LinearAlgebra.relativeToAbsoluteCoord(visionData.getPos(), Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity(), Robot.DRIVE_TRAIN.getRotEstimator().estimateHeading());
-//                Robot.DRIVE_TRAIN.driveSpeed((5+3D)/2D);
-//                System.out.println("centered");
-//            }
-//            else if(visionData.getPos().get(0) > 0)
-//            {
-//                // Turn Right
-//                Robot.DRIVE_TRAIN.runMotorsVelocity(5, 1);
-//                System.out.println("left");
-//            }
-//            else if (visionData.getPos().get(0) < 0)
-//            {
-//                // Turn Left
-//                Robot.DRIVE_TRAIN.runMotorsVelocity(1, 5);
-//                System.out.println("right");
-//            }
-//            else {
-//                //Imaginary
-//                Robot.DRIVE_TRAIN.runMotorsVelocity(5, 5);
-//                System.out.println("imaginary");
-//            }
-
         }
         else {
-            Robot.DRIVE_TRAIN.driveSpeed(totalSpeed);
+            SmartDashboard.putBoolean("seesTarget", false);
+            Robot.DRIVE_TRAIN.driveSpeed(totalSpeed/2);
             System.out.println("not meaningful");
         }
 
     }
 
     @Override
-    protected boolean isFinished()
+    protected boolean isFinished() //TODO: return true sometimes
     {
         return false;
     }
@@ -134,7 +144,9 @@ public class GoToTargetStupidCommand extends Command
 
         try
         {
+            pidController.disable();
             socket.shutdown();
+            socket = null;
         }
         catch(IOException e)
         {
