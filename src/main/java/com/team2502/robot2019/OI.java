@@ -3,6 +3,7 @@ package com.team2502.robot2019;
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
@@ -59,8 +60,8 @@ public final class OI
     public static final Button BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
     public static final Button BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
 
-    public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMB_UP);
-    public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMB_DOWN);
+    public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_UP);
+    public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_DOWN);
 
     public static final Button BUTTON_CLIMB_RIGHT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_UP);
     public static final Button BUTTON_CLIMB_RIGHT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_DOWN);
@@ -89,7 +90,7 @@ public final class OI
         BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
 
         BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.BOTTOM, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.BOTTOM, Constants.Physical.CargoActive.SPEED_BWD));
+        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whenPressed(new ClimbClawCommand());
 
 
         // CLIMBER
