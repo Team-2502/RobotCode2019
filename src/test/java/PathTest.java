@@ -69,7 +69,7 @@ public class PathTest
     }
 
     @Test
-    public void testRightHab2Front()
+    public void testRightHab2Front() throws TimeoutException, ExecutionException
     {
         List<Path> paths = Arrays.asList(
                 new SplinePPWaypoint.Builder()
@@ -109,11 +109,11 @@ public class PathTest
 
         Recording recording = new Recording();
         ActionGroup group = new ActionGroup();
-        ActionGroup ppCommands = new ActionGroup();
+        ActionGroup PurePursuitActions = new ActionGroup();
 
 
         paths.stream().map(this::getActionAndRecorder).forEach((PPPair p) -> {
-            ppCommands.addSequential(p.getCommand());
+            PurePursuitActions.addSequential(p.getCommand());
             recording.addSubRecording(p.getPurePursuitRecorder());
         });
 
@@ -126,7 +126,7 @@ public class PathTest
 
         group.with(new BackgroundAction(1, TimeUnit.MILLISECONDS, driveTrain::update))
              .with(new BackgroundAction(7, TimeUnit.MILLISECONDS, recording::update))
-             .addSequential(ppCommands);
+             .addSequential(PurePursuitActions);
 
 
         try

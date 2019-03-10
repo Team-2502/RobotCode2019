@@ -58,14 +58,14 @@ public class PointDriveAction extends PeriodicAction implements Runnable
     @Override
     protected void init()
     {
-        try
-        {
-            dt.take();
-        }
-        catch(InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            dt.take();
+//        }
+//        catch(InterruptedException e)
+//        {
+//            e.printStackTrace();
+//        }
         stopwatch.init();
     }
 
@@ -73,7 +73,8 @@ public class PointDriveAction extends PeriodicAction implements Runnable
     @Override
     protected boolean isFinished()
     {
-        return stopwatch.read(timeUnit) >= time || dt.getLocEstimator().estimateLocation().dist(loc) < 0.5;
+        return false;
+//        return stopwatch.read(timeUnit) >= time || dt.getLocEstimator().estimateLocation().dist(loc) < 0.5;
     }
 
     @Override

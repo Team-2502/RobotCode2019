@@ -1,6 +1,7 @@
 package com.team2502.robot2019.subsystem.vision;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.team2502.robot2019.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class VisionWebsocket
     private static Semaphore socketLock = new Semaphore(1);
 
     public VisionWebsocket() throws IOException
-    {this("team2502-tinker.local", 5800);}
+    {this(Constants.Autonomous.COPROCESSOR_MDNS_ADDR, Constants.Autonomous.PORT);}
 
     public VisionWebsocket(String host, int port) throws IOException
     {
@@ -50,6 +51,7 @@ public class VisionWebsocket
         }
         catch(IOException e)
         {
+            e.printStackTrace();
             return visionData;
         }
 

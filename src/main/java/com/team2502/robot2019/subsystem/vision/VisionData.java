@@ -26,7 +26,8 @@ public class VisionData
 
     public boolean isMeaningful()
     {
-        return pos.equals(new ImmutableVector(-9001, -9001)) && angle == -9001;
+        return ! (pos.get(0) == -9001 || angle == -9001);
+//        return pos.equals(new ImmutableVector(-9001, -9001)) && angle == -9001;
     }
 
     @Override

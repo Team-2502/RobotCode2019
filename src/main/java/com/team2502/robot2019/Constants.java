@@ -37,6 +37,9 @@ public class Constants
      */
     public static class Autonomous
     {
+        public static final String COPROCESSOR_MDNS_ADDR = "raspberrypi.local";
+        public static final int PORT = 5800;
+
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
             return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
         }
@@ -60,8 +63,20 @@ public class Constants
 
             public static final double WHEEL_REV_TO_ENC_REV = 1.0F;
 
-            public static final double ENC_UNITS_TO_FEET = 1 / Encoder.ENC_RES * WHEEL_CIRCUMFERENCE_FT / WHEEL_REV_TO_ENC_REV;
-            public static final double ENC_UNITS_TO_FPS = ENC_UNITS_TO_FEET * 1000;
+            public static final double ENC_UNITS_PER_ROT = 4096;
+
+            /**
+             * Multiply by enc units to get feet
+             */
+            public static final double ENC_UNITS_TO_FEET = (WHEEL_DIAMETER_FT  * Math.PI)/ (ENC_UNITS_PER_ROT);
+
+            /**
+             * Multiply by enc units/100 ms to get feet/sec
+             */
+            public static final double ENC_UNITS_TO_FPS = 10 * ENC_UNITS_TO_FEET;
+
+
+
             //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 18.0F;
 
@@ -77,6 +92,11 @@ public class Constants
             public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
+            public static final double DEFAULT_KF_LEFT = .6;
+            public static final double DEFAULT_KF_RIGHT = 0.495;
+            public static final int DEFAULT_KD = 0;
+            public static final int DEFAULT_KI = 0;
+            public static final double DEFAULT_KP = 0;
 
             private DriveTrain() { }
 
