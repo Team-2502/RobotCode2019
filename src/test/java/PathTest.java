@@ -169,16 +169,9 @@ public class PathTest
              .with(new BackgroundAction(7, TimeUnit.MILLISECONDS, recording::update))
              .addSequential(PurePursuitActions);
 
+        simulation.add(group)
+                  .runSimulation(45, TimeUnit.SECONDS);
 
-        try
-        {
-            simulation.add(group)
-                      .runSimulation(45, TimeUnit.SECONDS);
-        }
-        catch(TimeoutException | ExecutionException e)
-        {
-            e.printStackTrace();
-        }
         try
         {
             recording.save(name + ".json");
