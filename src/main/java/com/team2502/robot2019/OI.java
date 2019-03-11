@@ -8,8 +8,7 @@ import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
-import com.team2502.robot2019.command.vision.GoToTargetCommand;
-import com.team2502.robot2019.command.vision.GoToTargetSimpleCommand;
+
 import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -43,6 +42,12 @@ public final class OI
      */
     public static final Joystick JOYSTICK_FUNCTION = new Joystick(RobotMap.Joystick.JOYSTICK_FUNCTION);
 
+    /**
+     * Represents the side button panel
+     *
+     * @see OI
+     */
+    public static final Joystick JOYSTICK_SIDE_PANEL = new Joystick(RobotMap.Joystick.JOYSTICK_SIDE_PANEL);
 
     // Start defining buttons to be using
     // Names are self explanatory
@@ -71,6 +76,8 @@ public final class OI
     public static final Button BUTTON_CLIMB_LEFT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_UP);
     public static final Button BUTTON_CLIMB_LEFT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_DOWN);
 
+    public static final Button BUTTON_TOGGLE_FLIP_OUT = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_FLIP_OUT);
+
     public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
     public static final Button BUTTON_SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
@@ -96,7 +103,7 @@ public final class OI
         BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
 
         BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.BOTTOM, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whenPressed(new ClimbClawCommand());
+        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whenPressed(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
 
 
         // CLIMBER
@@ -110,6 +117,7 @@ public final class OI
         BUTTON_CLIMB_LEFT_DOWN.whileHeld(new ClimbCommand(false, ClimbCommand.Side.LEFT));
 
         BUTTON_CRAWL.whileHeld(new CrawlCommand());
+        BUTTON_TOGGLE_FLIP_OUT.whenPressed(new ClimbClawCommand());
 
         // BUTTON_SWITCH_CAMERA
         BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {

@@ -20,6 +20,7 @@ public class RobotMap
         public static final int JOYSTICK_DRIVE_LEFT = 1;
         public static final int JOYSTICK_DRIVE_RIGHT = 0;
         public static final int JOYSTICK_FUNCTION = 2;
+        public static final int JOYSTICK_SIDE_PANEL = 4;
 
         private Joystick()
         {
@@ -50,6 +51,7 @@ public class RobotMap
 
             public static final int BUTTON_SWITCH_CAMERA = 2;
             public static final int BUTTON_CRAWL = 1;
+            public static final int BUTTON_TOGGLE_FLIP_OUT = 7;
 
             private Button() { }
         }
