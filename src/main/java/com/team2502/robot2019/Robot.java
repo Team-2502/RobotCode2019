@@ -205,6 +205,7 @@ public class Robot extends TimedRobot
     public void disabledInit()
     {
         HATCH_INTAKE.setHatchIntake(false);
+        CLIMB_CLAWS.set(false);
     }
 
     @Override
