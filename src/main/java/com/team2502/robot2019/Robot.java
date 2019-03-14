@@ -27,6 +27,7 @@ import com.team2502.robot2019.subsystem.CrawlerSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
+import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -64,6 +65,7 @@ public class Robot extends TimedRobot
     public static UsbCamera CAMERA1;
     public static UsbCamera CAMERA2;
     public static VideoSink SERVER;
+    public static ScoringHUD SCORING_HUD;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -90,6 +92,7 @@ public class Robot extends TimedRobot
         COMPRESSOR = new Compressor();
         CRAWLER = new CrawlerSubsystem();
 
+        SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
 
         NAVX.reset();

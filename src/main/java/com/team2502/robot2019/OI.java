@@ -2,6 +2,7 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
+import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
@@ -83,6 +84,13 @@ public final class OI
 
     public static final Button BUTTON_CRAWL = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
 
+    public static final Button BUTTON_HUD_L0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L0);
+    public static final Button BUTTON_HUD_L1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L1);
+    public static final Button BUTTON_HUD_L2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L2);
+    public static final Button BUTTON_HUD_R0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R0);
+    public static final Button BUTTON_HUD_R1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R1);
+    public static final Button BUTTON_HUD_R2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
+
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -117,6 +125,15 @@ public final class OI
 
         BUTTON_DRIVER_FLIP_OUT_LEFT.whenPressed(new ClimbClawCommand());
         BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());
+
+        // BUTTONS FOR SCORING HUD
+        BUTTON_HUD_L0.whenPressed(new IncrementHUD(0, true));
+        BUTTON_HUD_L1.whenPressed(new IncrementHUD(1, true));
+        BUTTON_HUD_L2.whenPressed(new IncrementHUD(2, true));
+        BUTTON_HUD_R0.whenPressed(new IncrementHUD(0, false));
+        BUTTON_HUD_R1.whenPressed(new IncrementHUD(1, false));
+        BUTTON_HUD_R2.whenPressed(new IncrementHUD(2, false));
+
 
         // BUTTON_SWITCH_CAMERA
         BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {

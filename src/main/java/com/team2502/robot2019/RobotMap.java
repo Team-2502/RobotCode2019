@@ -54,6 +54,13 @@ public class RobotMap
             public static final int BUTTON_TOGGLE_FLIP_OUT = 7;
             public static final int BUTTON_DRIVER_ANTI_TIP = 2;
 
+            public static final int BUTTON_HUD_L0 = 1;
+            public static final int BUTTON_HUD_L1 = 2;
+            public static final int BUTTON_HUD_L2 = 3;
+            public static final int BUTTON_HUD_R0 = 4;
+            public static final int BUTTON_HUD_R1 = 5;
+            public static final int BUTTON_HUD_R2 = 6;
+
             private Button() { }
         }
     }
