@@ -29,7 +29,7 @@ public class ScoringHUD implements DashboardData.DashboardUpdater
                 leftCargo[zone] = true;
             else
             {
-                leftHatch[zone] = false;
+                leftCargo[zone] = false;
                 leftHatch[zone] = false;
             }
         }
@@ -42,7 +42,7 @@ public class ScoringHUD implements DashboardData.DashboardUpdater
                 rightCargo[zone] = true;
             else
             {
-                rightHatch[zone] = false;
+                rightCargo[zone] = false;
                 rightHatch[zone] = false;
             }
         }
@@ -52,7 +52,7 @@ public class ScoringHUD implements DashboardData.DashboardUpdater
     @Override
     public void updateDashboard()
     {
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 3; i++) {
             SmartDashboard.putBoolean(String.format("leftCargo %d", i), leftCargo[i]);
             SmartDashboard.putBoolean(String.format("rightCargo %d", i), rightCargo[i]);
             SmartDashboard.putBoolean(String.format("leftHatch %d", i), leftHatch[i]);
