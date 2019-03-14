@@ -52,7 +52,7 @@ public class ScoringHUD implements DashboardData.DashboardUpdater
     @Override
     public void updateDashboard()
     {
-        for(int i = 0; i < 2; i++) {
+        for(int i = 0; i < 3; i++) {
             SmartDashboard.putBoolean(String.format("leftCargo %d", i), leftCargo[i]);
             SmartDashboard.putBoolean(String.format("rightCargo %d", i), rightCargo[i]);
             SmartDashboard.putBoolean(String.format("leftHatch %d", i), leftHatch[i]);
