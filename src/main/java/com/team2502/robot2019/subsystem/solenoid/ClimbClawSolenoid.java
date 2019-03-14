@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class ClimbClawSolenoid extends NonDefaultSubsystem
 {
     private final Solenoid flipOuts;
+
     private boolean toggleState = false;
 
     public ClimbClawSolenoid()
@@ -26,4 +27,6 @@ public class ClimbClawSolenoid extends NonDefaultSubsystem
     {
         flipOuts.set(toggleState = open);
     }
+
+    public boolean isOut() { return toggleState; }
 }

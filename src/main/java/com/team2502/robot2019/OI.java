@@ -7,7 +7,6 @@ import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
-import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
 
 import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
@@ -77,10 +76,10 @@ public final class OI
     public static final Button BUTTON_CLIMB_LEFT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_DOWN);
 
     public static final Button BUTTON_TOGGLE_FLIP_OUT = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_FLIP_OUT);
+    public static final Button BUTTON_DRIVER_FLIP_OUT_LEFT = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
+    public static final Button BUTTON_DRIVER_FLIP_OUT_RIGHT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
 
     public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
-
-    public static final Button BUTTON_SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
 
     public static final Button BUTTON_CRAWL = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
 
@@ -95,8 +94,6 @@ public final class OI
 
         BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidCommand());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
-
-        BUTTON_SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
 
         // CARGO MANIPULATOR
         BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_FWD));
@@ -117,6 +114,9 @@ public final class OI
 
         BUTTON_CRAWL.whileHeld(new CrawlCommand());
         BUTTON_TOGGLE_FLIP_OUT.whenPressed(new ClimbClawCommand());
+
+        BUTTON_DRIVER_FLIP_OUT_LEFT.whenPressed(new ClimbClawCommand());
+        BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());
 
         // BUTTON_SWITCH_CAMERA
         BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {
