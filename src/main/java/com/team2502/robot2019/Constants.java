@@ -37,7 +37,7 @@ public class Constants
      */
     public static class Autonomous
     {
-        public static final String COPROCESSOR_MDNS_ADDR = "raspberrypi.local";
+        public static final String COPROCESSOR_MDNS_ADDR = "10.25.2.3";
         public static final int PORT = 5800;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
@@ -92,8 +92,12 @@ public class Constants
             public static final double ROBOT_LENGTH_FT = 2D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
-            public static final double DEFAULT_KF_LEFT = .6;
-            public static final double DEFAULT_KF_RIGHT = 0.495;
+            public static final double DEFAULT_KF_LEFT_PRACTICE = .6;
+            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.495;
+
+            public static final double DEFAULT_KF_LEFT_COMPBOT = 0.465;
+            public static final double DEFAULT_KF_RIGHT_COMPBOT = 0.455;
+
             public static final int DEFAULT_KD = 0;
             public static final int DEFAULT_KI = 0;
             public static final double DEFAULT_KP = 0;

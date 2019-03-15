@@ -2,6 +2,7 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
 import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
@@ -91,6 +92,7 @@ public final class OI
     public static final Button BUTTON_HUD_R1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R1);
     public static final Button BUTTON_HUD_R2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
 
+    public static final Button BUTTON_DRIVE_FORWARDS = new JoystickButton(JOYSTICK_DRIVE_LEFT, 8);
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -151,6 +153,7 @@ public final class OI
             }
             camera1Selected++;
         }));
+        BUTTON_DRIVE_FORWARDS.whileHeld(new VelocityDriveCommand(2, 2, 5));
     }
 
     /**

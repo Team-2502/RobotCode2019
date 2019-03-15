@@ -186,8 +186,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         DashboardData.addUpdater(this);
 
         applyPID();
-        frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT, Constants.INIT_TIMEOUT);
-        frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT, Constants.INIT_TIMEOUT);
+        frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT_COMPBOT, Constants.INIT_TIMEOUT);
+        frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT_COMPBOT, Constants.INIT_TIMEOUT);
 
 
     }
