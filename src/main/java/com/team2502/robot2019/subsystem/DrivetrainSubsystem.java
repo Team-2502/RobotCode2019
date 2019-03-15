@@ -70,11 +70,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontRight.setSelectedSensorPosition(0);
         frontLeft.setSensorPhase(true);
 
-        frontLeft.configClosedloopRamp(0.05);
-        frontRight.configClosedloopRamp(0.05);
+        frontLeft.configClosedloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+        frontRight.configClosedloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
 
-        frontLeft.configOpenloopRamp(0.05);
-        frontRight.configOpenloopRamp(0.05);
+        frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+        frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
 
 
         right = new TypicalMotor()
