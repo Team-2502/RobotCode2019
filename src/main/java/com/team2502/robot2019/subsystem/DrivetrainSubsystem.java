@@ -48,7 +48,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private double kP = Constants.Physical.DriveTrain.DEFAULT_KP;
     private double kI = Constants.Physical.DriveTrain.DEFAULT_KI;
     private double kD = Constants.Physical.DriveTrain.DEFAULT_KD;
-    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT;
+    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT_COMPBOT;
 
     private boolean forward = true;
 
