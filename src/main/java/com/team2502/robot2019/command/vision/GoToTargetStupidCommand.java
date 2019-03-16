@@ -47,6 +47,7 @@ public class GoToTargetStupidCommand extends Command
      * The maximum possible offset that can occur. This has been measured to be 3 feet.
      */
     private final double max_offset = 3;
+    private boolean stop = false;
 
     public GoToTargetStupidCommand()
     {
@@ -112,22 +113,41 @@ public class GoToTargetStupidCommand extends Command
     @Override
     protected void execute()
     {
-        VisionData visionData = socket.updateVisionData();
-        SmartDashboard.putNumber("desiredratio", desiredWheelDifferential.get());
-        SmartDashboard.putNumber("socket", visionData.getPos().get(0));
-        if(visionData.isMeaningful())
+        VisionData visionData = null;
+        boolean socketWasNotNull = false;
+        System.out.println("beginning execute");
+        try
         {
-            SmartDashboard.putBoolean("seesTarget", true);
-            double velRight = totalSpeed + desiredWheelDifferential.get()/2;
-            double velLeft = totalSpeed - desiredWheelDifferential.get()/2;
-            SmartDashboard.putNumber("velLeft", velLeft);
-            SmartDashboard.putNumber("velRight", velRight);
-            Robot.DRIVE_TRAIN.runMotorsVelocity(velLeft, velRight);
+            visionData = socket.updateVisionData();
+            socketWasNotNull = true;
+        } catch (NullPointerException e) {
+            DriverStation.reportError("Whoops 4: socket was null", e.getStackTrace());
+            System.out.println("caught error");
+            super.cancel();
         }
-        else {
-            SmartDashboard.putBoolean("seesTarget", false);
-            Robot.DRIVE_TRAIN.driveSpeed(totalSpeed/2);
-            System.out.println("not meaningful");
+        System.out.println("socketWasNotNull = " + socketWasNotNull);
+        if(socketWasNotNull)
+        {
+            System.out.println("inside if block");
+            SmartDashboard.putNumber("desiredratio", desiredWheelDifferential.get());
+            SmartDashboard.putNumber("socket", visionData.getPos().get(0));
+            if(visionData.isMeaningful())
+            {
+                SmartDashboard.putBoolean("seesTarget", true);
+                double velRight = totalSpeed + desiredWheelDifferential.get() / 2;
+                double velLeft = totalSpeed - desiredWheelDifferential.get() / 2;
+                SmartDashboard.putNumber("velLeft", velLeft);
+                SmartDashboard.putNumber("velRight", velRight);
+                Robot.DRIVE_TRAIN.runMotorsVelocity(velLeft, velRight);
+            }
+            else
+            {
+                SmartDashboard.putBoolean("seesTarget", false);
+                Robot.DRIVE_TRAIN.driveSpeed(totalSpeed / 2);
+                System.out.println("not meaningful");
+            }
+        } else {
+
         }
 
     }
@@ -135,7 +155,7 @@ public class GoToTargetStupidCommand extends Command
     @Override
     protected boolean isFinished() //TODO: return true sometimes
     {
-        return false;
+        return stop;
     }
 
     @Override

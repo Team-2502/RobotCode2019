@@ -2,14 +2,14 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
+import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
-import com.team2502.robot2019.command.teleop.SwitchDriveCommand;
-import com.team2502.robot2019.command.vision.GoToTargetCommand;
-import com.team2502.robot2019.command.vision.GoToTargetSimpleCommand;
+
 import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -43,6 +43,12 @@ public final class OI
      */
     public static final Joystick JOYSTICK_FUNCTION = new Joystick(RobotMap.Joystick.JOYSTICK_FUNCTION);
 
+    /**
+     * Represents the side button panel
+     *
+     * @see OI
+     */
+    public static final Joystick JOYSTICK_SIDE_PANEL = new Joystick(RobotMap.Joystick.JOYSTICK_SIDE_PANEL);
 
     // Start defining buttons to be using
     // Names are self explanatory
@@ -71,12 +77,22 @@ public final class OI
     public static final Button BUTTON_CLIMB_LEFT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_UP);
     public static final Button BUTTON_CLIMB_LEFT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_DOWN);
 
-    public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
+    public static final Button BUTTON_TOGGLE_FLIP_OUT = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_FLIP_OUT);
+    public static final Button BUTTON_DRIVER_FLIP_OUT_LEFT = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
+    public static final Button BUTTON_DRIVER_FLIP_OUT_RIGHT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
 
-    public static final Button BUTTON_SWITCH_DIRECTION = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_SWITCH_DIRECTION);
+    public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
     public static final Button BUTTON_CRAWL = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
 
+    public static final Button BUTTON_HUD_L0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L0);
+    public static final Button BUTTON_HUD_L1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L1);
+    public static final Button BUTTON_HUD_L2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L2);
+    public static final Button BUTTON_HUD_R0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R0);
+    public static final Button BUTTON_HUD_R1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R1);
+    public static final Button BUTTON_HUD_R2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
+
+    public static final Button BUTTON_DRIVE_FORWARDS = new JoystickButton(JOYSTICK_DRIVE_LEFT, 8);
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -89,15 +105,12 @@ public final class OI
         BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidCommand());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 
-        BUTTON_SWITCH_DIRECTION.whenPressed(new SwitchDriveCommand());
-
         // CARGO MANIPULATOR
         BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_FWD));
         BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
 
         BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.BOTTOM, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whenPressed(new ClimbClawCommand());
-
+        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
 
         // CLIMBER
         BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true, ClimbCommand.Side.BOTH));
@@ -110,6 +123,19 @@ public final class OI
         BUTTON_CLIMB_LEFT_DOWN.whileHeld(new ClimbCommand(false, ClimbCommand.Side.LEFT));
 
         BUTTON_CRAWL.whileHeld(new CrawlCommand());
+        BUTTON_TOGGLE_FLIP_OUT.whenPressed(new ClimbClawCommand());
+
+        BUTTON_DRIVER_FLIP_OUT_LEFT.whenPressed(new ClimbClawCommand());
+        BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());
+
+        // BUTTONS FOR SCORING HUD
+        BUTTON_HUD_L0.whenPressed(new IncrementHUD(0, true));
+        BUTTON_HUD_L1.whenPressed(new IncrementHUD(1, true));
+        BUTTON_HUD_L2.whenPressed(new IncrementHUD(2, true));
+        BUTTON_HUD_R0.whenPressed(new IncrementHUD(0, false));
+        BUTTON_HUD_R1.whenPressed(new IncrementHUD(1, false));
+        BUTTON_HUD_R2.whenPressed(new IncrementHUD(2, false));
+
 
         // BUTTON_SWITCH_CAMERA
         BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {
@@ -127,6 +153,7 @@ public final class OI
             }
             camera1Selected++;
         }));
+        BUTTON_DRIVE_FORWARDS.whileHeld(new VelocityDriveCommand(2, 2, 5));
     }
 
     /**

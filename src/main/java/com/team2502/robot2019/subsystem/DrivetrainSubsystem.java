@@ -48,7 +48,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private double kP = Constants.Physical.DriveTrain.DEFAULT_KP;
     private double kI = Constants.Physical.DriveTrain.DEFAULT_KI;
     private double kD = Constants.Physical.DriveTrain.DEFAULT_KD;
-    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT;
+    private double kF = Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT_COMPBOT;
 
     private boolean forward = true;
 
@@ -70,11 +70,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontRight.setSelectedSensorPosition(0);
         frontLeft.setSensorPhase(true);
 
-        frontLeft.configClosedloopRamp(0.05);
-        frontRight.configClosedloopRamp(0.05);
+        frontLeft.configClosedloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+        frontRight.configClosedloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
 
-        frontLeft.configOpenloopRamp(0.05);
-        frontRight.configOpenloopRamp(0.05);
+        frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+        frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
 
 
         right = new TypicalMotor()
@@ -186,8 +186,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         DashboardData.addUpdater(this);
 
         applyPID();
-        frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT, Constants.INIT_TIMEOUT);
-        frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT, Constants.INIT_TIMEOUT);
+        frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT_COMPBOT, Constants.INIT_TIMEOUT);
+        frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT_COMPBOT, Constants.INIT_TIMEOUT);
 
 
     }
