@@ -47,11 +47,12 @@ This project uses [ezAuton](https://github.com/ezAuton/ezAuton)
  
   ![Imgur](https://i.imgur.com/eQeEA97.jpg)
   
+  - then import `Team2502CS.xml` as a codestyle and use it for the project.
+  
 ##### In Eclipse
  
  - Instructions found [here](http://lmgtfy.com/?q=how+to+install+intellij),
   with more documentation [here](https://www.scientificamerican.com/article/the-science-of-irrational/)
-  
 
 ### Package Functions
 - `com.team2502.robot2019.command`
