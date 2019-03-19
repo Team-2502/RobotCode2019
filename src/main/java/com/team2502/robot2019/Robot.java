@@ -94,8 +94,6 @@ public class Robot extends TimedRobot
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
-
-        NAVX.reset();
     }
 
 
@@ -129,6 +127,7 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
+        NAVX.reset();
 
         CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3), Robot.ACTION_SCHEDULER);
 
