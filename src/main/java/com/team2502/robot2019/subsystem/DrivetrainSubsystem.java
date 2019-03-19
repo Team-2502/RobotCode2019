@@ -16,6 +16,7 @@ import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.wpilib.motors.TypicalMotor;
+import com.github.ezauton.wpilib.motors.MotorControllers;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.DashboardData;
 import com.team2502.robot2019.RobotMap;
@@ -30,8 +31,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private final WPI_TalonSRX backLeft;
     private final WPI_TalonSRX backRight;
 
-    private final WPI_TalonSRX frontLeft;
-    private final WPI_TalonSRX frontRight;
+    public final WPI_TalonSRX frontLeft;
+    public final WPI_TalonSRX frontRight;
 
     private final TypicalMotor left;
     private final TypicalMotor right;

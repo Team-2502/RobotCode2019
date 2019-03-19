@@ -10,7 +10,7 @@ import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 
-import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
+import com.team2502.robot2019.command.vision.GoToTargetStupidAction;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -102,7 +102,7 @@ public final class OI
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
 
-        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidCommand());
+        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidAction());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 
         // CARGO MANIPULATOR

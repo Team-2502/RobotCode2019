@@ -10,6 +10,7 @@ package com.team2502.robot2019;
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
+import com.github.ezauton.core.action.tangible.ExecutorPool;
 import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
@@ -18,25 +19,26 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.simulation.ActionScheduler;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
-import com.kauailabs.navx.frc.AHRS;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
-import com.team2502.robot2019.command.vision.GoToTargetCommand;
+import com.team2502.robot2019.command.vision.GoToTargetAction;
+import com.team2502.robot2019.command.vision.VisionSocketCreator;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import com.team2502.robot2019.subsystem.CrawlerSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
+import com.team2502.robot2019.subsystem.vision.VisionWebsocket;
 import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,7 +50,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Robot extends TimedRobot
 {
-    public static ActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE;
     public static ClimbClawSolenoid CLIMB_CLAWS;
@@ -61,6 +62,8 @@ public class Robot extends TimedRobot
     public static UsbCamera CAMERA2;
     public static VideoSink SERVER;
     public static ScoringHUD SCORING_HUD;
+    public static Future<VisionWebsocket> VISION_WEBSOCKET;
+    public static ActionScheduler ACTION_SCHEDULER;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -76,7 +79,6 @@ public class Robot extends TimedRobot
 
         SERVER.setSource(CAMERA0);
 
-
         DRIVE_TRAIN = new DrivetrainSubsystem();
         HATCH_INTAKE = new HatchIntakeSolenoid();
         CLIMB_CLAWS = new ClimbClawSolenoid();
@@ -86,9 +88,12 @@ public class Robot extends TimedRobot
         CRAWLER = new CrawlerSubsystem();
 
         SCORING_HUD = new ScoringHUD();
+
+        ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
+
+        VISION_WEBSOCKET = ExecutorPool.getInstance().submit(new VisionSocketCreator(Constants.Autonomous.COPROCESSOR_MDNS_ADDR, Constants.Autonomous.PORT, 1, TimeUnit.SECONDS));
         AutoSwitcher.putToSmartDashboard();
     }
-
 
 
     /**
@@ -121,11 +126,10 @@ public class Robot extends TimedRobot
     public void autonomousInit()
     {
 
-        CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3), Robot.ACTION_SCHEDULER);
+//        CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3), Robot.ACTION_SCHEDULER);
 
 //        Scheduler.getInstance().add(PPTest());
-        try
-        {
+
 //            Scheduler.getInstance().add(new VelocityDriveCommand(.5, .5, 3));
 //            Scheduler.getInstance().add(new PointDriveCommand(5,
 //                                                              new ImmutableVector(4,1),
@@ -136,23 +140,20 @@ public class Robot extends TimedRobot
 //            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update));
 //            group.addSequential((IAction) pdAction);
 //            Scheduler.getInstance().add(new CommandCreator(group));
-            Scheduler.getInstance().add(new GoToTargetCommand());
+
+            ACTION_SCHEDULER.scheduleAction(new GoToTargetAction());
 //            BackgroundAction loc = new BackgroundAction(5, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update);
 //            ActionGroup group = new ActionGroup();
 //            group.with(loc);
-//            group.addSequential((IAction) new GoToTargetCommand());
+//            group.addSequential((IAction) new GoToTargetAction());
 //            group.addSequential((IAction) new PointDriveAction(10, new ImmutableVector(0, 10), 15));
 //            Scheduler.getInstance().add(new CommandCreator(group));
-        }
-        catch(Exception e)
-        {
-            DriverStation.reportError("Failed to init autonomous (whoops!!!!)", e.getStackTrace());
-        }
 //        Scheduler.getInstance().add(PPTest());
 
     }
 
-    private CommandCreator PPTest() {
+    private CommandCreator PPTest()
+    {
         PPWaypoint[] waypoints = new PPWaypoint.Builder()
                 .add(0, 0, 1.6, 13, -12)
                 .add(0, 4, 1.6, 13, -12)
