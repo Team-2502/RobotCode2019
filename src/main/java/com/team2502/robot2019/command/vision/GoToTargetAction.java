@@ -39,18 +39,11 @@ public class GoToTargetAction extends PeriodicAction
     }
 
     @Override
-    protected void init()
+    protected void init() throws InterruptedException, ExecutionException, TimeoutException
     {
         stop = false;
         DriverStation.reportWarning("Go to target initialized", false);
-        try
-        {
-            socket = Robot.VISION_WEBSOCKET.get(5, TimeUnit.SECONDS);
-        }
-        catch(InterruptedException | ExecutionException | TimeoutException e)
-        {
-            e.printStackTrace();
-        }
+        socket = Robot.VISION_WEBSOCKET.get(5, TimeUnit.SECONDS);
         speed = 5;       // Math.max(Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mag(), 7);
     }
 
@@ -96,7 +89,6 @@ public class GoToTargetAction extends PeriodicAction
     protected boolean isFinished()
     {
         return stop;
-//        return lastAbsoluteTargetPos != null &&  (stop || Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation().dist(lastAbsoluteTargetPos) <= 1); // within a foot
     }
 
     @Override
