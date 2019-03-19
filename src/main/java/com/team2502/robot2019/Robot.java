@@ -48,11 +48,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class Robot extends TimedRobot
 {
-
-
-    @Deprecated
-    public static AHRS NAVX;
-
     public static ActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE;
@@ -74,8 +69,6 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
-        NAVX = new AHRS(SPI.Port.kMXP);
-
         CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
         CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
         CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
@@ -94,8 +87,6 @@ public class Robot extends TimedRobot
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
-
-        NAVX.reset();
     }
 
 
