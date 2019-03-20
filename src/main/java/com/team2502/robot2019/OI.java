@@ -1,15 +1,15 @@
 package com.team2502.robot2019;
 
+import com.github.ezauton.wpilib.util.WPIJoystickButton;
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
+import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
-import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
-
 import com.team2502.robot2019.command.vision.GoToTargetStupidAction;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -59,38 +59,38 @@ public final class OI
      *
      * @see OI
      */
-    public static final Button BUTTON_HATCH_PUSHER = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HATCH_PUSHER);
+    public static final WPIJoystickButton BUTTON_HATCH_PUSHER = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_HATCH_PUSHER);
 
-    public static final Button BUTTON_ENABLE_AUTO_ALIGN = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ENABLE_AUTO_ALIGN);
+    public static final WPIJoystickButton BUTTON_ENABLE_AUTO_ALIGN = new WPIJoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_ENABLE_AUTO_ALIGN);
 
-    public static final Button BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_TOP);
-    public static final Button BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_TOP);
+    public static final WPIJoystickButton BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_TOP);
+    public static final WPIJoystickButton BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_TOP);
 
-    public static final Button BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
-    public static final Button BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
+    public static final WPIJoystickButton BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
+    public static final WPIJoystickButton BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
 
-    public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_UP);
-    public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_DOWN);
+    public static final WPIJoystickButton BUTTON_CLIMB_UP = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_UP);
+    public static final WPIJoystickButton BUTTON_CLIMB_DOWN = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_DOWN);
 
-    public static final Button BUTTON_CLIMB_RIGHT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_UP);
-    public static final Button BUTTON_CLIMB_RIGHT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_DOWN);
-    public static final Button BUTTON_CLIMB_LEFT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_UP);
-    public static final Button BUTTON_CLIMB_LEFT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_DOWN);
+    public static final WPIJoystickButton BUTTON_CLIMB_RIGHT_UP = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_UP);
+    public static final WPIJoystickButton BUTTON_CLIMB_RIGHT_DOWN = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_DOWN);
+    public static final WPIJoystickButton BUTTON_CLIMB_LEFT_UP = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_UP);
+    public static final WPIJoystickButton BUTTON_CLIMB_LEFT_DOWN = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_LEFT_CLIMB_DOWN);
 
-    public static final Button BUTTON_TOGGLE_FLIP_OUT = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_FLIP_OUT);
-    public static final Button BUTTON_DRIVER_FLIP_OUT_LEFT = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
-    public static final Button BUTTON_DRIVER_FLIP_OUT_RIGHT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
+    public static final WPIJoystickButton BUTTON_TOGGLE_FLIP_OUT = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_FLIP_OUT);
+    public static final WPIJoystickButton BUTTON_DRIVER_FLIP_OUT_LEFT = new WPIJoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
+    public static final WPIJoystickButton BUTTON_DRIVER_FLIP_OUT_RIGHT = new WPIJoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
 
-    public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
+    public static final WPIJoystickButton BUTTON_SWITCH_CAMERA = new WPIJoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
-    public static final Button BUTTON_CRAWL = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
+    public static final WPIJoystickButton BUTTON_CRAWL = new WPIJoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
 
-    public static final Button BUTTON_HUD_L0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L0);
-    public static final Button BUTTON_HUD_L1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L1);
-    public static final Button BUTTON_HUD_L2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L2);
-    public static final Button BUTTON_HUD_R0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R0);
-    public static final Button BUTTON_HUD_R1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R1);
-    public static final Button BUTTON_HUD_R2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
+    public static final WPIJoystickButton BUTTON_HUD_L0 = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L0);
+    public static final WPIJoystickButton BUTTON_HUD_L1 = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L1);
+    public static final WPIJoystickButton BUTTON_HUD_L2 = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L2);
+    public static final WPIJoystickButton BUTTON_HUD_R0 = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R0);
+    public static final WPIJoystickButton BUTTON_HUD_R1 = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R1);
+    public static final WPIJoystickButton BUTTON_HUD_R2 = new WPIJoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
 
     public static final Button BUTTON_DRIVE_FORWARDS = new JoystickButton(JOYSTICK_DRIVE_LEFT, 8);
     public static int camera1Selected = 0;
@@ -102,7 +102,7 @@ public final class OI
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
 
-        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidAction());
+        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(Robot.ACTION_SCHEDULER, GoToTargetStupidAction::new);
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 
         // CARGO MANIPULATOR
