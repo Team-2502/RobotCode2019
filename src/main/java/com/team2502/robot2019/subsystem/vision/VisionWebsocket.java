@@ -23,7 +23,7 @@ public class VisionWebsocket
 //    public VisionWebsocket() throws IOException
 //    {this(Constants.Autonomous.COPROCESSOR_MDNS_ADDR, Constants.Autonomous.PORT);}
 
-         VisionWebsocket(Socket socket) throws IOException
+    public VisionWebsocket(Socket socket) throws IOException
     {
         this.socket = socket;
         out = new PrintWriter(socket.getOutputStream(), true);
