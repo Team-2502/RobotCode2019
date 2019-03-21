@@ -31,6 +31,8 @@ import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -61,6 +63,7 @@ public class Robot extends TimedRobot
     public static UsbCamera CAMERA2;
     public static VideoSink SERVER;
     public static ScoringHUD SCORING_HUD;
+    public static  NetworkTable VISION_TABLE;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -87,6 +90,9 @@ public class Robot extends TimedRobot
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
+
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        VISION_TABLE = inst.getTable("vision_data");
     }
 
 

@@ -4,8 +4,8 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
 public class VisionData
 {
-    private final ImmutableVector pos;
-    private final double angle;
+    public ImmutableVector pos;
+    public double angle;
 
 
     public VisionData(double x, double y, double angle)
