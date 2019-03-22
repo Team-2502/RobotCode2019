@@ -17,10 +17,10 @@ public class GoToTargetNetworkTables extends Command {
 
     private void updateVisionData()
     {
-        double tvecs1 = Robot.VISION_TABLE.getEntry("tvecs1").getDouble(-9001);
-        double tvecs2 = Robot.VISION_TABLE.getEntry("tvecs2").getDouble(-9001);
+        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001);
+        double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
         visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
-        visionInfo.angle = Robot.VISION_TABLE.getEntry("angle").getDouble(-9001);
+        visionInfo.angle = Robot.angleEntry.getDouble(-9001);
     }
 
     /**
@@ -54,6 +54,8 @@ public class GoToTargetNetworkTables extends Command {
     public GoToTargetNetworkTables()
     {
         requires(Robot.DRIVE_TRAIN);
+
+        visionInfo = new VisionData(0,0,0);
 
         updateVisionData();
 

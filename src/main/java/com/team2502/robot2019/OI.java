@@ -102,7 +102,6 @@ public final class OI
     static
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
-
         BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetNetworkTables());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 

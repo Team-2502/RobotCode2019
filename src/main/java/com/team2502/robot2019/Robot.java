@@ -32,6 +32,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -64,6 +65,9 @@ public class Robot extends TimedRobot
     public static VideoSink SERVER;
     public static ScoringHUD SCORING_HUD;
     public static  NetworkTable VISION_TABLE;
+    public static NetworkTableEntry tvecs1Entry;
+    public static NetworkTableEntry tvecs2Entry;
+    public static NetworkTableEntry angleEntry;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -92,7 +96,15 @@ public class Robot extends TimedRobot
         AutoSwitcher.putToSmartDashboard();
 
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        VISION_TABLE = inst.getTable("vision_data");
+        VISION_TABLE = inst.getTable("SmartDashboard");
+        tvecs1Entry = VISION_TABLE.getEntry("tvecs1");
+        tvecs1Entry.setDouble(-9001);
+        tvecs2Entry = VISION_TABLE.getEntry("tvecs2");
+        tvecs2Entry.setDouble(-9001);
+        angleEntry = VISION_TABLE.getEntry("angle");
+        angleEntry.setDouble(-9001);
+
+
     }
 
 
