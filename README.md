@@ -71,3 +71,8 @@ This project uses [ezAuton](https://github.com/ezAuton/ezAuton)
   
 - `com.team2502.robot2019.subsystem.vision`
   > Contains the code for interfacing with the Raspberry Pi
+
+## Special Thanks To
+![Image YourKit](https://jitsi.org/wp-content/uploads/2017/01/logo-yourkit.png)
+
+[YourKit](http://www.yourkit.com/), the makers of an incredible Java and .NET profiler, help us make our robot code run _fast_. We have been accepted for an Open Source license for Team 2502. 
