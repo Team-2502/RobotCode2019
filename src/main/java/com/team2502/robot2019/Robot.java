@@ -103,6 +103,9 @@ public class Robot extends TimedRobot
         tvecs2Entry.setDouble(-9001);
         angleEntry = VISION_TABLE.getEntry("angle");
         angleEntry.setDouble(-9001);
+        angleEntry = VISION_TABLE.getEntry("connected");
+        angleEntry.setBoolean(false);
+
 
 
     }
