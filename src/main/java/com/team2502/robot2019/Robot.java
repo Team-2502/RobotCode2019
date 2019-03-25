@@ -120,35 +120,7 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
-
-        CommandCreator command = new CommandCreator(new VoltageDriveAction(0.2, 0.2, 3), Robot.ACTION_SCHEDULER);
-
-//        Scheduler.getInstance().add(PPTest());
-        try
-        {
-//            Scheduler.getInstance().add(new VelocityDriveCommand(.5, .5, 3));
-//            Scheduler.getInstance().add(new PointDriveCommand(5,
-//                                                              new ImmutableVector(4,1),
-//                                                              40,
-//                                                              true));
-//            ActionGroup group = new ActionGroup();
-//            PointDriveAction pdAction = new PointDriveAction(10, new ImmutableVector(0, 10), 10);
-//            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update));
-//            group.addSequential((IAction) pdAction);
-//            Scheduler.getInstance().add(new CommandCreator(group));
-            Scheduler.getInstance().add(new GoToTargetCommand());
-//            BackgroundAction loc = new BackgroundAction(5, TimeUnit.MILLISECONDS, DRIVE_TRAIN::update);
-//            ActionGroup group = new ActionGroup();
-//            group.with(loc);
-//            group.addSequential((IAction) new GoToTargetCommand());
-//            group.addSequential((IAction) new PointDriveAction(10, new ImmutableVector(0, 10), 15));
-//            Scheduler.getInstance().add(new CommandCreator(group));
-        }
-        catch(Exception e)
-        {
-            DriverStation.reportError("Failed to init autonomous (whoops!!!!)", e.getStackTrace());
-        }
-//        Scheduler.getInstance().add(PPTest());
+        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
 
     }
 
