@@ -1,5 +1,6 @@
 package com.team2502.robot2019.command.autonomous.ingredients;
 
+import com.github.ezauton.core.utils.MathUtils;
 import com.team2502.robot2019.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,7 +53,7 @@ public class DriveStraightWithGyroCommand extends Command
         // Angluar velocity is the change in error and also the change in absolute angle because taking the derivative eliminates constants
         // and the initial angle is a constant
         // Learn calculus for more information
-        double currentAngularRate = Robot.DRIVE_TRAIN.getAngularVelocity();
+        double currentAngularRate = MathUtils.deg2Rad(Robot.DRIVE_TRAIN.getAngularVelocity());
 
         double desiredWheelDifferential = (targetAngle - currentAngle) * kPgain - (currentAngularRate) * kDgain;
         SmartDashboard.putNumber("drivestraight_desiredWheelDifferential", desiredWheelDifferential);
