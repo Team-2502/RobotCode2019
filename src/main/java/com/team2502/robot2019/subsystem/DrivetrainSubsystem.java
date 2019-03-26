@@ -265,6 +265,12 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         return frontRight;
     }
 
+    public double getAngularVelocity() {
+        double[] xyz_degrees_per_sec = new double[3];
+        pigeonIMU.getRawGyro(xyz_degrees_per_sec);
+        return xyz_degrees_per_sec[2];
+    }
+
     @Override
     public double getkP()
     {

@@ -2,6 +2,7 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
 import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
@@ -11,7 +12,6 @@ import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 
 import com.team2502.robot2019.command.vision.GoToTargetNetworkTables;
-import com.team2502.robot2019.command.vision.GoToTargetStupidOld;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -153,7 +153,7 @@ public final class OI
             }
             camera1Selected++;
         }));
-        BUTTON_DRIVE_FORWARDS.whileHeld(new VelocityDriveCommand(2, 2, 5));
+        BUTTON_DRIVE_FORWARDS.whileHeld(new DriveStraightWithGyroCommand(2,5));
     }
 
     /**

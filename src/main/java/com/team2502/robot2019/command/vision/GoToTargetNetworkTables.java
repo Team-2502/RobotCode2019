@@ -17,7 +17,7 @@ public class GoToTargetNetworkTables extends Command {
     /**
      * Name of the SmartDashboard item that lets you change speed
      */
-    private final String gttsc_speed = "gttsc_speed";
+    public static final String gttsc_speed = "gttsc_speed";
 
     /**
      * SPeed the robot should go at
