@@ -11,7 +11,7 @@ import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 
 import com.team2502.robot2019.command.vision.GoToTargetNetworkTables;
-import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
+import com.team2502.robot2019.command.vision.GoToTargetStupidOld;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;

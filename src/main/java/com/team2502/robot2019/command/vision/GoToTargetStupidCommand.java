@@ -14,6 +14,7 @@ import java.io.IOException;
 /**
  * Works for the purpose of turning towards the vision target.
  */
+@Deprecated
 public class GoToTargetStupidCommand extends Command
 {
     /**
@@ -49,6 +50,7 @@ public class GoToTargetStupidCommand extends Command
     private final double max_offset = 3;
     private boolean stop = false;
 
+    @Deprecated
     public GoToTargetStupidCommand()
     {
         requires(Robot.DRIVE_TRAIN);

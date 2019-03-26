@@ -59,7 +59,7 @@ public class GoToTargetNetworkTables extends Command {
 
         updateVisionData();
 
-        pidController = new PIDController(1.5, 0, 0, new PIDSource() {
+        pidController = new PIDController(7, 1.5, 0, new PIDSource() {
             PIDSourceType sourceType = PIDSourceType.kDisplacement;
             @Override
             public void setPIDSourceType(PIDSourceType pidSource)
@@ -76,7 +76,6 @@ public class GoToTargetNetworkTables extends Command {
             @Override
             public double pidGet()
             {
-
                 double lastPidGet = Math.min(max_offset, Math.max(-max_offset, visionInfo.getPos().get(0)));
                 System.out.println("lastPidGet = " + lastPidGet);
                 return lastPidGet;
@@ -109,11 +108,12 @@ public class GoToTargetNetworkTables extends Command {
 
         SmartDashboard.putNumber("desiredratio", desiredWheelDifferential.get());
         SmartDashboard.putNumber("socket", visionInfo.getPos().get(0));
+
         if(visionInfo.isMeaningful())
         {
             SmartDashboard.putBoolean("seesTarget", true);
-            double velRight = totalSpeed + desiredWheelDifferential.get() / 2;
-            double velLeft = totalSpeed - desiredWheelDifferential.get() / 2;
+            double velRight = desiredWheelDifferential.get() / 2;
+            double velLeft = - desiredWheelDifferential.get() / 2;
             SmartDashboard.putNumber("velLeft", velLeft);
             SmartDashboard.putNumber("velRight", velRight);
             Robot.DRIVE_TRAIN.runMotorsVelocity(velLeft, velRight);
@@ -121,7 +121,7 @@ public class GoToTargetNetworkTables extends Command {
         else
         {
             SmartDashboard.putBoolean("seesTarget", false);
-            Robot.DRIVE_TRAIN.driveSpeed(totalSpeed / 2);
+            Robot.DRIVE_TRAIN.driveSpeed(0);
             System.out.println("not meaningful");
         }
 
@@ -130,7 +130,8 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected boolean isFinished() //TODO: return true sometimes
     {
-        return stop;
+        //Math.abs(visionInfo.pos.get(0)) <= 0.02
+        return false;
     }
 
     @Override
