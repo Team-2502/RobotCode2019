@@ -4,6 +4,7 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
+import com.team2502.robot2019.utils.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -12,16 +13,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GoToTargetNetworkTables extends Command {
-
-    private VisionData visionInfo;
-
-    private void updateVisionData()
-    {
-        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001);
-        double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
-        visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
-        visionInfo.angle = Robot.angleEntry.getDouble(-9001);
-    }
 
     /**
      * Name of the SmartDashboard item that lets you change speed
@@ -49,7 +40,16 @@ public class GoToTargetNetworkTables extends Command {
      * The maximum possible offset that can occur. This has been measured to be 3 feet.
      */
     private final double max_offset = 3;
-    private boolean stop = false;
+
+    /**
+     * Data class that contains current offset
+     */
+    private VisionData visionInfo;
+
+    /**
+     * Circular buffer that keeps track of offsets in past loop iterations
+     */
+    private CircularBuffer errorBuffer;
 
     public GoToTargetNetworkTables()
     {
@@ -85,6 +85,15 @@ public class GoToTargetNetworkTables extends Command {
 
         SmartDashboard.putData("gototargetstupidcommand", pidController);
         SmartDashboard.putNumber(gttsc_speed, totalSpeed);
+
+    }
+
+    private void updateVisionData()
+    {
+        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001);
+        double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
+        visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
+        visionInfo.angle = Robot.angleEntry.getDouble(-9001);
     }
 
     @Override
@@ -97,8 +106,9 @@ public class GoToTargetNetworkTables extends Command {
         pidController.setInputRange(-max_offset, max_offset);
         pidController.setOutputRange(-totalSpeed, totalSpeed);
         pidController.setAbsoluteTolerance(1/12D);
-
         pidController.enable();
+
+        errorBuffer = new CircularBuffer(8);
     }
 
     @Override
@@ -117,6 +127,7 @@ public class GoToTargetNetworkTables extends Command {
             SmartDashboard.putNumber("velLeft", velLeft);
             SmartDashboard.putNumber("velRight", velRight);
             Robot.DRIVE_TRAIN.runMotorsVelocity(velLeft, velRight);
+            errorBuffer.addValue(visionInfo.pos.get(0));
         }
         else
         {
@@ -128,10 +139,9 @@ public class GoToTargetNetworkTables extends Command {
     }
 
     @Override
-    protected boolean isFinished() //TODO: return true sometimes
+    protected boolean isFinished()
     {
-        //Math.abs(visionInfo.pos.get(0)) <= 0.02
-        return false;
+        return Math.abs(errorBuffer.getAverage()) <= 0.02;
     }
 
     @Override
