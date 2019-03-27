@@ -59,7 +59,7 @@ public class GoToTargetNetworkTables extends Command {
 
         updateVisionData();
 
-        pidController = new PIDController(7, 1.5, 0, new PIDSource() {
+        pidController = new PIDController(8, .0005, .5, new PIDSource() {
             PIDSourceType sourceType = PIDSourceType.kDisplacement;
             @Override
             public void setPIDSourceType(PIDSourceType pidSource)
@@ -105,10 +105,10 @@ public class GoToTargetNetworkTables extends Command {
 
         pidController.setInputRange(-max_offset, max_offset);
         pidController.setOutputRange(-totalSpeed, totalSpeed);
-        pidController.setAbsoluteTolerance(1/12D);
+        pidController.setAbsoluteTolerance(.01);
         pidController.enable();
 
-        errorBuffer = new CircularBuffer(8);
+        errorBuffer = new CircularBuffer(800);
     }
 
     @Override
@@ -141,7 +141,8 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected boolean isFinished()
     {
-        return Math.abs(errorBuffer.getAverage()) <= 0.02;
+        return false;
+//        return Math.abs(errorBuffer.getAverage()) <= 0.002;
     }
 
     @Override

@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveStraightWithGyroCommand extends Command
 {
-    private static final double defaultKPgain = 0.2;
+    private static final double defaultKPgain = 10;
     private static final double defaultKDgain = 0;
 
 
