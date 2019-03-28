@@ -101,7 +101,7 @@ public class Constants
             public static final int DEFAULT_KD = 0;
             public static final int DEFAULT_KI = 0;
             public static final double DEFAULT_KP = 0;
-            public static final double SECONDS_FROM_NEUTRAL_TO_FULL = 0.25;
+            public static final double SECONDS_FROM_NEUTRAL_TO_FULL = 0.05;
 
             private DriveTrain() { }
 
