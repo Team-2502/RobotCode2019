@@ -81,6 +81,7 @@ public class Robot extends TimedRobot
         CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
         CRAWLER = new CrawlerSubsystem();
+        OBA = new OBASolenoid();
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
@@ -167,6 +168,7 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
+        OBA.set(false);
         HATCH_INTAKE.setHatchIntake(false);
         CLIMB_CLAWS.set(false);
     }
