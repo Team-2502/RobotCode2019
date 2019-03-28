@@ -130,6 +130,12 @@ public class Constants
             public static final double SPEED_DOWN = -1.0D;
         }
 
+        public static class OverBumperActive
+        {
+            public static final double SPEED_FWD = 0.35D;
+            public static final double SPEED_BWD = -0.35D;
+        }
+
         public static class Encoder
         {
             /**

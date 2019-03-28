@@ -18,22 +18,18 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.simulation.ActionScheduler;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
-import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
-import com.team2502.robot2019.command.vision.GoToTargetCommand;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import com.team2502.robot2019.subsystem.CrawlerSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
+import com.team2502.robot2019.subsystem.solenoid.OBASolenoid;
 import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -52,6 +48,7 @@ public class Robot extends TimedRobot
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE;
     public static ClimbClawSolenoid CLIMB_CLAWS;
+    public static OBASolenoid OBA;
     public static CargoSubsystem CARGO_ACTIVE;
     public static ClimberSubsystem CLIMBER;
     public static CrawlerSubsystem CRAWLER;
