@@ -94,6 +94,8 @@ public class GoToTargetNetworkTables extends Command {
         double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
         visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
         visionInfo.angle = Robot.angleEntry.getDouble(-9001);
+
+        Robot.seesTarget.setBoolean(! (visionInfo.pos.get(0) == -9001 || visionInfo.angle == -9001));
     }
 
     @Override
@@ -121,7 +123,6 @@ public class GoToTargetNetworkTables extends Command {
 
         if(visionInfo.isMeaningful())
         {
-            SmartDashboard.putBoolean("seesTarget", true);
             double velRight = desiredWheelDifferential.get() / 2;
             double velLeft = - desiredWheelDifferential.get() / 2;
             SmartDashboard.putNumber("velLeft", velLeft);
@@ -131,7 +132,6 @@ public class GoToTargetNetworkTables extends Command {
         }
         else
         {
-            SmartDashboard.putBoolean("seesTarget", false);
             Robot.DRIVE_TRAIN.driveSpeed(0);
             System.out.println("not meaningful");
         }

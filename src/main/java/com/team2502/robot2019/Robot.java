@@ -67,6 +67,8 @@ public class Robot extends TimedRobot
     public static NetworkTableEntry tvecs1Entry;
     public static NetworkTableEntry tvecs2Entry;
     public static NetworkTableEntry angleEntry;
+    public static NetworkTableEntry connectedEntry;
+    public static NetworkTableEntry seesTarget;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -102,11 +104,10 @@ public class Robot extends TimedRobot
         tvecs2Entry.setDouble(-9001);
         angleEntry = VISION_TABLE.getEntry("angle");
         angleEntry.setDouble(-9001);
-        angleEntry = VISION_TABLE.getEntry("connected");
-        angleEntry.setNumber(0);
-
-
-
+        connectedEntry = VISION_TABLE.getEntry("connected");
+        connectedEntry.setNumber(0);
+        seesTarget = VISION_TABLE.getEntry("seesTarget");
+        seesTarget.setBoolean(true);
     }
 
 
