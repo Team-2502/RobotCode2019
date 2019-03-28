@@ -37,7 +37,7 @@ public class Constants
      */
     public static class Autonomous
     {
-        public static final String COPROCESSOR_MDNS_ADDR = "10.25.2.3";
+        public static final String COPROCESSOR_MDNS_ADDR = "frcvision.local";
         public static final int PORT = 5800;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
