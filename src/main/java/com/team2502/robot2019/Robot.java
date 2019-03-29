@@ -29,6 +29,9 @@ import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -58,6 +61,12 @@ public class Robot extends TimedRobot
     public static UsbCamera CAMERA2;
     public static VideoSink SERVER;
     public static ScoringHUD SCORING_HUD;
+    public static  NetworkTable VISION_TABLE;
+    public static NetworkTableEntry tvecs1Entry;
+    public static NetworkTableEntry tvecs2Entry;
+    public static NetworkTableEntry angleEntry;
+    public static NetworkTableEntry connectedEntry;
+    public static NetworkTableEntry seesTarget;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -85,6 +94,19 @@ public class Robot extends TimedRobot
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
+
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        VISION_TABLE = inst.getTable("SmartDashboard");
+        tvecs1Entry = VISION_TABLE.getEntry("tvecs1");
+        tvecs1Entry.setDouble(-9001);
+        tvecs2Entry = VISION_TABLE.getEntry("tvecs2");
+        tvecs2Entry.setDouble(-9001);
+        angleEntry = VISION_TABLE.getEntry("angle");
+        angleEntry.setDouble(-9001);
+        connectedEntry = VISION_TABLE.getEntry("connected");
+        connectedEntry.setNumber(0);
+        seesTarget = VISION_TABLE.getEntry("seesTarget");
+        seesTarget.setBoolean(true);
     }
 
 
@@ -119,7 +141,6 @@ public class Robot extends TimedRobot
     public void autonomousInit()
     {
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
-
     }
 
     private CommandCreator PPTest() {
