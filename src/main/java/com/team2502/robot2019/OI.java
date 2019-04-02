@@ -2,15 +2,17 @@ package com.team2502.robot2019;
 
 import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
 import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.cargoactive.ToggleOBACommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 
-import com.team2502.robot2019.command.vision.GoToTargetStupidCommand;
+import com.team2502.robot2019.command.vision.GoToTargetNetworkTables;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -66,8 +68,8 @@ public final class OI
     public static final Button BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_TOP);
     public static final Button BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_TOP);
 
-    public static final Button BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
-    public static final Button BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
+    public static final Button BUTTON_RUN_CARGO_OBA_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
+    public static final Button BUTTON_RUN_CARGO_OBA_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
 
     public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_UP);
     public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_DOWN);
@@ -80,6 +82,8 @@ public final class OI
     public static final Button BUTTON_TOGGLE_FLIP_OUT = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_FLIP_OUT);
     public static final Button BUTTON_DRIVER_FLIP_OUT_LEFT = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
     public static final Button BUTTON_DRIVER_FLIP_OUT_RIGHT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
+
+    public static final Button BUTTON_TOGGLE_OBA = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_OBA);
 
     public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
@@ -101,16 +105,15 @@ public final class OI
     static
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
-
-        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetStupidCommand());
+        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetNetworkTables());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 
         // CARGO MANIPULATOR
-        BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
+        BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_FWD));
+        BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_BWD));
 
-        BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.BOTTOM, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM.whileHeld(new CargoActiveCommand(CargoSubsystem.Belt.TOP, Constants.Physical.CargoActive.SPEED_BWD));
+        BUTTON_RUN_CARGO_OBA_FWD.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.BOTH, Constants.Physical.OverBumperActive.SPEED_FWD));
+        BUTTON_RUN_CARGO_OBA_BWD.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.BOTH, Constants.Physical.OverBumperActive.SPEED_BWD));
 
         // CLIMBER
         BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true, ClimbCommand.Side.BOTH));
@@ -124,6 +127,8 @@ public final class OI
 
         BUTTON_CRAWL.whileHeld(new CrawlCommand());
         BUTTON_TOGGLE_FLIP_OUT.whenPressed(new ClimbClawCommand());
+
+        BUTTON_TOGGLE_OBA.whenPressed(new ToggleOBACommand());
 
         BUTTON_DRIVER_FLIP_OUT_LEFT.whenPressed(new ClimbClawCommand());
         BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());
@@ -153,7 +158,7 @@ public final class OI
             }
             camera1Selected++;
         }));
-        BUTTON_DRIVE_FORWARDS.whileHeld(new VelocityDriveCommand(2, 2, 5));
+        BUTTON_DRIVE_FORWARDS.whileHeld(new DriveStraightWithGyroCommand(2,5));
     }
 
     /**

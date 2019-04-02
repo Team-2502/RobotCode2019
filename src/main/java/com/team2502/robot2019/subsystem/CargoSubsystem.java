@@ -2,6 +2,7 @@ package com.team2502.robot2019.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.RobotMap;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -12,45 +13,64 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class CargoSubsystem extends Subsystem
 {
     /**
-     * Used to determine to activate just the top, bottom, or both belts.
+     * Used to determine the part of the active to run: external (OBA), internal (top pulleys), or both
      */
-    public enum Belt
+    public enum Section
     {
-        TOP,
-        BOTTOM,
+        INTERNAL,
+        EXTERNAL,
         BOTH
     }
 
-    private final WPI_TalonSRX upperBelt;
-    private final WPI_TalonSRX lowerBelt;
+    private final WPI_TalonSRX tunnel;
+    private final WPI_TalonSRX intake;
 
     /**
      * Creates a CargoSubsystem with two WPI_TalonSRX motor controllers
-     * (upperBelt and lowerBelt).
+     * (tunnel and intake).
      */
     public CargoSubsystem()
     {
-        upperBelt = new WPI_TalonSRX(RobotMap.Motor.CARGO_UPPER_BELT);
-        lowerBelt = new WPI_TalonSRX(RobotMap.Motor.CARGO_LOWER_BELT);
+        tunnel = new WPI_TalonSRX(RobotMap.Motor.CARGO_UPPER_BELT);
+        intake = new WPI_TalonSRX(RobotMap.Motor.CARGO_LOWER_BELT);
+
+        tunnel.setInverted(true);
+        intake.setInverted(true);
     }
 
     /**
-     * Runs a specified belt of the cargo intake at a particular speed (includes direction).
-     * @param belt Whether to run the TOP, BOTTOM, or BOTH belts from the Belt enum.
+     * Runs a specified section of the cargo intake at a particular speed (includes direction).
+     * @param section Whether to run the INTERNAL, EXTERNAL, or BOTH motors from the Section enum.
      * @param speed The speed (-1.0 to 1.0) at which to run the intake.
      */
-    public void runIntake(Belt belt, double speed) {
-        switch(belt) {
-            case TOP:
+    public void runIntake(Section section, double speed) {
+        switch(section) {
+            case INTERNAL:
                 runTop(speed);
                 break;
-            case BOTTOM:
+            case EXTERNAL:
                 runBottom(speed);
                 break;
             case BOTH:
-                runBoth(speed);
+                if (speed > 0)
+                {
+                    runTop(Constants.Physical.CargoActive.SPEED_FWD);
+                    runBottom(Constants.Physical.OverBumperActive.SPEED_FWD);
+                }
+
+                else
+                {
+                    runTop(Constants.Physical.CargoActive.SPEED_BWD);
+                    runBottom(Constants.Physical.OverBumperActive.SPEED_BWD);
+                }
                 break;
         }
+    }
+
+
+    public void runIntake(boolean forward)
+    {
+        runIntake(Section.BOTH, forward ? 1.0D : -1.0D);
     }
 
     /**
@@ -59,8 +79,8 @@ public class CargoSubsystem extends Subsystem
      */
     public void runBoth(double speed)
     {
-        upperBelt.set(ControlMode.PercentOutput, speed);
-        lowerBelt.set(ControlMode.PercentOutput, -speed);
+        tunnel.set(ControlMode.PercentOutput, speed);
+        intake.set(ControlMode.PercentOutput, -speed);
     }
 
     /**
@@ -77,7 +97,7 @@ public class CargoSubsystem extends Subsystem
      */
     public void runTop(double speed)
     {
-        upperBelt.set(ControlMode.PercentOutput, speed);
+        tunnel.set(ControlMode.PercentOutput, speed);
     }
 
     /**
@@ -86,7 +106,7 @@ public class CargoSubsystem extends Subsystem
      */
     public void runBottom(double speed)
     {
-        lowerBelt.set(ControlMode.PercentOutput, -speed);
+        intake.set(ControlMode.PercentOutput, -speed);
 
     }
 

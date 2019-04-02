@@ -52,6 +52,7 @@ public class RobotMap
             public static final int BUTTON_SWITCH_CAMERA = 2;
             public static final int BUTTON_CRAWL = 1;
             public static final int BUTTON_TOGGLE_FLIP_OUT = 7;
+            public static final int BUTTON_TOGGLE_OBA = 8;
             public static final int BUTTON_DRIVER_ANTI_TIP = 2;
 
             public static final int BUTTON_HUD_L0 = 1;
@@ -97,6 +98,7 @@ public class RobotMap
 
         public static final int HATCH_INTAKE = 4;
         public static final int FLIP_OUTS = 3;
+        public static final int OBA = 2;
 
         private Solenoid() { }
     }
