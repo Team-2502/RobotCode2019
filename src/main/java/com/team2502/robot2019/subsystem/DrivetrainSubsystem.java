@@ -151,9 +151,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
         pigeonIMU.setYaw(0);
         rotEst = () -> {
-            double[] ypr = new double[3];
-            pigeonIMU.getYawPitchRoll(ypr);
-            return -MathUtils.Kinematics.navXToRad(ypr[0]);
+//            double[] ypr = new double[3];
+//            pigeonIMU.getYawPitchRoll(ypr);
+            return -MathUtils.Kinematics.navXToRad(pigeonIMU.getFusedHeading());
         };
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
 

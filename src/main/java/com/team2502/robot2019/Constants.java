@@ -89,7 +89,10 @@ public class Constants
             public static final double THRESHOLD = 1e-2;
 
             public static final double LATERAL_WHEEL_DIST_FT = 25.5D / 12;
-            public static final double ROBOT_LENGTH_FT = 2D;
+
+            // Includes Bumpers
+            public static final double ROBOT_LENGTH_FT = 30D/12;
+            public static final double ROBOT_WIDTH_FT = 36/12D;
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
             public static final double DEFAULT_KF_LEFT_PRACTICE = .6;
