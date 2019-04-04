@@ -1,14 +1,19 @@
 package com.team2502.robot2019;
 
 
-import com.github.ezauton.core.action.*;
+import com.github.ezauton.core.action.Action;
+import com.github.ezauton.core.action.ActionGroup;
+import com.github.ezauton.core.action.BackgroundAction;
+import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
+import com.team2502.robot2019.utils.Paths;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +55,7 @@ public class AutoSwitcher
     static Command getAutoInstance() { return autoChooser.getSelected().getInstance(); }
 
     public static AutoMode getSelectedPosition() { return autoChooser.getSelected(); }
+
     /**
      * An enum containing all the autonomi the drivers can select from
      */
@@ -78,6 +84,11 @@ public class AutoSwitcher
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
             group.addSequential((Action) new VoltageDriveAction(0.3, 0.3, 3));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+
+        }),
+        CENTER_HAB_TO_RIGHT_FRONT("Center Hab To Right Front", () ->
+        {
+            return new CommandCreator(Paths.Right.Level1.getAction_CenterToRightCargoShip(Robot.DRIVE_TRAIN, Robot.HATCH_INTAKE, RealClock.CLOCK), Robot.ACTION_SCHEDULER);
         });
 
 
@@ -117,6 +128,7 @@ public class AutoSwitcher
     {
         /**
          * Create a command
+         *
          * @return A new command, fresh from the factory
          */
         Command getInstance();

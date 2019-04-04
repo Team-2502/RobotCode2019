@@ -13,10 +13,12 @@ import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.subsystem.sim.SimulatedDrivetrain;
+import com.team2502.robot2019.utils.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -112,6 +114,17 @@ public class PathTest
     }
 
     @Test
+    public void testCenterHab1FrontRight() throws TimeoutException, ExecutionException
+    {
+//        .11.3, -4.2
+        List<Path> paths = new ArrayList<>();
+        paths.add(Paths.Right.Level1.segment1.buildPathGenerator().generate(0.05));
+        paths.add(Paths.Right.Level1.segment2.buildPathGenerator().generate(0.05));
+
+        testPath(paths, "testCenterHab1FrontRight");
+    }
+
+    @Test
     public void testRightHab2Rocket() throws TimeoutException, ExecutionException
     {
         List<Path> paths = Arrays.asList(
@@ -144,6 +157,13 @@ public class PathTest
                                         );
 
         testPath(paths, "testRightHab2Rocket");
+    }
+
+    @Test
+    public void bananaTest()  throws TimeoutException, ExecutionException
+    {
+        simulation.add(Paths.Right.Level1.getAction_CenterToLeftCargoShip(driveTrain, null, simulation.getClock()))
+                  .runSimulation(45, TimeUnit.SECONDS);
     }
 
     private void testPath(List<Path> paths, String name) throws TimeoutException, ExecutionException

@@ -1,9 +1,11 @@
 package com.team2502.robot2019.subsystem.solenoid;
 import com.team2502.robot2019.RobotMap;
+import com.team2502.robot2019.subsystem.interfaces.HatchFlap;
 import com.team2502.robot2019.utils.NonDefaultSubsystem;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class HatchIntakeSolenoid extends NonDefaultSubsystem {
+public class HatchIntakeSolenoid extends NonDefaultSubsystem implements HatchFlap
+{
 
     private final Solenoid hatchPusher;
     private boolean hatchPusherEnabled = false;
