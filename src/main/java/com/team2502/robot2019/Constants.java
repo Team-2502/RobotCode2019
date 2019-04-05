@@ -78,10 +78,10 @@ public class Constants
 
 
             //TODO: Remeasure
-            public static final double MAX_FPS_SPEED = 18.0F;
+            public static final double MAX_FPS_SPEED = 10.0F;
 
             //TODO: Measure/Calculate
-            public static final double MAX_FPS2_ACCEL = 30;
+            public static final double MAX_FPS2_ACCEL = 15;
 
             /**
              * Threshold below which the joystick is considered to be at a 0 position
