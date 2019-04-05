@@ -76,11 +76,9 @@ public class Constants
             public static final double ENC_UNITS_TO_FPS = 10 * ENC_UNITS_TO_FEET;
 
 
-
-            //TODO: Remeasure
             public static final double MAX_FPS_SPEED = 10.0F;
 
-            //TODO: Measure/Calculate
+            //TODO: Tune values on each new iteration of drive train.
             public static final double MAX_FPS2_ACCEL = 15;
 
             /**
