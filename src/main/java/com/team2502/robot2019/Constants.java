@@ -76,12 +76,10 @@ public class Constants
             public static final double ENC_UNITS_TO_FPS = 10 * ENC_UNITS_TO_FEET;
 
 
+            public static final double MAX_FPS_SPEED = 10.0F;
 
-            //TODO: Remeasure
-            public static final double MAX_FPS_SPEED = 18.0F;
-
-            //TODO: Measure/Calculate
-            public static final double MAX_FPS2_ACCEL = 30;
+            //TODO: Tune values on each new iteration of drive train.
+            public static final double MAX_FPS2_ACCEL = 15;
 
             /**
              * Threshold below which the joystick is considered to be at a 0 position
