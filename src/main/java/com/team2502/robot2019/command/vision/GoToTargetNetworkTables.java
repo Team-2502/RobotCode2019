@@ -121,7 +121,6 @@ public class GoToTargetNetworkTables extends Command {
 
         if(visionInfo.isMeaningful())
         {
-            SmartDashboard.putBoolean("seesTarget", true);
             double velRight = desiredWheelDifferential.get() / 2;
             double velLeft = - desiredWheelDifferential.get() / 2;
             SmartDashboard.putNumber("velLeft", velLeft);
@@ -131,7 +130,6 @@ public class GoToTargetNetworkTables extends Command {
         }
         else
         {
-            SmartDashboard.putBoolean("seesTarget", false);
             Robot.DRIVE_TRAIN.driveSpeed(0);
             System.out.println("not meaningful");
         }

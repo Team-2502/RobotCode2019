@@ -18,14 +18,13 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.simulation.ActionScheduler;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
-import com.kauailabs.navx.frc.AHRS;
-import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import com.team2502.robot2019.subsystem.ClimberSubsystem;
 import com.team2502.robot2019.subsystem.CrawlerSubsystem;
 import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
 import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
+import com.team2502.robot2019.subsystem.solenoid.OBASolenoid;
 import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
@@ -34,8 +33,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -54,6 +51,7 @@ public class Robot extends TimedRobot
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE;
     public static ClimbClawSolenoid CLIMB_CLAWS;
+    public static OBASolenoid OBA;
     public static CargoSubsystem CARGO_ACTIVE;
     public static ClimberSubsystem CLIMBER;
     public static CrawlerSubsystem CRAWLER;
@@ -67,6 +65,8 @@ public class Robot extends TimedRobot
     public static NetworkTableEntry tvecs1Entry;
     public static NetworkTableEntry tvecs2Entry;
     public static NetworkTableEntry angleEntry;
+    public static NetworkTableEntry connectedEntry;
+    public static NetworkTableEntry seesTarget;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -90,6 +90,7 @@ public class Robot extends TimedRobot
         CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
         CRAWLER = new CrawlerSubsystem();
+        OBA = new OBASolenoid();
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
@@ -102,11 +103,10 @@ public class Robot extends TimedRobot
         tvecs2Entry.setDouble(-9001);
         angleEntry = VISION_TABLE.getEntry("angle");
         angleEntry.setDouble(-9001);
-        angleEntry = VISION_TABLE.getEntry("connected");
-        angleEntry.setNumber(0);
-
-
-
+        connectedEntry = VISION_TABLE.getEntry("connected");
+        connectedEntry.setNumber(0);
+        seesTarget = VISION_TABLE.getEntry("seesTarget");
+        seesTarget.setBoolean(true);
     }
 
 
@@ -140,7 +140,7 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
-
+        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
     private CommandCreator PPTest() {
@@ -189,6 +189,7 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
+        OBA.set(false);
         HATCH_INTAKE.setHatchIntake(false);
         CLIMB_CLAWS.set(false);
     }

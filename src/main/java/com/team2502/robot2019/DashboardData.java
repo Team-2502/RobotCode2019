@@ -25,7 +25,7 @@ public final class DashboardData
     {
         Shuffleboard.update();
         for(DashboardUpdater subsystem : updaters) { subsystem.updateDashboard(); }
-        updateNavX();
+        updateVisionData();
 //        ppRecord();
     }
 
@@ -36,15 +36,9 @@ public final class DashboardData
      */
     public static void addUpdater(DashboardUpdater subsystem) { updaters.add(subsystem); }
 
-    /**
-     * Update the heading data for the NavX, because AHRS does not extend our functional interface.
-     */
-    private static void updateNavX()
+    private static void updateVisionData()
     {
-//        SmartDashboard.putNumber("NavX: Yaw", Robot.NAVX.getYaw());
-//        SmartDashboard.putNumber("NavX: X Displacement", Robot.NAVX.getDisplacementX());
-//        SmartDashboard.putNumber("NavX: Y Displacement", Robot.NAVX.getDisplacementY());
-//        SmartDashboard.putNumber("NavX: Z Displacement", Robot.NAVX.getDisplacementZ());
+        Robot.seesTarget.setBoolean(! (Robot.tvecs2Entry.getDouble(-9001) == -9001 || Robot.angleEntry.getDouble(-9001) == -9001));
     }
 
 
