@@ -83,8 +83,8 @@ public class Constants
 
             public static final double MAX_FPS_SPEED = 10.0F;
 
-            //TODO: Tune values on each new iteration of drive train.
-            public static final double MAX_FPS2_ACCEL = 15;
+            //TODO: Measure/Calculate
+            public static final double MAX_FPS2_ACCEL = 10;
 
             /**
              * Threshold below which the joystick is considered to be at a 0 position
