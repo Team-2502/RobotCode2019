@@ -32,6 +32,11 @@ public class Constants
     public static final long DEFAULT_ACTION_PERIOD = 20;
     public static final TimeUnit DEFAULT_ACTION_PERIOD_UNIT = TimeUnit.MILLISECONDS;
 
+    public static class Teleop
+    {
+        public static final double JOYSTICK_DEADBAND = 0.05;
+    }
+
     /**
      * Variables that pertain to auto
      */

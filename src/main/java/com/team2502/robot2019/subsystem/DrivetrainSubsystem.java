@@ -227,6 +227,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
     public enum TeleopMode
     {
+        // The first item in this enum is the default
         TANK_VOLTAGE("Tank: Voltage"),
         TANK_VELOCITY("Tank: Velocity"),
         ARCADE("Arcade"),
@@ -498,7 +499,15 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
             rightVelTarget = Utils.handleMaxAcc(rightVelTarget, lastRightVelTarget, dt);
         }
 
-        Robot.DRIVE_TRAIN.runMotorsVelocity(leftVelTarget, rightVelTarget);
+        if (Math.abs(leftVelTarget) > Constants.Teleop.JOYSTICK_DEADBAND)
+        {
+            runMotorsVelocity(leftVelTarget, rightVelTarget);
+        }
+
+        else
+        {
+            runMotorsVoltage(0.0D, 0.0D);
+        }
 
         lastLeftVelTarget = leftVelTarget;
         lastRightVelTarget = rightVelTarget;
