@@ -16,7 +16,6 @@ import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.wpilib.motors.TypicalMotor;
-import com.github.ezauton.wpilib.motors.MotorControllers;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.DashboardData;
 import com.team2502.robot2019.RobotMap;
@@ -218,6 +217,23 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         right.runVelocity(rightVal);
     }
 
+    public void runMotorsPosition(double leftPos, double rightPos) {
+        double leftPosEncUnits = leftPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+        double rightPosEncUnits = rightPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+
+        frontLeft.configAllowableClosedloopError(0, 64);
+        frontRight.configAllowableClosedloopError(0, 64);
+
+        frontLeft.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontLeft.configMotionCruiseVelocity((int) (10 / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+        frontRight.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontRight.configMotionCruiseVelocity((int) (10 / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+
+        frontLeft.set(ControlMode.MotionMagic, leftPosEncUnits);
+        frontRight.set(ControlMode.MotionMagic, rightPosEncUnits);
+    }
     @Deprecated
     public void runMotorsVoltage(double leftVolts, double rightVolts)
     {
@@ -399,5 +415,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     protected void initDefaultCommand()
     {
         setDefaultCommand(new DriveCommand());
+    }
+
+    public void resetEncoderPosition() {
+        frontLeft.setSelectedSensorPosition(0);
+        frontRight.setSelectedSensorPosition(0);
     }
 }

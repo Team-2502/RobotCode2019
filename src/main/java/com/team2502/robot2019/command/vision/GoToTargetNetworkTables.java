@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.AtomicDouble;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
 import com.team2502.robot2019.utils.CircularBuffer;
+import com.team2502.robot2019.utils.GainScheduler;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -18,6 +19,7 @@ public class GoToTargetNetworkTables extends Command {
      * Name of the SmartDashboard item that lets you change speed
      */
     public static final String gttsc_speed = "gttsc_speed";
+    private final GainScheduler gainScheduler;
 
     /**
      * SPeed the robot should go at
@@ -59,7 +61,8 @@ public class GoToTargetNetworkTables extends Command {
 
         updateVisionData();
 
-        pidController = new PIDController(8, .0005, .5, new PIDSource() {
+        gainScheduler = new GainScheduler(16, 0, 0.5);
+        pidController = new PIDController(16, 0, 0.5, new PIDSource() {
             PIDSourceType sourceType = PIDSourceType.kDisplacement;
             @Override
             public void setPIDSourceType(PIDSourceType pidSource)
@@ -114,6 +117,7 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected void execute()
     {
+        gainScheduler.applyScheduledGains(pidController);
         updateVisionData();
 
         SmartDashboard.putNumber("desiredratio", desiredWheelDifferential.get());
@@ -139,8 +143,8 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected boolean isFinished()
     {
-        return false;
-//        return Math.abs(errorBuffer.getAverage()) <= 0.002;
+//        return false;
+        return visionInfo.getPos().get(0) <= 0.002;
     }
 
     @Override
