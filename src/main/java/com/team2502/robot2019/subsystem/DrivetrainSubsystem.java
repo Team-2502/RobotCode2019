@@ -15,15 +15,21 @@ import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
+import com.github.ezauton.core.utils.RealClock;
+import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.wpilib.motors.TypicalMotor;
-import com.team2502.robot2019.Constants;
-import com.team2502.robot2019.DashboardData;
-import com.team2502.robot2019.RobotMap;
+import com.team2502.robot2019.*;
 import com.team2502.robot2019.command.teleop.DriveCommand;
 import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 import com.team2502.robot2019.utils.IPIDTunable;
+import com.team2502.robot2019.utils.Utils;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.concurrent.TimeUnit;
 
 public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, DriveTrain, Updateable, DashboardData.DashboardUpdater
 {
@@ -41,6 +47,10 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private final RotationalLocationEstimator rotEst;
     private final VelocityEstimator velEst;
 
+    private SendableChooser<TeleopMode> teleopChooser;
+
+    private final DifferentialDrive diffDrive;
+
     private final PigeonIMU pigeonIMU;
 
 
@@ -56,8 +66,16 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private final TranslationalDistanceSensor leftSensor;
     private final TranslationalDistanceSensor rightSensor;
 
+    // for veldrive
+    private final Stopwatch stopwatch;
+    private double lastLeftVelTarget = Double.NaN;
+    private double lastRightVelTarget = Double.NaN;
+
     public DrivetrainSubsystem()
     {
+        stopwatch = new Stopwatch(RealClock.CLOCK);
+        stopwatch.init();
+
         backLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
         backRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
         frontLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
@@ -75,6 +93,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
         frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
 
+        SpeedControllerGroup scgLeft = new SpeedControllerGroup(frontLeft, backLeft);
+        SpeedControllerGroup scgRight = new SpeedControllerGroup(frontRight, backRight);
+
+        scgLeft.setInverted(false);
+        scgRight.setInverted(true);
+
+        diffDrive = new DifferentialDrive(scgLeft, scgRight);
 
         right = new TypicalMotor()
         {
@@ -188,7 +213,31 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT_PRACTICE, Constants.INIT_TIMEOUT);
         frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT_PRACTICE, Constants.INIT_TIMEOUT);
 
+        teleopChooser = new SendableChooser<>();
 
+        for(int i = 0; i < TeleopMode.values().length; i++)
+        {
+            TeleopMode mode = TeleopMode.values()[i];
+            if(i == 0) { teleopChooser.addDefault(mode.name, mode); }
+            else { teleopChooser.addObject(mode.name, mode); }
+        }
+
+        SmartDashboard.putData("Teleop Mode", teleopChooser);
+    }
+
+    public enum TeleopMode
+    {
+        TANK_VOLTAGE("Tank: Voltage"),
+        TANK_VELOCITY("Tank: Velocity"),
+        ARCADE("Arcade"),
+        CURVATURE("Curvature");
+
+        String name;
+
+        TeleopMode(String name)
+        {
+            this.name = name;
+        }
     }
 
     /**
@@ -398,6 +447,78 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     public void setForward(boolean forward)
     {
         this.forward = forward;
+    }
+
+    public void teleopDrive()
+    {
+        double speed1, speed2;
+        switch(teleopChooser.getSelected())
+        {
+            case ARCADE:
+                speed1 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                speed2 = OI.JOYSTICK_DRIVE_RIGHT.getTwist();
+                teleopDriveArcade(speed1, speed2);
+                break;
+
+            case TANK_VOLTAGE:
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                teleopDriveTankVoltage(speed1, speed2);
+                break;
+
+            case TANK_VELOCITY:
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                teleopDriveTankVelocity(speed1, speed2);
+                break;
+
+            case CURVATURE:
+                speed1 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                speed2 = OI.JOYSTICK_DRIVE_RIGHT.getTwist();
+                boolean isQuickturn = OI.JOYSTICK_DRIVE_LEFT.getTrigger();
+                teleopDriveCurvature(speed1, speed2, isQuickturn);
+                break;
+
+            default:
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                teleopDriveTankVoltage(speed1, speed2);
+        }
+    }
+
+    private void teleopDriveCurvature(double xSpeed, double zRotation, boolean isQuickTurn)
+    {
+        diffDrive.curvatureDrive(xSpeed, zRotation, isQuickTurn);
+    }
+
+    private void teleopDriveArcade(double xSpeed, double zRotation)
+    {
+        diffDrive.arcadeDrive(xSpeed, zRotation);
+    }
+
+    private void teleopDriveTankVoltage(double leftSpeed, double rightSpeed)
+    {
+        diffDrive.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    private void teleopDriveTankVelocity(double leftVolts, double rightVolts)
+    {
+        // skipping input squaring
+        double leftVelTarget = leftVolts * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+        double rightVelTarget = rightVolts * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+
+        if(!Double.isNaN(lastLeftVelTarget) && !Double.isNaN(lastRightVelTarget)) {
+            double dt = stopwatch.pop(TimeUnit.SECONDS);
+
+
+            leftVelTarget = Utils.handleMaxAcc(leftVelTarget, lastLeftVelTarget, dt);
+            rightVelTarget = Utils.handleMaxAcc(rightVelTarget, lastRightVelTarget, dt);
+        }
+
+        Robot.DRIVE_TRAIN.runMotorsVelocity(leftVelTarget, rightVelTarget);
+
+        lastLeftVelTarget = leftVelTarget;
+        lastRightVelTarget = rightVelTarget;
     }
 
     @Override
