@@ -474,8 +474,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
                 break;
 
             case CURVATURE:
-                speed1 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
-                speed2 = OI.JOYSTICK_DRIVE_RIGHT.getTwist();
+                double left = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                double right = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+
+                speed1 = (left + right) / 2;
+                speed2 = left - right;
                 boolean isQuickturn = OI.JOYSTICK_DRIVE_LEFT.getTrigger();
                 teleopDriveCurvature(speed1, speed2, isQuickturn);
                 break;
