@@ -2,6 +2,8 @@ package com.team2502.robot2019.command.vision;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.google.common.util.concurrent.AtomicDouble;
+import com.sun.tools.javac.code.Attribute;
+import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
 import com.team2502.robot2019.utils.CircularBuffer;
@@ -19,7 +21,7 @@ public class GoToTargetNetworkTables extends Command {
      * Name of the SmartDashboard item that lets you change speed
      */
     public static final String gttsc_speed = "gttsc_speed";
-    private final GainScheduler gainScheduler;
+//    private final GainScheduler gainScheduler;
 
     /**
      * SPeed the robot should go at
@@ -61,8 +63,8 @@ public class GoToTargetNetworkTables extends Command {
 
         updateVisionData();
 
-        gainScheduler = new GainScheduler(16, 0, 0.5);
-        pidController = new PIDController(16, 0, 0.5, new PIDSource() {
+//        gainScheduler = new GainScheduler(16, 0, 0.5);
+        pidController = new PIDController(Constants.Autonomous.visionkP, Constants.Autonomous.visionkI, Constants.Autonomous.visionkD, new PIDSource() {
             PIDSourceType sourceType = PIDSourceType.kDisplacement;
             @Override
             public void setPIDSourceType(PIDSourceType pidSource)
@@ -93,7 +95,7 @@ public class GoToTargetNetworkTables extends Command {
 
     private void updateVisionData()
     {
-        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001);
+        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001) - Constants.Autonomous.visionOffset;
         double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
         visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
         visionInfo.angle = Robot.angleEntry.getDouble(-9001);
@@ -117,7 +119,7 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected void execute()
     {
-        gainScheduler.applyScheduledGains(pidController);
+//        gainScheduler.applyScheduledGains(pidController);
         updateVisionData();
 
         SmartDashboard.putNumber("desiredratio", desiredWheelDifferential.get());
@@ -125,8 +127,8 @@ public class GoToTargetNetworkTables extends Command {
 
         if(visionInfo.isMeaningful())
         {
-            double velRight = desiredWheelDifferential.get() / 2;
-            double velLeft = - desiredWheelDifferential.get() / 2;
+            double velRight = totalSpeed + desiredWheelDifferential.get() / 2;
+            double velLeft = totalSpeed - desiredWheelDifferential.get() / 2;
             SmartDashboard.putNumber("velLeft", velLeft);
             SmartDashboard.putNumber("velRight", velRight);
             Robot.DRIVE_TRAIN.runMotorsVelocity(velLeft, velRight);
@@ -134,7 +136,7 @@ public class GoToTargetNetworkTables extends Command {
         }
         else
         {
-            Robot.DRIVE_TRAIN.driveSpeed(0);
+            Robot.DRIVE_TRAIN.runMotorsVoltage(0, 0);
             System.out.println("not meaningful");
         }
 
@@ -143,15 +145,16 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected boolean isFinished()
     {
+        return Math.abs(visionInfo.getPos().get(1)) <= 1.25;
 //        return false;
-        return visionInfo.getPos().get(0) <= 0.002;
+//        return visionInfo.getPos().get(0) <= 0.002;
     }
 
     @Override
     protected void end()
     {
         pidController.disable();
-        Robot.DRIVE_TRAIN.driveSpeed(0);
+        Robot.DRIVE_TRAIN.runMotorsVoltage(0, 0);
         DriverStation.reportError("ended", false);
     }
 }

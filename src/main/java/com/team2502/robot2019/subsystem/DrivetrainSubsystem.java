@@ -228,8 +228,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     public enum TeleopMode
     {
         // The first item in this enum is the default
-        TANK_VOLTAGE("Tank: Voltage"),
         TANK_VELOCITY("Tank: Velocity"),
+        TANK_VOLTAGE("Tank: Voltage"),
         ARCADE("Arcade"),
         CURVATURE("Curvature");
 
@@ -415,6 +415,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
     }
 
+    public void applyTeleopPID() {
+        setPID(0, 0, 0);
+    }
+
+    public void applyAutonomousPID() {
+        setPID(Constants.Physical.DriveTrain.DEFAULT_KP, Constants.Physical.DriveTrain.DEFAULT_KI, Constants.Physical.DriveTrain.DEFAULT_KD);
+    }
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
@@ -520,15 +527,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
             rightVelTarget = Utils.handleMaxAcc(rightVelTarget, lastRightVelTarget, dt);
         }
 
-        if (Math.abs(leftVelTarget) > Constants.Teleop.JOYSTICK_DEADBAND)
-        {
-            runMotorsVelocity(leftVelTarget, rightVelTarget);
-        }
-
-        else
-        {
-            runMotorsVoltage(0.0D, 0.0D);
-        }
+        runMotorsVelocity(leftVelTarget, rightVelTarget);
 
         lastLeftVelTarget = leftVelTarget;
         lastRightVelTarget = rightVelTarget;
@@ -554,5 +553,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     public void resetEncoderPosition() {
         frontLeft.setSelectedSensorPosition(0);
         frontRight.setSelectedSensorPosition(0);
+    }
+
+    public void updateDifferentialDriveOftenEnough() {
+        diffDrive.tankDrive(0, 0);
     }
 }
