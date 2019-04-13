@@ -2,6 +2,7 @@ package com.team2502.robot2019.command.teleop;
 
 import com.team2502.robot2019.OI;
 import com.team2502.robot2019.Robot;
+import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,13 +23,17 @@ public class DriveCommand extends Command
     @Override
     protected void execute()
     {
-        double deadband = SmartDashboard.getNumber("deadband", 0.05);
-        if (Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) > deadband || Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) > deadband)
+        if(!Robot.DRIVE_TRAIN.isTakenByAnyone())
         {
-            Robot.DRIVE_TRAIN.teleopDrive();
-        }
-        else {
-            Robot.DRIVE_TRAIN.updateDifferentialDriveOftenEnough();
+            double deadband = SmartDashboard.getNumber("deadband", 0.05);
+            if(Math.abs(OI.JOYSTICK_DRIVE_LEFT.getY()) > deadband || Math.abs(OI.JOYSTICK_DRIVE_RIGHT.getY()) > deadband)
+            {
+                Robot.DRIVE_TRAIN.teleopDrive();
+            }
+            else
+            {
+                Robot.DRIVE_TRAIN.updateDifferentialDriveOftenEnough();
+            }
         }
     }
 
