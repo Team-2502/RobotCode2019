@@ -175,9 +175,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
         pigeonIMU.setYaw(0);
         rotEst = () -> {
-            double[] ypr = new double[3];
-            pigeonIMU.getYawPitchRoll(ypr);
-            return -MathUtils.Kinematics.navXToRad(ypr[0]);
+            double headingDeg = pigeonIMU.getFusedHeading();
+            return headingDeg * Math.PI / 180D;
         };
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
 
@@ -223,6 +222,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         }
 
         SmartDashboard.putData("Teleop Mode", teleopChooser);
+    }
+
+    public PigeonIMU getPigeon()
+    {
+        return pigeonIMU;
     }
 
     public enum TeleopMode
@@ -536,8 +540,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     @Override
     public void updateDashboard()
     {
-        update();
+//        update();
         SmartDashboard.putNumber("rot", rotEst.estimateHeading());
+        SmartDashboard.putNumber("pigeonRaw", pigeonIMU.getFusedHeading());
         SmartDashboard.putNumber("left vel", leftSensor.getVelocity());
         SmartDashboard.putNumber("right vel", rightSensor.getVelocity());
         SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
