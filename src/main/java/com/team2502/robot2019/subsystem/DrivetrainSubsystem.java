@@ -232,8 +232,8 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     public enum TeleopMode
     {
         // The first item in this enum is the default
-        TANK_VELOCITY("Tank: Velocity"),
         TANK_VOLTAGE("Tank: Voltage"),
+        TANK_VELOCITY("Tank: Velocity"),
         ARCADE("Arcade"),
         CURVATURE("Curvature");
 
