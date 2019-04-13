@@ -6,9 +6,12 @@ import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
+import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroAction;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
+import com.team2502.robot2019.command.vision.GoToTargetNTAction;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -57,20 +60,26 @@ public class AutoSwitcher
     {
         DO_NOTHING("Do Nothing", DoNothingCommand::new),
         ACTION_GROUP_TEST("PP Action Group Test", () -> {
-            ActionGroup group = new ActionGroup();
-            PPWaypoint[] waypoints = new PPWaypoint.Builder()
-                    .add(0, 0, 1600, 130000, -120000)
-                    .add(0, 4, 0, 130000, -120000)
-                    .buildArray();
-            PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
-            Path path = pathGenerator.generate(0.05);
+            Path path =new SplinePPWaypoint.Builder()
+                    .add(0, 0, 0, 2, 13, -12)
+                    .add(0, 3, -Math.PI/2, 2, 13, -13)
+                    .add(3, 3, 0, 2, 13, -12)
+                    .add(3, 6, 0, 0, 13, -12)
+                    .buildPathGenerator()
+                    .generate(0.05);
 
-            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
-            PurePursuitAction pp = new PurePursuitAction(10, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
-
-            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
-            group.addSequential(pp);//new PointDriveAction(.05, new ImmutableVector(3, 10), 3));
-            group.addSequential((Action) new VoltageDriveAction(-0.3, -0.3, 3));
+            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
+            PurePursuitAction pp = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
+            ActionGroup group = new ActionGroup().addSequential(() -> {
+                try
+                {
+                    Robot.DRIVE_TRAIN.take();
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }).addSequential(pp).addSequential(Robot.DRIVE_TRAIN::giveBack);
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
@@ -78,7 +87,18 @@ public class AutoSwitcher
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
             group.addSequential((Action) new VoltageDriveAction(0.3, 0.3, 3));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-        });
+        }),
+        VISION_TEST("VisionTest", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(4, 2, TimeUnit.SECONDS));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        DRIVE_STRAIGHT_TEST("drive straight", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(1, 50, TimeUnit.SECONDS));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        });;
 
 
         /**
