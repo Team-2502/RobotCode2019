@@ -1,6 +1,7 @@
 package com.team2502.robot2019.command.autonomous.ingredients;
 
 import com.github.ezauton.core.action.PeriodicAction;
+import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
@@ -10,52 +11,38 @@ import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 
 import java.util.concurrent.TimeUnit;
 
-public class VelocityDriveAction extends PeriodicAction implements Runnable
+public class VelocityDriveAction extends TimedPeriodicAction
 {
     private final double leftVel;
     private final double rightVel;
     private final boolean brake;
 
-    private final Stopwatch stopwatch;
-    private final double time;
-    private final TimeUnit timeUnit;
     private DriveTrain dt;
 
     /**
      * @param leftVel
      * @param rightVel
-     * @param time       Amount of time to run for (seconds)
+     * @param time       Amount of time to run for (milliseconds)
      */
-    public VelocityDriveAction(double leftVel, double rightVel, double time)
-    {this(leftVel, rightVel, time, TimeUnit.SECONDS, true, RealClock.CLOCK, Robot.DRIVE_TRAIN); }
+    public VelocityDriveAction(double leftVel, double rightVel, long time)
+    {this(leftVel, rightVel, time, false, Robot.DRIVE_TRAIN); }
 
 
     /**
      * @param leftVel
      * @param rightVel
-     * @param time       Amount of time to run for (seconds)
+     * @param time       Amount of time to run for (milliseconds)
      */
-    public VelocityDriveAction(double leftVel, double rightVel, double time, TimeUnit timeUnit, boolean brake, Clock clock, DriveTrain dt)
+    public VelocityDriveAction(double leftVel, double rightVel, long time, boolean brake, DriveTrain dt)
     {
-        super(Constants.DEFAULT_ACTION_PERIOD, Constants.DEFAULT_ACTION_PERIOD_UNIT);
-        this.time = time;
-        this.timeUnit = timeUnit;
+        super(Constants.DEFAULT_ACTION_PERIOD, Constants.DEFAULT_ACTION_PERIOD_UNIT, time, TimeUnit.MILLISECONDS);
 
         this.leftVel = leftVel;
         this.rightVel = rightVel;
         this.brake = brake;
 
-        stopwatch = new Stopwatch(clock);
         this.dt = dt;
 
-        this.onFinish(() -> {
-            if(brake) {
-                dt.runMotorsVoltage(0, 0);
-            }
-            dt.giveBack();
-        });
-
-        addRunnable(this);
 
     }
 
@@ -70,19 +57,25 @@ public class VelocityDriveAction extends PeriodicAction implements Runnable
         {
             e.printStackTrace();
         }
+        Robot.DRIVE_TRAIN.applyAutonomousPID();
         stopwatch.init();
     }
 
-
     @Override
-    protected boolean isFinished()
+    public void execute()
     {
-        return stopwatch.read(timeUnit) >= time;
+        dt.runMotorsVelocity(leftVel, rightVel);
     }
 
     @Override
-    public void run()
+    public void end() throws Exception
     {
-        dt.runMotorsVelocity(leftVel, rightVel);
+        if(!brake) {
+            dt.runMotorsVoltage(0, 0);
+        }
+        else {
+            dt.runMotorsVelocity(0, 0);
+        }
+        dt.giveBack();
     }
 }
