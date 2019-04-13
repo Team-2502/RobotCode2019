@@ -98,7 +98,16 @@ public class AutoSwitcher
             ActionGroup group = new ActionGroup()
                     .addSequential(new DriveStraightWithGyroAction(1, 50, TimeUnit.SECONDS));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-        });;
+        }),
+        FRONT_HATCH_AUTO("experimental", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(4, 1.5, TimeUnit.SECONDS))
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(3, 1, TimeUnit.SECONDS))
+                    .addSequential(() -> {Robot.HATCH_INTAKE.setHatchIntake(true);})
+                    .addSequential(new DriveStraightWithGyroAction(-4, 1.5, TimeUnit.SECONDS));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        });
 
 
         /**
