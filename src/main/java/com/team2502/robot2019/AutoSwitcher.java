@@ -2,14 +2,13 @@ package com.team2502.robot2019;
 
 
 import com.github.ezauton.core.action.*;
-import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroAction;
+import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveAction;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.command.vision.GoToTargetNTAction;
 import edu.wpi.first.wpilibj.command.Command;
@@ -91,23 +90,39 @@ public class AutoSwitcher
         VISION_TEST("VisionTest", () -> {
             ActionGroup group = new ActionGroup()
                     .addSequential(new GoToTargetNTAction())
-                    .addSequential(new DriveStraightWithGyroAction(4, 2, TimeUnit.SECONDS));
+                    .addSequential(new DriveStraightWithGyroAction(4, 2000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         DRIVE_STRAIGHT_TEST("drive straight", () -> {
             ActionGroup group = new ActionGroup()
-                    .addSequential(new DriveStraightWithGyroAction(1, 50, TimeUnit.SECONDS));
+                    .addSequential(new DriveStraightWithGyroAction(1, 50000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
-        FRONT_HATCH_AUTO("experimental", () -> {
+        FRONT_LEFT_HATCH("MID Hab -> LEFT Front Hatch", () -> {
             ActionGroup group = new ActionGroup()
-                    .addSequential(new DriveStraightWithGyroAction(4, 1.5, TimeUnit.SECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                    .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+                    .addSequential(new VelocityDriveAction(2, 4, 500))
                     .addSequential(new GoToTargetNTAction())
-                    .addSequential(new DriveStraightWithGyroAction(3, 1, TimeUnit.SECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(3, 1000))
                     .addSequential(() -> {Robot.HATCH_INTAKE.setHatchIntake(true);})
-                    .addSequential(new DriveStraightWithGyroAction(-4, 1.5, TimeUnit.SECONDS));
+                    .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(-4, 1000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-        });
+        }),
+
+        FRONT_RIGHT_HATCH("MID Hab -> RIGHT Front Hatch", () -> {
+        ActionGroup group = new ActionGroup()
+                .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+                .addSequential(new VelocityDriveAction(4, 2, 500))
+                .addSequential(new GoToTargetNTAction())
+                .addSequential(new DriveStraightWithGyroAction(3, 1000))
+                .addSequential(() -> {Robot.HATCH_INTAKE.setHatchIntake(true);})
+                .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                .addSequential(new DriveStraightWithGyroAction(-4, 1000));
+        return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+    });
 
 
         /**
