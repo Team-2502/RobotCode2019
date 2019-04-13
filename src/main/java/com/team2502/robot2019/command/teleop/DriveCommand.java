@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveCommand extends Command
 {
+    private boolean lastIteractive = false;
     public DriveCommand()
     {
         requires(Robot.DRIVE_TRAIN);
@@ -33,6 +34,13 @@ public class DriveCommand extends Command
             else
             {
                 Robot.DRIVE_TRAIN.updateDifferentialDriveOftenEnough();
+            }
+            lastIteractive = true;
+        }
+        else {
+            if(lastIteractive) {
+                Robot.DRIVE_TRAIN.applyAutonomousPID();
+                lastIteractive = false;
             }
         }
     }
