@@ -2,7 +2,6 @@ package com.team2502.robot2019.command.vision;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.google.common.util.concurrent.AtomicDouble;
-import com.sun.tools.javac.code.Attribute;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
@@ -114,6 +113,7 @@ public class GoToTargetNetworkTables extends Command {
         pidController.enable();
 
         errorBuffer = new CircularBuffer(800);
+        SmartDashboard.putNumber("pleaseUnstick", 0);
     }
 
     @Override
@@ -156,5 +156,6 @@ public class GoToTargetNetworkTables extends Command {
         pidController.disable();
         Robot.DRIVE_TRAIN.runMotorsVoltage(0, 0);
         DriverStation.reportError("ended", false);
+        SmartDashboard.putNumber("pleaseUnstick", 1);
     }
 }
