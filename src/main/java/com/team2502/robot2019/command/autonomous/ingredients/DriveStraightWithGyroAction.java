@@ -29,10 +29,9 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
      * Construct a Drive Straight command
      *
      * @param speed How fast to go (ft/s)
-     * @param durationUnit How long to go for (seconds)
-     */
-    public DriveStraightWithGyroAction(double speed, double duration, TimeUnit durationUnit) {
-        super((long) duration, durationUnit);
+     * */
+    public DriveStraightWithGyroAction(double speed, long duration) {
+        super(duration, TimeUnit.MILLISECONDS);
         this.speed = speed;
 
         SmartDashboard.putNumber("drivestraight_kP", defaultKPgain);
