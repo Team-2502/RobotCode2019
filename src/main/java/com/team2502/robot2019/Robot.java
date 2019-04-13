@@ -26,8 +26,10 @@ import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.OBASolenoid;
 import com.team2502.robot2019.utils.ScoringHUD;
+import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
+import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -35,6 +37,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.concurrent.TimeUnit;
 
@@ -59,6 +62,8 @@ public class Robot extends TimedRobot
     public static UsbCamera CAMERA0;
     public static UsbCamera CAMERA1;
     public static UsbCamera CAMERA2;
+    private HttpCamera CAMERA3;
+
     public static VideoSink SERVER;
     public static ScoringHUD SCORING_HUD;
     public static  NetworkTable VISION_TABLE;
@@ -78,6 +83,8 @@ public class Robot extends TimedRobot
         CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
         CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
         CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
+        CAMERA3 = new HttpCamera("vision", "http://10.25.2.29:1181/?action=stream", HttpCamera.HttpCameraKind.kCSCore);// + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ":1181");
+        CameraServer.getInstance().addCamera(CAMERA3);
         SERVER = CameraServer.getInstance().getServer();
 
         SERVER.setSource(CAMERA0);
@@ -107,6 +114,12 @@ public class Robot extends TimedRobot
         connectedEntry.setNumber(0);
         seesTarget = VISION_TABLE.getEntry("seesTarget");
         seesTarget.setBoolean(true);
+
+        SmartDashboard.putNumber("pleaseUnstick", 1);
+
+        ActionGroup defaultActions = new ActionGroup()
+                .addParallel(new BackgroundAction(20, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
+        ACTION_SCHEDULER.scheduleAction(defaultActions);
     }
 
 
@@ -140,6 +153,8 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
+        Robot.DRIVE_TRAIN.getPigeon().setFusedHeading(0);
+        Robot.DRIVE_TRAIN.getLocEstimator().reset();
         Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
