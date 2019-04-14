@@ -3,18 +3,19 @@ package com.team2502.robot2019;
 
 import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
+import com.github.ezauton.core.pathplanning.purepursuit.*;
+import com.github.ezauton.core.utils.RealClock;
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.base.PurePursuitRecorder;
+import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.wpilib.command.CommandCreator;
-import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
-import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroAction;
-import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveAction;
-import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
+import com.team2502.robot2019.command.autonomous.ingredients.*;
 import com.team2502.robot2019.command.vision.GoToTargetNTAction;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -100,29 +101,52 @@ public class AutoSwitcher
         }),
         FRONT_LEFT_HATCH("MID Hab -> LEFT Front Hatch", () -> {
             ActionGroup group = new ActionGroup()
+                    .addSequential(new SetHatchIntakeAction(false))
                     .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                     .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
                     .addSequential(new VelocityDriveAction(2, 4, 500))
-                    .addSequential(new GoToTargetNTAction())
-                    .addSequential(new DriveStraightWithGyroAction(3, 1000))
-                    .addSequential(() -> {Robot.HATCH_INTAKE.setHatchIntake(true);})
-                    .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                    .addSequential(getVisionRoutine())
                     .addSequential(new DriveStraightWithGyroAction(-4, 1000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
 
         FRONT_RIGHT_HATCH("MID Hab -> RIGHT Front Hatch", () -> {
         ActionGroup group = new ActionGroup()
+                .addSequential(new SetHatchIntakeAction(false))
                 .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                 .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
                 .addSequential(new VelocityDriveAction(4, 2, 500))
-                .addSequential(new GoToTargetNTAction())
-                .addSequential(new DriveStraightWithGyroAction(3, 1000))
-                .addSequential(() -> {Robot.HATCH_INTAKE.setHatchIntake(true);})
-                .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                .addSequential(getVisionRoutine())
                 .addSequential(new DriveStraightWithGyroAction(-4, 1000));
         return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-    });
+        }),
+        NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, (long) (4500), -Math.PI / 5))
+                    .addSequential(new TurnToAnglePDAction(1, Math.PI/2))
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(4, 1000))
+                    .addSequential(new SetHatchIntakeAction(true))
+                    .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(-1, 1000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        NEARSIDE_RIGHT_HATCH_PP("MID Hab -> RIGHT nearSIDE Hatch", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, (long) (4500), -Math.PI / 5))
+                    .addSequential(new TurnToAnglePDAction(1, Math.PI/2))
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(4, 1000))
+                    .addSequential(new SetHatchIntakeAction(true))
+                    .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(-1, 1000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        TURNYTEST("turn test", () -> {
+            return new CommandCreator(new TurnToAnglePDAction(1, Math.PI / 2), Robot.ACTION_SCHEDULER);
+        });
 
 
         /**
@@ -164,6 +188,17 @@ public class AutoSwitcher
          * @return A new command, fresh from the factory
          */
         Command getInstance();
+    }
+
+    /**
+     * @return An action group that will do vision, deploy hatch mech, and wait
+     */
+    private static ActionGroup getVisionRoutine()  {
+        return new ActionGroup().addSequential(new GoToTargetNTAction())
+                .addSequential(new DriveStraightWithGyroAction(3, 1000))
+                .addSequential(new SetHatchIntakeAction(true))
+                .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS));
+
     }
 
 }

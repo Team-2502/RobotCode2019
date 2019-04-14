@@ -118,7 +118,7 @@ public class Robot extends TimedRobot
         SmartDashboard.putNumber("pleaseUnstick", 1);
 
         ActionGroup defaultActions = new ActionGroup()
-                .addParallel(new BackgroundAction(20, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
+                .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
         ACTION_SCHEDULER.scheduleAction(defaultActions);
     }
 
@@ -210,9 +210,5 @@ public class Robot extends TimedRobot
     }
 
     @Override
-    public void disabledPeriodic()
-    {
-
-    }
-
+    public void disabledPeriodic() { }
 }
