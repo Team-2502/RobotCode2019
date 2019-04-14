@@ -89,7 +89,7 @@ public class Constants
             public static final double MAX_FPS_SPEED = 10.0F;
 
             //TODO: Measure/Calculate
-            public static final double MAX_FPS2_ACCEL = 10;
+            public static final double MAX_FPS2_ACCEL = 30;
 
             /**
              * Threshold below which the joystick is considered to be at a 0 position
@@ -106,7 +106,7 @@ public class Constants
             public static final double DEFAULT_KF_LEFT_COMPBOT = 0.465;
             public static final double DEFAULT_KF_RIGHT_COMPBOT = 0.455;
 
-            public static final double DEFAULT_KP = 0.2;
+            public static final double DEFAULT_KP = 2;
             public static final double DEFAULT_KI = 0;
             public static final double DEFAULT_KD = 0;
             public static final double SECONDS_FROM_NEUTRAL_TO_FULL = 0.05;

@@ -14,7 +14,6 @@ import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.wpilib.motors.TypicalMotor;
@@ -424,7 +423,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     }
 
     public void applyAutonomousPID() {
-        setPID(Constants.Physical.DriveTrain.DEFAULT_KP, Constants.Physical.DriveTrain.DEFAULT_KI, Constants.Physical.DriveTrain.DEFAULT_KD);
+        setPID(
+                SmartDashboard.getNumber("kP", 0.2),
+                SmartDashboard.getNumber("kI", 0.2),
+                SmartDashboard.getNumber("kD", 0.2)
+        );
     }
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
@@ -479,9 +482,9 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
                 break;
 
             case TANK_VELOCITY:
-                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY();
-                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
-                teleopDriveTankVelocity(speed1, speed2);
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY() * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY() * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+                runAccelVelocity(speed1, speed2, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL);
                 break;
 
             case CURVATURE:
@@ -517,24 +520,45 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         diffDrive.tankDrive(leftSpeed, rightSpeed);
     }
 
-    private void teleopDriveTankVelocity(double leftVolts, double rightVolts)
+    public void runAccelVelocity(double leftVelTarget, double rightVelTarget, double maxAccel)
     {
         // skipping input squaring
-        double leftVelTarget = leftVolts * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
-        double rightVelTarget = rightVolts * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+//        double leftVelTarget = leftVolts * maxAccel;
+//        double rightVelTarget = rightVolts * maxAccel;
 
         if(!Double.isNaN(lastLeftVelTarget) && !Double.isNaN(lastRightVelTarget)) {
-            double dt = stopwatch.pop(TimeUnit.SECONDS);
+            double dt = stopwatch.pop(TimeUnit.MILLISECONDS) / 1000;
+            System.out.println("dt = " + dt);
 
 
-            leftVelTarget = Utils.handleMaxAcc(leftVelTarget, lastLeftVelTarget, dt);
-            rightVelTarget = Utils.handleMaxAcc(rightVelTarget, lastRightVelTarget, dt);
+            double leftVelEnc = Utils.furthestFromZero(leftSensor.getVelocity(),  Math.signum(leftVelTarget));
+            double rightVelEnc = Utils.furthestFromZero(rightSensor.getVelocity(), Math.signum(rightVelTarget));
+            leftVelTarget = Utils.handleMaxAcc(leftVelTarget, leftVelEnc, dt, maxAccel);
+            rightVelTarget = Utils.handleMaxAcc(rightVelTarget, rightVelEnc, dt, maxAccel);
         }
 
         runMotorsVelocity(leftVelTarget, rightVelTarget);
 
         lastLeftVelTarget = leftVelTarget;
         lastRightVelTarget = rightVelTarget;
+    }
+
+    public void motionMagic(double leftPos, double rightPos, double leftVel, double rightVel) {
+        frontLeft.configMotionCruiseVelocity((int) (leftVel / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontRight.configMotionCruiseVelocity((int) (rightVel / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+        frontLeft.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontRight.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+        frontLeft.set(ControlMode.MotionMagic, leftPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET);
+        frontRight.set(ControlMode.MotionMagic, rightPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET);
+    }
+
+    public void resetForAccelDrive() {
+        lastLeftVelTarget = 0;
+        lastRightVelTarget = 0;
+
+        stopwatch.pop();
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.team2502.robot2019.command.autonomous.ingredients;
 import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.utils.MathUtils;
 import com.team2502.robot2019.Robot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.concurrent.TimeUnit;
@@ -24,14 +23,23 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
 
     private double kPgain;
     private double kDgain;
+    private final double maxAccel;
 
     /**
      * Construct a Drive Straight command
-     *
-     * @param speed How fast to go (ft/s)
-     * */
+     *  @param speed How fast to go (ft/s)
+     **/
     public DriveStraightWithGyroAction(double speed, long duration) {
-        this(speed, duration, null);
+        this(speed, duration, null, 20);
+    }
+
+
+    /**
+     * Construct a Drive Straight command
+     *  @param speed How fast to go (ft/s)
+     * @param maxAccel*/
+    public DriveStraightWithGyroAction(double speed, long duration, double maxAccel) {
+        this(speed, duration, null, maxAccel);
     }
 
     /**
@@ -39,8 +47,9 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
      *
      * @param speed How fast to go (ft/s)
      * */
-    public DriveStraightWithGyroAction(double speed, long duration, Double targetAngle) {
+    public DriveStraightWithGyroAction(double speed, long duration, Double targetAngle, double maxAccel) {
         super(duration, TimeUnit.MILLISECONDS);
+        this.maxAccel = maxAccel;
         this.speed = speed;
 
         SmartDashboard.putNumber("drivestraight_kP", defaultKPgain);
@@ -74,7 +83,7 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
         double desiredWheelDifferential = (targetAngle - currentAngle) * kPgain - (currentAngularRate) * kDgain;
         SmartDashboard.putNumber("drivestraight_desiredWheelDifferential", desiredWheelDifferential);
 
-        Robot.DRIVE_TRAIN.runMotorsVelocity(speed - desiredWheelDifferential, speed + desiredWheelDifferential);
+        Robot.DRIVE_TRAIN.runAccelVelocity(speed - desiredWheelDifferential, speed + desiredWheelDifferential, maxAccel);
     }
 
     @Override

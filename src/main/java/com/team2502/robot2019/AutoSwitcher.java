@@ -3,11 +3,8 @@ package com.team2502.robot2019;
 
 import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.*;
-import com.github.ezauton.core.utils.RealClock;
-import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.recorder.base.PurePursuitRecorder;
-import com.github.ezauton.recorder.base.RobotStateRecorder;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.*;
 import com.team2502.robot2019.command.vision.GoToTargetNTAction;
@@ -15,7 +12,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -104,9 +100,11 @@ public class AutoSwitcher
                     .addSequential(new SetHatchIntakeAction(false))
                     .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                     .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
-                    .addSequential(new VelocityDriveAction(2, 4, 500))
+                    .addSequential(new TurnToAnglePDAction(2, 15 * Math.PI / 180))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1000))
+                    .addSequential(new TurnToAnglePDAction(2, 15 * .4 * Math.PI / 180))
                     .addSequential(getVisionRoutine())
-                    .addSequential(new DriveStraightWithGyroAction(-4, 1000));
+                    .addSequential(new AccelVelocityDriveAction(-4, -4, 0.25, 1000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
 
@@ -115,16 +113,18 @@ public class AutoSwitcher
                 .addSequential(new SetHatchIntakeAction(false))
                 .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                 .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
-                .addSequential(new VelocityDriveAction(4, 2, 500))
+                .addSequential(new TurnToAnglePDAction(2, -15 * Math.PI / 180))
+                .addSequential(new DriveStraightWithGyroAction(2.5, 1000))
+                .addSequential(new TurnToAnglePDAction(2, -15 * .4 * Math.PI / 180))
                 .addSequential(getVisionRoutine())
-                .addSequential(new DriveStraightWithGyroAction(-4, 1000));
+                .addSequential(new AccelVelocityDriveAction(-4, -4, 0.25, 1000));
         return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", () -> {
             ActionGroup group = new ActionGroup()
                     .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                     .addSequential(new DriveStraightWithGyroAction(2.5, (long) (4500), -Math.PI / 5))
-                    .addSequential(new TurnToAnglePDAction(1, Math.PI/2))
+                    .addSequential(new TurnToAnglePDAction(1, Math.PI/2 - Math.PI / 6))
                     .addSequential(new GoToTargetNTAction())
                     .addSequential(new DriveStraightWithGyroAction(4, 1000))
                     .addSequential(new SetHatchIntakeAction(true))
@@ -146,6 +146,9 @@ public class AutoSwitcher
         }),
         TURNYTEST("turn test", () -> {
             return new CommandCreator(new TurnToAnglePDAction(1, Math.PI / 2), Robot.ACTION_SCHEDULER);
+        }),
+        ACCELY_TEST("drivey test", () -> {
+            return new CommandCreator(new MotionMagicDriveAction(10, 10, 10, 10), Robot.ACTION_SCHEDULER);
         });
 
 
@@ -196,6 +199,7 @@ public class AutoSwitcher
     private static ActionGroup getVisionRoutine()  {
         return new ActionGroup().addSequential(new GoToTargetNTAction())
                 .addSequential(new DriveStraightWithGyroAction(3, 1000))
+                .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
                 .addSequential(new SetHatchIntakeAction(true))
                 .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS));
 

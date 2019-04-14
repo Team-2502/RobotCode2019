@@ -29,7 +29,6 @@ import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
-import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -87,7 +86,7 @@ public class Robot extends TimedRobot
         CameraServer.getInstance().addCamera(CAMERA3);
         SERVER = CameraServer.getInstance().getServer();
 
-        SERVER.setSource(CAMERA0);
+        SERVER.setSource(CAMERA3);
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
@@ -118,8 +117,12 @@ public class Robot extends TimedRobot
         SmartDashboard.putNumber("pleaseUnstick", 1);
 
         ActionGroup defaultActions = new ActionGroup()
-                .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
+                .addParallel(new BackgroundAction(5, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
         ACTION_SCHEDULER.scheduleAction(defaultActions);
+
+        SmartDashboard.putNumber("kP", 0.2);
+        SmartDashboard.putNumber("kI", 0);
+        SmartDashboard.putNumber("kD", 0);
     }
 
 
@@ -189,7 +192,7 @@ public class Robot extends TimedRobot
     @Override
     public void teleopInit()
     {
-
+        free();
     }
 
     /**
@@ -205,7 +208,7 @@ public class Robot extends TimedRobot
     public void disabledInit()
     {
         OBA.set(false);
-        HATCH_INTAKE.setHatchIntake(false);
+        HATCH_INTAKE.set(false);
         CLIMB_CLAWS.set(false);
     }
 

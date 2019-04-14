@@ -25,7 +25,7 @@ public class TurnToAnglePDAction extends PeriodicAction
     private double kPgain;
     private double kDgain;
     private static final double velErrThresh = 0.05;
-    private static final double posErrThresh = 0.05;
+    private static final double posErrThresh = 0.1;
 
     /**
      * Construct a Drive Straight command

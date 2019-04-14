@@ -15,6 +15,6 @@ public class SetHatchIntakeAction extends BaseAction
     @Override
     public void run(ActionRunInfo info)
     {
-        Robot.HATCH_INTAKE.setHatchIntake(out);
+        Robot.HATCH_INTAKE.set(out);
     }
 }
