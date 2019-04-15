@@ -44,11 +44,11 @@ public class Constants
     {
         public static final String COPROCESSOR_MDNS_ADDR = "frcvision.local";
         public static final int PORT = 5800;
-        public static final double visionOffset = 0.5;
+        public static final double visionOffset = 0.2;//.3;
 
-        public static final double visionkP = 3.0D;
-        public static final double visionkI = 0.0D;
-        public static final double visionkD = 10.0D;
+        public static final double visionkP = 1.5D;
+        public static final double visionkI = 0.015D;
+        public static final double visionkD = 0D; // 10.0D;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
             return new LookaheadBounds(0.3, 0.5, 3, 10, dt.getVelocityEstimator());
@@ -101,7 +101,8 @@ public class Constants
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
             public static final double DEFAULT_KF_LEFT_PRACTICE = .6;
-            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.495;
+//            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.495;
+            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.6;
 
             public static final double DEFAULT_KF_LEFT_COMPBOT = 0.465;
             public static final double DEFAULT_KF_RIGHT_COMPBOT = 0.455;

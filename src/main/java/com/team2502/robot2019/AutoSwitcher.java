@@ -144,6 +144,24 @@ public class AutoSwitcher
                     .addSequential(new DriveStraightWithGyroAction(-1, 1000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
+        RIGHT_NEAR_HATCH_HAB2("RIGHT Hab 2 -> Right nearSIDE Hatch CARGO SHIP", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(-7, 1000))
+                    .addSequential(new TimedPeriodicAction(1500, TimeUnit.MILLISECONDS))
+                    .addSequential(new TurnToAnglePDAction(2, -Math.PI / 6))
+                    .addSequential(new DriveStraightWithGyroAction(-4, 1750))
+                    .addSequential(new TurnToAnglePDAction(2, -Math.PI/2));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        LEFT_NEAR_HATCH_HAB2("LEFT Hab 2 -> LEFT nearSIDE Hatch CARGO SHIP", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(-7, 1000))
+                    .addSequential(new TimedPeriodicAction(1500, TimeUnit.MILLISECONDS))
+                    .addSequential(new TurnToAnglePDAction(2, Math.PI / 6))
+                    .addSequential(new DriveStraightWithGyroAction(-4, 1750))
+                    .addSequential(new TurnToAnglePDAction(2, Math.PI/2));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
         TURNYTEST("turn test", () -> {
             return new CommandCreator(new TurnToAnglePDAction(1, Math.PI / 2), Robot.ACTION_SCHEDULER);
         }),

@@ -142,7 +142,7 @@ public class GoToTargetNTAction extends PeriodicAction
     @Override
     protected boolean isFinished()
     {
-        return Math.abs(visionInfo.getPos().get(1)) <= 1.25;
+        return Math.abs(visionInfo.getPos().get(1)) <= 1.25 || visionInfo.getPos().get(0) == -9001;
     }
 
     @Override

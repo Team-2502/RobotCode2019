@@ -98,6 +98,7 @@ public final class OI
     public static final Button BUTTON_HUD_R2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
 
     public static final Button BUTTON_DRIVE_FORWARDS = new JoystickButton(JOYSTICK_DRIVE_LEFT, 8);
+    public static final Button BUTTON_DRIVE_FORWARDS_NOGYRO = new JoystickButton(JOYSTICK_DRIVE_LEFT, 7);
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -134,6 +135,7 @@ public final class OI
         BUTTON_DRIVER_FLIP_OUT_LEFT.whenPressed(new ClimbClawCommand());
         BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());
 
+        BUTTON_DRIVE_FORWARDS_NOGYRO.whileHeld(new VelocityDriveCommand(4, 4, 4));
         // BUTTONS FOR SCORING HUD
         BUTTON_HUD_L0.whenPressed(new IncrementHUD(0, true));
         BUTTON_HUD_L1.whenPressed(new IncrementHUD(1, true));

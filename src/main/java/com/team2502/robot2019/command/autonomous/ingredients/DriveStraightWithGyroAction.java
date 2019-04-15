@@ -23,33 +23,23 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
 
     private double kPgain;
     private double kDgain;
-    private final double maxAccel;
 
     /**
      * Construct a Drive Straight command
      *  @param speed How fast to go (ft/s)
      **/
     public DriveStraightWithGyroAction(double speed, long duration) {
-        this(speed, duration, null, 20);
+        this(speed, duration, null);
     }
 
-
-    /**
-     * Construct a Drive Straight command
-     *  @param speed How fast to go (ft/s)
-     * @param maxAccel*/
-    public DriveStraightWithGyroAction(double speed, long duration, double maxAccel) {
-        this(speed, duration, null, maxAccel);
-    }
 
     /**
      * Construct a Drive Straight command
      *
      * @param speed How fast to go (ft/s)
      * */
-    public DriveStraightWithGyroAction(double speed, long duration, Double targetAngle, double maxAccel) {
+    public DriveStraightWithGyroAction(double speed, long duration, Double targetAngle) {
         super(duration, TimeUnit.MILLISECONDS);
-        this.maxAccel = maxAccel;
         this.speed = speed;
 
         SmartDashboard.putNumber("drivestraight_kP", defaultKPgain);
@@ -83,7 +73,7 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
         double desiredWheelDifferential = (targetAngle - currentAngle) * kPgain - (currentAngularRate) * kDgain;
         SmartDashboard.putNumber("drivestraight_desiredWheelDifferential", desiredWheelDifferential);
 
-        Robot.DRIVE_TRAIN.runAccelVelocity(speed - desiredWheelDifferential, speed + desiredWheelDifferential, maxAccel);
+        Robot.DRIVE_TRAIN.runMotorsVelocity(speed - desiredWheelDifferential, speed + desiredWheelDifferential);
     }
 
     @Override
