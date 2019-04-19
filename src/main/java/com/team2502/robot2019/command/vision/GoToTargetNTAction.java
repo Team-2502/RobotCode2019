@@ -1,27 +1,26 @@
 package com.team2502.robot2019.command.vision;
 
+import com.github.ezauton.core.action.PeriodicAction;
+import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.Robot;
 import com.team2502.robot2019.subsystem.vision.VisionData;
 import com.team2502.robot2019.utils.CircularBuffer;
-import com.team2502.robot2019.utils.GainScheduler;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class GoToTargetNetworkTables extends Command {
+import java.util.concurrent.TimeUnit;
 
-    /**
-     * Name of the SmartDashboard item that lets you change speed
-     */
-    public static final String gttsc_speed = "gttsc_speed";
-//    private final GainScheduler gainScheduler;
+public class GoToTargetNTAction extends PeriodicAction
+{
 
+    private static final TimeUnit defaultDurationUnit = TimeUnit.MILLISECONDS;
+    private static final long defaultDuration = 20;
     /**
      * SPeed the robot should go at
      */
@@ -54,15 +53,13 @@ public class GoToTargetNetworkTables extends Command {
      */
     private CircularBuffer errorBuffer;
 
-    public GoToTargetNetworkTables()
+    public GoToTargetNTAction()
     {
-        requires(Robot.DRIVE_TRAIN);
-
+        super(defaultDuration, defaultDurationUnit);
         visionInfo = new VisionData(0,0,0);
 
         updateVisionData();
 
-//        gainScheduler = new GainScheduler(16, 0, 0.5);
         pidController = new PIDController(Constants.Autonomous.visionkP, Constants.Autonomous.visionkI, Constants.Autonomous.visionkD, new PIDSource() {
             PIDSourceType sourceType = PIDSourceType.kDisplacement;
             @Override
@@ -88,23 +85,15 @@ public class GoToTargetNetworkTables extends Command {
 
 
         SmartDashboard.putData("gototargetstupidcommand", pidController);
-        SmartDashboard.putNumber(gttsc_speed, totalSpeed);
+        SmartDashboard.putNumber(GoToTargetNetworkTables.gttsc_speed, totalSpeed);
 
-    }
-
-    private void updateVisionData()
-    {
-        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001) - Constants.Autonomous.visionOffset;
-        double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
-        visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
-        visionInfo.angle = Robot.angleEntry.getDouble(-9001);
     }
 
     @Override
-    protected void initialize()
+    protected void init() throws Exception
     {
         DriverStation.reportWarning("Go to target initialized", false);
-        totalSpeed = SmartDashboard.getNumber(gttsc_speed, totalSpeed);
+        totalSpeed = SmartDashboard.getNumber(GoToTargetNetworkTables.gttsc_speed, totalSpeed);
         pidController.setSetpoint(0);
 
         pidController.setInputRange(-max_offset, max_offset);
@@ -114,12 +103,13 @@ public class GoToTargetNetworkTables extends Command {
 
         errorBuffer = new CircularBuffer(800);
         SmartDashboard.putNumber("pleaseUnstick", 0);
+
+        Robot.DRIVE_TRAIN.getResource().take();
     }
 
     @Override
-    protected void execute()
+    protected void execute() throws Exception
     {
-//        gainScheduler.applyScheduledGains(pidController);
         updateVisionData();
 
         SmartDashboard.putNumber("desiredratio", desiredWheelDifferential.get());
@@ -139,20 +129,26 @@ public class GoToTargetNetworkTables extends Command {
             Robot.DRIVE_TRAIN.runMotorsVoltage(0, 0);
             System.out.println("not meaningful");
         }
+    }
 
+    private void updateVisionData()
+    {
+        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001) - Constants.Autonomous.visionOffset;
+        double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
+        visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
+        visionInfo.angle = Robot.angleEntry.getDouble(-9001);
     }
 
     @Override
     protected boolean isFinished()
     {
-        return Math.abs(visionInfo.getPos().get(1)) <= 1.25;
-//        return false;
-//        return visionInfo.getPos().get(0) <= 0.002;
+        return Math.abs(visionInfo.getPos().get(1)) <= 1.25 || visionInfo.getPos().get(0) == -9001;
     }
 
     @Override
-    protected void end()
+    public void end() throws Exception
     {
+        Robot.DRIVE_TRAIN.getResource().giveBack();
         pidController.disable();
         Robot.DRIVE_TRAIN.runMotorsVoltage(0, 0);
         DriverStation.reportError("ended", false);

@@ -8,23 +8,27 @@ import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.localization.RotationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
-import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator;
+import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.utils.MathUtils;
+import com.github.ezauton.core.utils.RealClock;
+import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.wpilib.motors.TypicalMotor;
-import com.github.ezauton.wpilib.motors.MotorControllers;
-import com.team2502.robot2019.Constants;
-import com.team2502.robot2019.DashboardData;
-import com.team2502.robot2019.RobotMap;
+import com.team2502.robot2019.*;
 import com.team2502.robot2019.command.teleop.DriveCommand;
 import com.team2502.robot2019.subsystem.interfaces.DriveTrain;
 import com.team2502.robot2019.utils.IPIDTunable;
+import com.team2502.robot2019.utils.Utils;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.concurrent.TimeUnit;
 
 public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, DriveTrain, Updateable, DashboardData.DashboardUpdater
 {
@@ -38,9 +42,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private final TypicalMotor right;
 
     private final TankRobotTransLocDriveable trtls;
-    private final EncoderRotationEstimator locEst;
+    private final TankRobotEncoderEncoderEstimator locEst;
     private final RotationalLocationEstimator rotEst;
     private final VelocityEstimator velEst;
+
+    private SendableChooser<TeleopMode> teleopChooser;
+
+    private final DifferentialDrive diffDrive;
 
     private final PigeonIMU pigeonIMU;
 
@@ -57,8 +65,16 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private final TranslationalDistanceSensor leftSensor;
     private final TranslationalDistanceSensor rightSensor;
 
+    // for veldrive
+    private final Stopwatch stopwatch;
+    private double lastLeftVelTarget = Double.NaN;
+    private double lastRightVelTarget = Double.NaN;
+
     public DrivetrainSubsystem()
     {
+        stopwatch = new Stopwatch(RealClock.CLOCK);
+        stopwatch.init();
+
         backLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_LEFT);
         backRight = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_BACK_RIGHT);
         frontLeft = new WPI_TalonSRX(RobotMap.Motor.DRIVE_TRAIN_FRONT_LEFT);
@@ -76,6 +92,14 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
         frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
 
+
+        SpeedControllerGroup scgLeft = new SpeedControllerGroup(frontLeft, backLeft);
+        SpeedControllerGroup scgRight = new SpeedControllerGroup(frontRight, backRight);
+
+        scgLeft.setInverted(false);
+        scgRight.setInverted(true);
+
+        diffDrive = new DifferentialDrive(scgLeft, scgRight);
 
         right = new TypicalMotor()
         {
@@ -150,30 +174,30 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
                                                             );
 
         pigeonIMU.setYaw(0);
-        rotEst = () -> {
-//            double[] ypr = new double[3];
-//            pigeonIMU.getYawPitchRoll(ypr);
-            return -MathUtils.Kinematics.navXToRad(pigeonIMU.getFusedHeading());
-        };
+//        rotEst = () -> {
+//            double headingDeg = pigeonIMU.getFusedHeading();
+//            return headingDeg * Math.PI / 180D;
+//        };
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
 
-        locEst = new EncoderRotationEstimator(rotEst, new TranslationalDistanceSensor()
-        {
-            @Override
-            public double getPosition()
-            {
-                return (leftSensor.getPosition() + rightSensor.getPosition()) / 2;
-            }
-
-            @Override
-            public double getVelocity()
-            {
-                return (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
-            }
-        });
-//        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
+//        locEst = new EncoderRotationEstimator(rotEst, new TranslationalDistanceSensor()
+//        {
+//            @Override
+//            public double getPosition()
+//            {
+//                return (leftSensor.getPosition() + rightSensor.getPosition()) / 2;
+//            }
+//
+//            @Override
+//            public double getVelocity()
+//            {
+//                return (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
+//            }
+//        });
+        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
         locEst.reset();
 
+        rotEst = locEst;
 
         trtls = new TankRobotTransLocDriveable(left, right, locEst, rotEst, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
 
@@ -189,7 +213,37 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontRight.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_RIGHT_PRACTICE, Constants.INIT_TIMEOUT);
         frontLeft.config_kF(0, Constants.Physical.DriveTrain.DEFAULT_KF_LEFT_PRACTICE, Constants.INIT_TIMEOUT);
 
+        teleopChooser = new SendableChooser<>();
 
+        for(int i = 0; i < TeleopMode.values().length; i++)
+        {
+            TeleopMode mode = TeleopMode.values()[i];
+            if(i == 0) { teleopChooser.addDefault(mode.name, mode); }
+            else { teleopChooser.addObject(mode.name, mode); }
+        }
+
+        SmartDashboard.putData("Teleop Mode", teleopChooser);
+    }
+
+    public PigeonIMU getPigeon()
+    {
+        return pigeonIMU;
+    }
+
+    public enum TeleopMode
+    {
+        // The first item in this enum is the default
+        TANK_VOLTAGE("Tank: Voltage"),
+        TANK_VELOCITY("Tank: Velocity"),
+        ARCADE("Arcade"),
+        CURVATURE("Curvature");
+
+        String name;
+
+        TeleopMode(String name)
+        {
+            this.name = name;
+        }
     }
 
     /**
@@ -218,6 +272,23 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         right.runVelocity(rightVal);
     }
 
+    public void runMotorsPosition(double leftPos, double rightPos) {
+        double leftPosEncUnits = leftPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+        double rightPosEncUnits = rightPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET;
+
+        frontLeft.configAllowableClosedloopError(0, 64);
+        frontRight.configAllowableClosedloopError(0, 64);
+
+        frontLeft.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontLeft.configMotionCruiseVelocity((int) (10 / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+        frontRight.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontRight.configMotionCruiseVelocity((int) (10 / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+
+        frontLeft.set(ControlMode.MotionMagic, leftPosEncUnits);
+        frontRight.set(ControlMode.MotionMagic, rightPosEncUnits);
+    }
     @Deprecated
     public void runMotorsVoltage(double leftVolts, double rightVolts)
     {
@@ -238,7 +309,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     }
 
     @Override
-    public EncoderRotationEstimator getLocEstimator()
+    public TankRobotEncoderEncoderEstimator getLocEstimator()
     {
         return locEst;
     }
@@ -349,6 +420,17 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
     }
 
+    public void applyTeleopPID() {
+        setPID(0, 0, 0);
+    }
+
+    public void applyAutonomousPID() {
+        setPID(
+                SmartDashboard.getNumber("kP", 0.2),
+                SmartDashboard.getNumber("kI", 0.2),
+                SmartDashboard.getNumber("kD", 0.2)
+        );
+    }
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
@@ -384,20 +466,134 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         this.forward = forward;
     }
 
+    public void teleopDrive()
+    {
+        double speed1, speed2;
+        switch(teleopChooser.getSelected())
+        {
+            case ARCADE:
+                speed1 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                speed2 = OI.JOYSTICK_DRIVE_RIGHT.getTwist();
+                teleopDriveArcade(speed1, speed2);
+                break;
+
+            case TANK_VOLTAGE:
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                teleopDriveTankVoltage(speed1, speed2);
+                break;
+
+            case TANK_VELOCITY:
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY() * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY() * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
+                runAccelVelocity(speed1, speed2, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL);
+                break;
+
+            case CURVATURE:
+                double left = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                double right = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                boolean isQuickturn = Math.abs(left - right) > 1.0;
+
+                speed1 = (left + right) / 2;
+                speed2 = left - right;
+
+                teleopDriveCurvature(speed1, speed2, isQuickturn);
+                break;
+
+            default:
+                speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY();
+                speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
+                teleopDriveTankVoltage(speed1, speed2);
+        }
+    }
+
+    private void teleopDriveCurvature(double xSpeed, double zRotation, boolean isQuickTurn)
+    {
+        diffDrive.curvatureDrive(xSpeed, zRotation, isQuickTurn);
+    }
+
+    private void teleopDriveArcade(double xSpeed, double zRotation)
+    {
+        diffDrive.arcadeDrive(xSpeed, zRotation);
+    }
+
+    private void teleopDriveTankVoltage(double leftSpeed, double rightSpeed)
+    {
+        diffDrive.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    public void runAccelVelocity(double leftVelTarget, double rightVelTarget, double maxAccel)
+    {
+        // skipping input squaring
+//        double leftVelTarget = leftVolts * maxAccel;
+//        double rightVelTarget = rightVolts * maxAccel;
+
+        if(!Double.isNaN(lastLeftVelTarget) && !Double.isNaN(lastRightVelTarget)) {
+            double dt = stopwatch.pop(TimeUnit.MILLISECONDS) / 1000;
+            System.out.println("dt = " + dt);
+
+
+            double leftVelEnc = Utils.furthestFromZero(leftSensor.getVelocity(),  Math.signum(leftVelTarget));
+            double rightVelEnc = Utils.furthestFromZero(rightSensor.getVelocity(), Math.signum(rightVelTarget));
+            leftVelTarget = Utils.handleMaxAcc(leftVelTarget, leftVelEnc, dt, maxAccel);
+            rightVelTarget = Utils.handleMaxAcc(rightVelTarget, rightVelEnc, dt, maxAccel);
+        }
+
+        runMotorsVelocity(leftVelTarget, rightVelTarget);
+
+        lastLeftVelTarget = leftVelTarget;
+        lastRightVelTarget = rightVelTarget;
+    }
+
+    public void motionMagic(double leftPos, double rightPos, double leftVel, double rightVel) {
+        frontLeft.configMotionCruiseVelocity((int) (leftVel / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontRight.configMotionCruiseVelocity((int) (rightVel / Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+        frontLeft.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+        frontRight.configMotionAcceleration((int) (Constants.Physical.DriveTrain.MAX_FPS2_ACCEL/Constants.Physical.DriveTrain.ENC_UNITS_TO_FPS));
+
+        frontLeft.set(ControlMode.MotionMagic, leftPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET);
+        frontRight.set(ControlMode.MotionMagic, rightPos / Constants.Physical.DriveTrain.ENC_UNITS_TO_FEET);
+    }
+
+    public void resetForAccelDrive() {
+        lastLeftVelTarget = 0;
+        lastRightVelTarget = 0;
+
+        stopwatch.pop();
+    }
+
     @Override
     public void updateDashboard()
     {
-        update();
+//        update();
         SmartDashboard.putNumber("rot", rotEst.estimateHeading());
+        SmartDashboard.putNumber("pigeonRaw", pigeonIMU.getFusedHeading());
         SmartDashboard.putNumber("left vel", leftSensor.getVelocity());
         SmartDashboard.putNumber("right vel", rightSensor.getVelocity());
         SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
         SmartDashboard.putNumber("right pos", frontRight.getSelectedSensorPosition());
+
+        SmartDashboard.putNumber("leftFt", leftSensor.getPosition());
+        SmartDashboard.putNumber("rightFt", rightSensor.getPosition());
+
+        SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
+        SmartDashboard.putNumber("right pos", frontRight.getSelectedSensorPosition());
+
         SmartDashboard.putString("loc", locEst.estimateLocation().toString());
     }
 
     protected void initDefaultCommand()
     {
         setDefaultCommand(new DriveCommand());
+    }
+
+    public void resetEncoderPosition() {
+        frontLeft.setSelectedSensorPosition(0);
+        frontRight.setSelectedSensorPosition(0);
+    }
+
+    public void updateDifferentialDriveOftenEnough() {
+        diffDrive.tankDrive(0, 0);
     }
 }

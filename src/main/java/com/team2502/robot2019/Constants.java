@@ -32,6 +32,11 @@ public class Constants
     public static final long DEFAULT_ACTION_PERIOD = 20;
     public static final TimeUnit DEFAULT_ACTION_PERIOD_UNIT = TimeUnit.MILLISECONDS;
 
+    public static class Teleop
+    {
+        public static final double JOYSTICK_DEADBAND = 0.05;
+    }
+
     /**
      * Variables that pertain to auto
      */
@@ -39,9 +44,14 @@ public class Constants
     {
         public static final String COPROCESSOR_MDNS_ADDR = "frcvision.local";
         public static final int PORT = 5800;
+        public static final double visionOffset = 0.2;//.3;
+
+        public static final double visionkP = 1.5D;
+        public static final double visionkI = 0.015D;
+        public static final double visionkD = 0D; // 10.0D;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
-            return new LookaheadBounds(1, 8, 3, 10, dt.getVelocityEstimator());
+            return new LookaheadBounds(1, 3, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
     }
@@ -76,9 +86,7 @@ public class Constants
             public static final double ENC_UNITS_TO_FPS = 10 * ENC_UNITS_TO_FEET;
 
 
-
-            //TODO: Remeasure
-            public static final double MAX_FPS_SPEED = 18.0F;
+            public static final double MAX_FPS_SPEED = 10.0F;
 
             //TODO: Measure/Calculate
             public static final double MAX_FPS2_ACCEL = 30;
@@ -96,14 +104,15 @@ public class Constants
 
             public static final DriveTrain TANK_ROBOT_CONSTANTS = new DriveTrain();
             public static final double DEFAULT_KF_LEFT_PRACTICE = .6;
-            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.495;
+//            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.495;
+            public static final double DEFAULT_KF_RIGHT_PRACTICE = 0.6;
 
             public static final double DEFAULT_KF_LEFT_COMPBOT = 0.465;
             public static final double DEFAULT_KF_RIGHT_COMPBOT = 0.455;
 
-            public static final int DEFAULT_KD = 0;
-            public static final int DEFAULT_KI = 0;
-            public static final double DEFAULT_KP = 0.2;
+            public static final double DEFAULT_KP = 2;
+            public static final double DEFAULT_KI = 0;
+            public static final double DEFAULT_KD = 0;
             public static final double SECONDS_FROM_NEUTRAL_TO_FULL = 0.05;
 
             private DriveTrain() { }

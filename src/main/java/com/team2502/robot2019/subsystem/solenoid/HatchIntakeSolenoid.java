@@ -22,7 +22,7 @@ public class HatchIntakeSolenoid extends NonDefaultSubsystem implements HatchFla
         hatchPusher.set(hatchPusherEnabled = !hatchPusherEnabled);
     }
 
-    public void setHatchIntake(boolean open)
+    public void set(boolean open)
     {
         hatchPusher.set(hatchPusherEnabled = open);
     }

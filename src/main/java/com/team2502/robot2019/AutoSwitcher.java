@@ -1,23 +1,39 @@
 package com.team2502.robot2019;
 
 
+<<<<<<< HEAD
 import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
+=======
+import com.github.ezauton.core.action.*;
+>>>>>>> develop
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+<<<<<<< HEAD
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
 import com.team2502.robot2019.utils.Paths;
+=======
+import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
+import com.github.ezauton.core.utils.RealClock;
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.base.PurePursuitRecorder;
+import com.github.ezauton.recorder.base.RobotStateRecorder;
+import com.github.ezauton.wpilib.command.CommandCreator;
+import com.team2502.robot2019.command.autonomous.ingredients.*;
+import com.team2502.robot2019.command.vision.GoToTargetNTAction;
+import edu.wpi.first.wpilibj.DriverStation;
+>>>>>>> develop
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,20 +79,56 @@ public class AutoSwitcher
     {
         DO_NOTHING("Do Nothing", DoNothingCommand::new),
         ACTION_GROUP_TEST("PP Action Group Test", () -> {
-            ActionGroup group = new ActionGroup();
-            PPWaypoint[] waypoints = new PPWaypoint.Builder()
-                    .add(0, 0, 1600, 130000, -120000)
-                    .add(0, 4, 0, 130000, -120000)
-                    .buildArray();
-            PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
-            Path path = pathGenerator.generate(0.05);
+            Path path =new SplinePPWaypoint.Builder()
+                    .add(0, 0, 0, 4, 13, -12)
+                    .add(0, 3.5, -Math.PI/2,4, 13, -13)
+                    .add(3.5, 3.5, 0, 4, 13, -12)
+                    .add(3.5, 7, 0, 4, 13, -12)
+                    .add(6, 7, -Math.PI / 2, 4, 13, -12)
+                    .add(0, 0, -Math.PI, 1, 13, -12)
+                    .buildPathGenerator()
+                    .generate(0.05);
 
-            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
-            PurePursuitAction pp = new PurePursuitAction(10, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
+            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
+            PurePursuitAction pp = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
+            Recording rec = new Recording().addSubRecording(new PurePursuitRecorder(RealClock.CLOCK, path, ppMoveStrat))
+                    .addSubRecording(new RobotStateRecorder(RealClock.CLOCK, Robot.DRIVE_TRAIN.getLocEstimator(), Robot.DRIVE_TRAIN.getRotEstimator(), 35/12D, 30/12D));
 
-            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
-            group.addSequential(pp);//new PointDriveAction(.05, new ImmutableVector(3, 10), 3));
-            group.addSequential((Action) new VoltageDriveAction(-0.3, -0.3, 3));
+            Robot.onDisableThings.add(() -> {
+                try
+                {
+                    rec.save("ryan2.json");
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
+                DriverStation.reportError("saved unless not", false);
+            });
+            ActionGroup group = new ActionGroup()
+                    .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, rec::update, () -> {System.out.println("u");}))
+                    .addSequential(() -> {
+                try
+                {
+                    Robot.DRIVE_TRAIN.take();
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }).addSequential(pp).addSequential(Robot.DRIVE_TRAIN::giveBack);
+//            .addSequential(() -> {
+//                        DriverStation.reportError("I am saving", false);
+//                        try
+//                        {
+//                            rec.save("ryanisdecu.json");
+//                        }
+//                        catch(IOException e)
+//                        {
+//                            e.printStackTrace();
+//                        }
+//                        DriverStation.reportError("Saved", false);
+//                    });
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
@@ -84,11 +136,94 @@ public class AutoSwitcher
             group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
             group.addSequential((Action) new VoltageDriveAction(0.3, 0.3, 3));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-
         }),
         CENTER_HAB_TO_RIGHT_FRONT("Center Hab To Right Front", () ->
         {
             return new CommandCreator(Paths.Right.Level1.getAction_CenterToRightCargoShip(Robot.DRIVE_TRAIN, Robot.HATCH_INTAKE, RealClock.CLOCK), Robot.ACTION_SCHEDULER);
+        }),
+        VISION_TEST("VisionTest", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(4, 2000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        DRIVE_STRAIGHT_TEST("drive straight", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(1, 50000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        FRONT_LEFT_HATCH("MID Hab -> LEFT Front Hatch", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new SetHatchIntakeAction(false))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                    .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+                    .addSequential(new TurnToAnglePDAction(2, 15 * Math.PI / 180))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1000))
+                    .addSequential(new TurnToAnglePDAction(2, 15 * .4 * Math.PI / 180))
+                    .addSequential(getVisionRoutine())
+                    .addSequential(new AccelVelocityDriveAction(-4, -4, 0.25, 1000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+
+        FRONT_RIGHT_HATCH("MID Hab -> RIGHT Front Hatch", () -> {
+        ActionGroup group = new ActionGroup()
+                .addSequential(new SetHatchIntakeAction(false))
+                .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+                .addSequential(new TurnToAnglePDAction(2, -15 * Math.PI / 180))
+                .addSequential(new DriveStraightWithGyroAction(2.5, 1000))
+                .addSequential(new TurnToAnglePDAction(2, -15 * .4 * Math.PI / 180))
+                .addSequential(getVisionRoutine())
+                .addSequential(new AccelVelocityDriveAction(-4, -4, 0.25, 1000));
+        return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, (long) (4500), -Math.PI / 5))
+                    .addSequential(new TurnToAnglePDAction(1, Math.PI/2 - Math.PI / 6))
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(4, 1000))
+                    .addSequential(new SetHatchIntakeAction(true))
+                    .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(-1, 1000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        NEARSIDE_RIGHT_HATCH_PP("MID Hab -> RIGHT nearSIDE Hatch", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
+                    .addSequential(new DriveStraightWithGyroAction(2.5, (long) (4500), -Math.PI / 5))
+                    .addSequential(new TurnToAnglePDAction(1, Math.PI/2))
+                    .addSequential(new GoToTargetNTAction())
+                    .addSequential(new DriveStraightWithGyroAction(4, 1000))
+                    .addSequential(new SetHatchIntakeAction(true))
+                    .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                    .addSequential(new DriveStraightWithGyroAction(-1, 1000));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        RIGHT_NEAR_HATCH_HAB2("RIGHT Hab 2 -> Right nearSIDE Hatch CARGO SHIP", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(-7, 1000))
+                    .addSequential(new TimedPeriodicAction(1500, TimeUnit.MILLISECONDS))
+                    .addSequential(new TurnToAnglePDAction(2, -Math.PI / 6))
+                    .addSequential(new DriveStraightWithGyroAction(-4, 1750))
+                    .addSequential(new TurnToAnglePDAction(2, -Math.PI/2));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        LEFT_NEAR_HATCH_HAB2("LEFT Hab 2 -> LEFT nearSIDE Hatch CARGO SHIP", () -> {
+            ActionGroup group = new ActionGroup()
+                    .addSequential(new DriveStraightWithGyroAction(-7, 1000))
+                    .addSequential(new TimedPeriodicAction(1500, TimeUnit.MILLISECONDS))
+                    .addSequential(new TurnToAnglePDAction(2, Math.PI / 6))
+                    .addSequential(new DriveStraightWithGyroAction(-4, 1750))
+                    .addSequential(new TurnToAnglePDAction(2, Math.PI/2));
+            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        }),
+        TURNYTEST("turn test", () -> {
+            return new CommandCreator(new TurnToAnglePDAction(1, Math.PI / 2), Robot.ACTION_SCHEDULER);
+        }),
+        ACCELY_TEST("drivey test", () -> {
+            return new CommandCreator(new MotionMagicDriveAction(10, 10, 10, 10), Robot.ACTION_SCHEDULER);
         });
 
 
@@ -132,6 +267,18 @@ public class AutoSwitcher
          * @return A new command, fresh from the factory
          */
         Command getInstance();
+    }
+
+    /**
+     * @return An action group that will do vision, deploy hatch mech, and wait
+     */
+    private static ActionGroup getVisionRoutine()  {
+        return new ActionGroup().addSequential(new GoToTargetNTAction())
+                .addSequential(new DriveStraightWithGyroAction(3, 1000))
+                .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS))
+                .addSequential(new SetHatchIntakeAction(true))
+                .addSequential(new TimedPeriodicAction(400, TimeUnit.MILLISECONDS));
+
     }
 
 }

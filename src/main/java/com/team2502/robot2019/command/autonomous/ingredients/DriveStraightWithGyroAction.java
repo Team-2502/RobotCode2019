@@ -1,45 +1,60 @@
 package com.team2502.robot2019.command.autonomous.ingredients;
 
+import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.utils.MathUtils;
 import com.team2502.robot2019.Robot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.concurrent.TimeUnit;
+
+import static com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroCommand.defaultKDgain;
+import static com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroCommand.defaultKPgain;
 
 /**
  * Drive straight by using basic PD control on the heading
  */
-public class DriveStraightWithGyroCommand extends Command
+public class DriveStraightWithGyroAction extends TimedPeriodicAction
 {
-    protected static final double defaultKPgain = 10;
-    protected static final double defaultKDgain = 0;
 
 
     private final double speed;
 
-    private double targetAngle;
+    private Double targetAngle;
 
     private double kPgain;
     private double kDgain;
 
     /**
      * Construct a Drive Straight command
+     *  @param speed How fast to go (ft/s)
+     **/
+    public DriveStraightWithGyroAction(double speed, long duration) {
+        this(speed, duration, null);
+    }
+
+
+    /**
+     * Construct a Drive Straight command
      *
      * @param speed How fast to go (ft/s)
-     * @param timeout How long to go for (seconds)
-     */
-    public DriveStraightWithGyroCommand(double speed, double timeout) {
-        super(timeout);
+     * */
+    public DriveStraightWithGyroAction(double speed, long duration, Double targetAngle) {
+        super(duration, TimeUnit.MILLISECONDS);
         this.speed = speed;
 
         SmartDashboard.putNumber("drivestraight_kP", defaultKPgain);
         SmartDashboard.putNumber("drivestraight_kD", defaultKDgain);
+        this.targetAngle = targetAngle;
     }
 
     @Override
-    protected void initialize()
+    protected void init() throws InterruptedException
     {
-        this.targetAngle = Robot.DRIVE_TRAIN.getRotEstimator().estimateHeading();
-
+        Robot.DRIVE_TRAIN.take();
+        if(targetAngle == null)
+        {
+            this.targetAngle = Robot.DRIVE_TRAIN.getRotEstimator().estimateHeading();
+        }
         // Allow for tuning of PID without redeployment.
         kPgain = SmartDashboard.getNumber("drivestraight_kP", defaultKPgain);
         kDgain = SmartDashboard.getNumber("drivestraight_kD", defaultKDgain);
@@ -62,8 +77,8 @@ public class DriveStraightWithGyroCommand extends Command
     }
 
     @Override
-    protected boolean isFinished()
+    public void end() throws Exception
     {
-        return isTimedOut();
+        Robot.DRIVE_TRAIN.giveBack();
     }
 }
