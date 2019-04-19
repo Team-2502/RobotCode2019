@@ -38,6 +38,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -71,6 +73,8 @@ public class Robot extends TimedRobot
     public static NetworkTableEntry angleEntry;
     public static NetworkTableEntry connectedEntry;
     public static NetworkTableEntry seesTarget;
+
+    public static List<Runnable> onDisableThings = new ArrayList<>();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -210,6 +214,9 @@ public class Robot extends TimedRobot
         OBA.set(false);
         HATCH_INTAKE.set(false);
         CLIMB_CLAWS.set(false);
+
+        onDisableThings.forEach(Runnable::run);
+        onDisableThings.clear();
     }
 
     @Override

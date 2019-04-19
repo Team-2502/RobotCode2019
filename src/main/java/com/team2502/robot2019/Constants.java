@@ -51,7 +51,7 @@ public class Constants
         public static final double visionkD = 0D; // 10.0D;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
-            return new LookaheadBounds(0.3, 0.5, 3, 10, dt.getVelocityEstimator());
+            return new LookaheadBounds(1, 3, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
     }

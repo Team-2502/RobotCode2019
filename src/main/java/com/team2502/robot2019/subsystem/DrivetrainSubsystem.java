@@ -8,7 +8,7 @@ import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.localization.RotationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
-import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator;
+import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.localization.sensors.VelocityEstimator;
@@ -42,7 +42,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     private final TypicalMotor right;
 
     private final TankRobotTransLocDriveable trtls;
-    private final EncoderRotationEstimator locEst;
+    private final TankRobotEncoderEncoderEstimator locEst;
     private final RotationalLocationEstimator rotEst;
     private final VelocityEstimator velEst;
 
@@ -91,6 +91,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
         frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
         frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+
 
         SpeedControllerGroup scgLeft = new SpeedControllerGroup(frontLeft, backLeft);
         SpeedControllerGroup scgRight = new SpeedControllerGroup(frontRight, backRight);
@@ -173,29 +174,30 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
                                                             );
 
         pigeonIMU.setYaw(0);
-        rotEst = () -> {
-            double headingDeg = pigeonIMU.getFusedHeading();
-            return headingDeg * Math.PI / 180D;
-        };
+//        rotEst = () -> {
+//            double headingDeg = pigeonIMU.getFusedHeading();
+//            return headingDeg * Math.PI / 180D;
+//        };
         velEst = () -> (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
 
-        locEst = new EncoderRotationEstimator(rotEst, new TranslationalDistanceSensor()
-        {
-            @Override
-            public double getPosition()
-            {
-                return (leftSensor.getPosition() + rightSensor.getPosition()) / 2;
-            }
-
-            @Override
-            public double getVelocity()
-            {
-                return (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
-            }
-        });
-//        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
+//        locEst = new EncoderRotationEstimator(rotEst, new TranslationalDistanceSensor()
+//        {
+//            @Override
+//            public double getPosition()
+//            {
+//                return (leftSensor.getPosition() + rightSensor.getPosition()) / 2;
+//            }
+//
+//            @Override
+//            public double getVelocity()
+//            {
+//                return (leftSensor.getVelocity() + rightSensor.getVelocity()) / 2;
+//            }
+//        });
+        locEst = new TankRobotEncoderEncoderEstimator(leftSensor, rightSensor, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
         locEst.reset();
 
+        rotEst = locEst;
 
         trtls = new TankRobotTransLocDriveable(left, right, locEst, rotEst, Constants.Physical.DriveTrain.TANK_ROBOT_CONSTANTS);
 
@@ -307,7 +309,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
     }
 
     @Override
-    public EncoderRotationEstimator getLocEstimator()
+    public TankRobotEncoderEncoderEstimator getLocEstimator()
     {
         return locEst;
     }
@@ -571,6 +573,13 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         SmartDashboard.putNumber("right vel", rightSensor.getVelocity());
         SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
         SmartDashboard.putNumber("right pos", frontRight.getSelectedSensorPosition());
+
+        SmartDashboard.putNumber("leftFt", leftSensor.getPosition());
+        SmartDashboard.putNumber("rightFt", rightSensor.getPosition());
+
+        SmartDashboard.putNumber("left pos", frontLeft.getSelectedSensorPosition());
+        SmartDashboard.putNumber("right pos", frontRight.getSelectedSensorPosition());
+
         SmartDashboard.putString("loc", locEst.estimateLocation().toString());
     }
 

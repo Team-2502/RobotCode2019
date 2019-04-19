@@ -5,13 +5,19 @@ import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
+import com.github.ezauton.core.utils.RealClock;
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.base.PurePursuitRecorder;
+import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.*;
 import com.team2502.robot2019.command.vision.GoToTargetNTAction;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,16 +63,34 @@ public class AutoSwitcher
         DO_NOTHING("Do Nothing", DoNothingCommand::new),
         ACTION_GROUP_TEST("PP Action Group Test", () -> {
             Path path =new SplinePPWaypoint.Builder()
-                    .add(0, 0, 0, 2, 13, -12)
-                    .add(0, 3, -Math.PI/2, 2, 13, -13)
-                    .add(3, 3, 0, 2, 13, -12)
-                    .add(3, 6, 0, 0, 13, -12)
+                    .add(0, 0, 0, 4, 13, -12)
+                    .add(0, 3.5, -Math.PI/2,4, 13, -13)
+                    .add(3.5, 3.5, 0, 4, 13, -12)
+                    .add(3.5, 7, 0, 4, 13, -12)
+                    .add(6, 7, -Math.PI / 2, 4, 13, -12)
+                    .add(0, 0, -Math.PI, 1, 13, -12)
                     .buildPathGenerator()
                     .generate(0.05);
 
             PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
             PurePursuitAction pp = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
-            ActionGroup group = new ActionGroup().addSequential(() -> {
+            Recording rec = new Recording().addSubRecording(new PurePursuitRecorder(RealClock.CLOCK, path, ppMoveStrat))
+                    .addSubRecording(new RobotStateRecorder(RealClock.CLOCK, Robot.DRIVE_TRAIN.getLocEstimator(), Robot.DRIVE_TRAIN.getRotEstimator(), 35/12D, 30/12D));
+
+            Robot.onDisableThings.add(() -> {
+                try
+                {
+                    rec.save("ryan2.json");
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace();
+                }
+                DriverStation.reportError("saved unless not", false);
+            });
+            ActionGroup group = new ActionGroup()
+                    .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, rec::update, () -> {System.out.println("u");}))
+                    .addSequential(() -> {
                 try
                 {
                     Robot.DRIVE_TRAIN.take();
@@ -76,6 +100,18 @@ public class AutoSwitcher
                     e.printStackTrace();
                 }
             }).addSequential(pp).addSequential(Robot.DRIVE_TRAIN::giveBack);
+//            .addSequential(() -> {
+//                        DriverStation.reportError("I am saving", false);
+//                        try
+//                        {
+//                            rec.save("ryanisdecu.json");
+//                        }
+//                        catch(IOException e)
+//                        {
+//                            e.printStackTrace();
+//                        }
+//                        DriverStation.reportError("Saved", false);
+//                    });
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
