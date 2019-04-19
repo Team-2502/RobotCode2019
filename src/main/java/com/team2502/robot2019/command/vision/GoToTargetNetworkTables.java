@@ -145,7 +145,7 @@ public class GoToTargetNetworkTables extends Command {
     @Override
     protected boolean isFinished()
     {
-        return Math.abs(visionInfo.getPos().get(1)) <= 1.25;
+        return Math.abs(visionInfo.getPos().get(1)) <= 0.7;
 //        return false;
 //        return visionInfo.getPos().get(0) <= 0.002;
     }

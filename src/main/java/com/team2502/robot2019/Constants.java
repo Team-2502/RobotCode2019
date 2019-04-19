@@ -46,8 +46,8 @@ public class Constants
         public static final int PORT = 5800;
         public static final double visionOffset = 0.2;//.3;
 
-        public static final double visionkP = 1.5D;
-        public static final double visionkI = 0.015D;
+        public static final double visionkP = 2D;
+        public static final double visionkI = 0D;
         public static final double visionkD = 0D; // 10.0D;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
