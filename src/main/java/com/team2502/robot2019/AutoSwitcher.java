@@ -1,24 +1,9 @@
 package com.team2502.robot2019;
 
 
-<<<<<<< HEAD
-import com.github.ezauton.core.action.Action;
-import com.github.ezauton.core.action.ActionGroup;
-import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PurePursuitAction;
-import com.github.ezauton.core.pathplanning.PP_PathGenerator;
-=======
 import com.github.ezauton.core.action.*;
->>>>>>> develop
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-<<<<<<< HEAD
-import com.github.ezauton.core.utils.RealClock;
-import com.github.ezauton.wpilib.command.CommandCreator;
-import com.team2502.robot2019.command.autonomous.ingredients.DoNothingCommand;
-import com.team2502.robot2019.command.autonomous.ingredients.VoltageDriveAction;
-import com.team2502.robot2019.utils.Paths;
-=======
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.recorder.Recording;
@@ -27,8 +12,8 @@ import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.*;
 import com.team2502.robot2019.command.vision.GoToTargetNTAction;
+import com.team2502.robot2019.utils.Paths;
 import edu.wpi.first.wpilibj.DriverStation;
->>>>>>> develop
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -117,18 +102,6 @@ public class AutoSwitcher
                     e.printStackTrace();
                 }
             }).addSequential(pp).addSequential(Robot.DRIVE_TRAIN::giveBack);
-//            .addSequential(() -> {
-//                        DriverStation.reportError("I am saving", false);
-//                        try
-//                        {
-//                            rec.save("ryanisdecu.json");
-//                        }
-//                        catch(IOException e)
-//                        {
-//                            e.printStackTrace();
-//                        }
-//                        DriverStation.reportError("Saved", false);
-//                    });
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
         ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {

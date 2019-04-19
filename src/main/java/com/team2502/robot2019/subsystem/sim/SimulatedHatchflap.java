@@ -14,7 +14,7 @@ public class SimulatedHatchflap implements HatchFlap
     }
 
     @Override
-    public void setHatchIntake(boolean open)
+    public void set(boolean open)
     {
         deployed = open;
     }
