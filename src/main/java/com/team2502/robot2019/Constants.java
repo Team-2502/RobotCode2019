@@ -37,6 +37,9 @@ public class Constants
         public static final double JOYSTICK_DEADBAND = 0.05;
     }
 
+    public static class ShuffleboardKeys {
+        public static final String DELAY_AUTO = "delay auto by how many seconds?";
+    }
     /**
      * Variables that pertain to auto
      */

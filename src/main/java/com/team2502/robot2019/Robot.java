@@ -16,6 +16,7 @@ import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.simulation.ActionScheduler;
+import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
@@ -127,6 +128,10 @@ public class Robot extends TimedRobot
         SmartDashboard.putNumber("kP", 0.2);
         SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
+
+        SmartDashboard.putNumber(Constants.ShuffleboardKeys.DELAY_AUTO, 0);
+
+        MathUtils.init();
     }
 
 
