@@ -17,7 +17,7 @@ public class TurnToAnglePDAction extends PeriodicAction
 
     private final double speed;
 
-    private final double defaultKPgain = 10;
+    private final double defaultKPgain = 5;
     private final double defaultKDgain = 0;
 
     private double targetAngle;

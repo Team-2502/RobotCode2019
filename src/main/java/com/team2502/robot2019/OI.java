@@ -95,6 +95,7 @@ public final class OI
     public static final Button BUTTON_DRIVE_FORWARDS_NOGYRO = new JoystickButton(JOYSTICK_DRIVE_LEFT, 7);
 
     public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_SIDE_PANEL, 6);
+    public static final Button BUTTON_KILL_ACTIONS = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_KILL_ACTIONS);
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -146,6 +147,18 @@ public final class OI
         BUTTON_DRIVE_FORWARDS_NOGYRO.whileHeld(new VelocityDriveCommand(4, 4, 4));
 
         BUTTON_DRIVE_FORWARDS.whileHeld(new DriveStraightWithGyroCommand(2,5));
+
+        BUTTON_KILL_ACTIONS.whenPressed(new LambdaCommand(() -> {
+            Scheduler.getInstance().removeAll();
+            try
+            {
+                Robot.ACTION_SCHEDULER.killAll();
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }));
     }
 
     /**
