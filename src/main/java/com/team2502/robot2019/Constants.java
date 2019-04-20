@@ -44,14 +44,14 @@ public class Constants
     {
         public static final String COPROCESSOR_MDNS_ADDR = "frcvision.local";
         public static final int PORT = 5800;
-        public static final double visionOffset = 0.2;//.3;
+        public static final double visionOffset = 0.14;//.3;
 
         public static final double visionkP = 2D;
         public static final double visionkI = 0D;
         public static final double visionkD = 0D; // 10.0D;
 
         public static LookaheadBounds getLookaheadBounds(DriveTrain dt) {
-            return new LookaheadBounds(1, 3, 3, 10, dt.getVelocityEstimator());
+            return new LookaheadBounds(1, 5, 3, 10, dt.getVelocityEstimator());
         }
         private Autonomous() { }
     }

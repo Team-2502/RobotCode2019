@@ -143,7 +143,7 @@ public class AutoSwitcher
 
 
 
-        NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", CenterStartingAutos::rightNearSideHatch),
+        NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", CenterStartingAutos::rightNearSideHatchPP),
         RIGHT_NEAR_HATCH_HAB2("RIGHT Hab 2 -> Right nearSIDE Hatch CARGO SHIP", RightStartingAutos.Hab2::rightNearSideHatch),
         LEFT_NEAR_HATCH_HAB2("LEFT Hab 2 -> LEFT nearSIDE Hatch CARGO SHIP", LeftStartingAutos.Hab2::leftNearSideHatch),
         TURNYTEST("turn test", () -> {

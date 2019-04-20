@@ -107,6 +107,31 @@ public class PathTest
                         .buildPathGenerator().generate(0.05)
                                         );
 
+        test(paths, "testRightHab2Front.json");
+    }
+
+    @Test
+    public void testApple() throws TimeoutException, ExecutionException
+    {
+        List<Path> paths = Arrays.asList(
+                new SplinePPWaypoint.Builder(4)
+                        .add(0, 0, 0, 2, 13, -12)
+                        .add(0, 6, 0, 5, 13, -13)
+                        .add(6, 10, 2.5, 1.25, 6, 13, -12)
+                        .add(3, 17, -20, 0, 6, 13, -13)
+
+//                        .add(6.6, 14, 10, 10, 2, 13, -12)
+//                        .add(3, 17.387, -0.2, 0, 2, 13, -12)
+//                        .add(5, 17.2, -0.001, 0, 3.5, 13, -12)
+                        .buildPathGenerator()
+                        .generate(0.05)
+                                        );
+
+        test(paths, "apple.json");
+    }
+
+    private void test(List<Path> paths, String fileName)
+    {
         Recording recording = new Recording();
         ActionGroup group = new ActionGroup();
         ActionGroup PurePursuitActions = new ActionGroup();
@@ -145,7 +170,7 @@ public class PathTest
 
         try
         {
-            recording.save("testRightHab2Front.json");
+            recording.save(fileName);
         }
         catch(IOException e)
         {
