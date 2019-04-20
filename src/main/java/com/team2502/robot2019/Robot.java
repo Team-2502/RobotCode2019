@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Robot extends TimedRobot
 {
-    public static ActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
+    public static MainActionScheduler ACTION_SCHEDULER = new MainActionScheduler(RealClock.CLOCK);
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE;
     public static ClimbClawSolenoid CLIMB_CLAWS;

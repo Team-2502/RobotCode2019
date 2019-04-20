@@ -18,6 +18,7 @@ import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 
 /**
@@ -84,21 +85,16 @@ public final class OI
     public static final Button BUTTON_DRIVER_FLIP_OUT_LEFT = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
     public static final Button BUTTON_DRIVER_FLIP_OUT_RIGHT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
 
-    public static final Button BUTTON_TOGGLE_OBA = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_TOGGLE_OBA);
+    public static final Button BUTTON_TOGGLE_OBA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
-    public static final Button BUTTON_SWITCH_CAMERA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
     public static final Button BUTTON_CRAWL = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
 
-    public static final Button BUTTON_HUD_L0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L0);
-    public static final Button BUTTON_HUD_L1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L1);
-    public static final Button BUTTON_HUD_L2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_L2);
-    public static final Button BUTTON_HUD_R0 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R0);
-    public static final Button BUTTON_HUD_R1 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R1);
-    public static final Button BUTTON_HUD_R2 = new JoystickButton(JOYSTICK_SIDE_PANEL, RobotMap.Joystick.Button.BUTTON_HUD_R2);
 
     public static final Button BUTTON_DRIVE_FORWARDS = new JoystickButton(JOYSTICK_DRIVE_LEFT, 8);
     public static final Button BUTTON_DRIVE_FORWARDS_NOGYRO = new JoystickButton(JOYSTICK_DRIVE_LEFT, 7);
+
+    public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_SIDE_PANEL, 6);
     public static int camera1Selected = 0;
     /*
      * Runs when the first static method (usually OI#init()) is called
@@ -109,6 +105,18 @@ public final class OI
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
         BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new DriveToVisionTargetCommand());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
+
+        BUTTON_ABORT_AUTO.whenPressed(new LambdaCommand(() -> {
+            Scheduler.getInstance().removeAll();
+            try
+            {
+                Robot.ACTION_SCHEDULER.killAll();
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }));
 
         // CARGO MANIPULATOR
         BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_FWD));
@@ -136,31 +144,7 @@ public final class OI
         BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());
 
         BUTTON_DRIVE_FORWARDS_NOGYRO.whileHeld(new VelocityDriveCommand(4, 4, 4));
-        // BUTTONS FOR SCORING HUD
-        BUTTON_HUD_L0.whenPressed(new IncrementHUD(0, true));
-        BUTTON_HUD_L1.whenPressed(new IncrementHUD(1, true));
-        BUTTON_HUD_L2.whenPressed(new IncrementHUD(2, true));
-        BUTTON_HUD_R0.whenPressed(new IncrementHUD(0, false));
-        BUTTON_HUD_R1.whenPressed(new IncrementHUD(1, false));
-        BUTTON_HUD_R2.whenPressed(new IncrementHUD(2, false));
 
-
-        // BUTTON_SWITCH_CAMERA
-        BUTTON_SWITCH_CAMERA.whenPressed(new LambdaCommand(() -> {
-            switch (camera1Selected = camera1Selected % 3)
-            {
-                case 0:
-                    Robot.SERVER.setSource(Robot.CAMERA0);
-                    break;
-                case 1:
-                    Robot.SERVER.setSource(Robot.CAMERA1);
-                    break;
-                case 2:
-                    Robot.SERVER.setSource(Robot.CAMERA2);
-                    break;
-            }
-            camera1Selected++;
-        }));
         BUTTON_DRIVE_FORWARDS.whileHeld(new DriveStraightWithGyroCommand(2,5));
     }
 
