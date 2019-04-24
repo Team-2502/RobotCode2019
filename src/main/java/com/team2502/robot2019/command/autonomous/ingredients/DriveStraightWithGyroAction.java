@@ -42,8 +42,8 @@ public class DriveStraightWithGyroAction extends TimedPeriodicAction
         super(duration, TimeUnit.MILLISECONDS);
         this.speed = speed;
 
-        SmartDashboard.putNumber("drivestraight_kP", defaultKPgain);
-        SmartDashboard.putNumber("drivestraight_kD", defaultKDgain);
+//        SmartDashboard.putNumber("drivestraight_kP", defaultKPgain);
+//        SmartDashboard.putNumber("drivestraight_kD", defaultKDgain);
         this.targetAngle = targetAngle;
     }
 

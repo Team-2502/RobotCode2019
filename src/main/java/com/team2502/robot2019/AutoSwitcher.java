@@ -11,6 +11,7 @@ import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.command.autonomous.ingredients.*;
+import com.team2502.robot2019.command.autonomous.recipes.AutoSpecificUtils;
 import com.team2502.robot2019.command.autonomous.recipes.CenterStartingAutos;
 import com.team2502.robot2019.command.autonomous.recipes.LeftStartingAutos;
 import com.team2502.robot2019.command.autonomous.recipes.RightStartingAutos;
@@ -64,75 +65,61 @@ public class AutoSwitcher
     public enum AutoMode
     {
         DO_NOTHING("Do Nothing", DoNothingCommand::new),
-        ACTION_GROUP_TEST("PP Action Group Test", () -> {
-            Path path =new SplinePPWaypoint.Builder()
-                    .add(0, 0, 0, 4, 13, -12)
-                    .add(0, 3.5, -Math.PI/2,4, 13, -13)
-                    .add(3.5, 3.5, 0, 4, 13, -12)
-                    .add(3.5, 7, 0, 4, 13, -12)
-                    .add(6, 7, -Math.PI / 2, 4, 13, -12)
-                    .add(0, 0, -Math.PI, 1, 13, -12)
-                    .buildPathGenerator()
-                    .generate(0.05);
-
-            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
-            PurePursuitAction pp = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
-            Recording rec = new Recording().addSubRecording(new PurePursuitRecorder(RealClock.CLOCK, path, ppMoveStrat))
-                    .addSubRecording(new RobotStateRecorder(RealClock.CLOCK, Robot.DRIVE_TRAIN.getLocEstimator(), Robot.DRIVE_TRAIN.getRotEstimator(), 35/12D, 30/12D));
-
-            Robot.onDisableThings.add(() -> {
-                try
-                {
-                    rec.save("ryan2.json");
-                }
-                catch(IOException e)
-                {
-                    e.printStackTrace();
-                }
-                DriverStation.reportError("saved unless not", false);
-            });
-            ActionGroup group = new ActionGroup()
-                    .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, rec::update, () -> {System.out.println("u");}))
-                    .addSequential(() -> {
-                try
-                {
-                    Robot.DRIVE_TRAIN.take();
-                }
-                catch(InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }).addSequential(pp).addSequential(Robot.DRIVE_TRAIN::giveBack);
-//            .addSequential(() -> {
-//                        DriverStation.reportError("I am saving", false);
-//                        try
-//                        {
-//                            rec.save("ryanisdecu.json");
-//                        }
-//                        catch(IOException e)
-//                        {
-//                            e.printStackTrace();
-//                        }
-//                        DriverStation.reportError("Saved", false);
-//                    });
-            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-        }),
-        ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
-            ActionGroup group = new ActionGroup();
-            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
-            group.addSequential((Action) new VoltageDriveAction(0.3, 0.3, 3));
-            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
-        }),
+//        ACTION_GROUP_TEST("PP Action Group Test", () -> {
+//            Path path =new SplinePPWaypoint.Builder()
+//                    .add(0, 0, 0, 4, 13, -12)
+//                    .add(0, 3.5, -Math.PI/2,4, 13, -13)
+//                    .add(3.5, 3.5, 0, 4, 13, -12)
+//                    .add(3.5, 7, 0, 4, 13, -12)
+//                    .add(6, 7, -Math.PI / 2, 4, 13, -12)
+//                    .add(0, 0, -Math.PI, 1, 13, -12)
+//                    .buildPathGenerator()
+//                    .generate(0.05);
+//
+//            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
+//            PurePursuitAction pp = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, Robot.DRIVE_TRAIN.getLocEstimator(), Constants.Autonomous.getLookaheadBounds(Robot.DRIVE_TRAIN), Robot.DRIVE_TRAIN);
+//            Recording rec = new Recording().addSubRecording(new PurePursuitRecorder(RealClock.CLOCK, path, ppMoveStrat))
+//                    .addSubRecording(new RobotStateRecorder(RealClock.CLOCK, Robot.DRIVE_TRAIN.getLocEstimator(), Robot.DRIVE_TRAIN.getRotEstimator(), 35/12D, 30/12D));
+//
+//            Robot.onDisableThings.add(() -> {
+//                try
+//                {
+//                    rec.save("ryan2.json");
+//                }
+//                catch(IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//                DriverStation.reportError("saved unless not", false);
+//            });
+//            ActionGroup group = new ActionGroup()
+//                    .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, rec::update, () -> {System.out.println("u");}))
+//                    .addSequential(() -> {
+//                try
+//                {
+//                    Robot.DRIVE_TRAIN.take();
+//                }
+//                catch(InterruptedException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//            }).addSequential(pp).addSequential(Robot.DRIVE_TRAIN::giveBack);
+//            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+//        }),
+//        ACTION_GROUP_PARALLEL_TEST("PP Action Group Parallel Test", () -> {
+//            ActionGroup group = new ActionGroup();
+//            group.with(new BackgroundAction(10, TimeUnit.MILLISECONDS, Robot.DRIVE_TRAIN::update));
+//            group.addSequential((Action) new VoltageDriveAction(0.3, 0.3, 3));
+//            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+//        }),
         VISION_TEST("VisionTest", () -> {
             ActionGroup group = new ActionGroup()
                     .addSequential(new GoToTargetNTAction())
                     .addSequential(new DriveStraightWithGyroAction(4, 2000));
             return new CommandCreator(group, Robot.ACTION_SCHEDULER);
         }),
-        DRIVE_STRAIGHT_TEST("drive straight", () -> {
-            ActionGroup group = new ActionGroup()
-                    .addSequential(new DriveStraightWithGyroAction(1, 50000));
-            return new CommandCreator(group, Robot.ACTION_SCHEDULER);
+        DRIVE_STRAIGHT_TEST("HAB 2 -> Straight Backwards + 180deg turn", () -> {
+            return new CommandCreator(AutoSpecificUtils.driveOffOfHab2Backwards(), Robot.ACTION_SCHEDULER);
         }),
 
 
@@ -143,15 +130,22 @@ public class AutoSwitcher
 
 
 
-        NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", CenterStartingAutos::rightNearSideHatchPP),
+        NEARSIDE_RIGHT_HATCH("MID Hab -> RIGHT nearSIDE Hatch", CenterStartingAutos::
+                rightNearSideHatchPP),
+        NEARSIDE_LEFT_HATCH("MID Hab -> LEFT nearSIDE Hatch", CenterStartingAutos::
+                leftNearSideHatchPP),
+
         RIGHT_NEAR_HATCH_HAB2("RIGHT Hab 2 -> Right nearSIDE Hatch CARGO SHIP", RightStartingAutos.Hab2::rightNearSideHatch),
-        LEFT_NEAR_HATCH_HAB2("LEFT Hab 2 -> LEFT nearSIDE Hatch CARGO SHIP", LeftStartingAutos.Hab2::leftNearSideHatch),
-        TURNYTEST("turn test", () -> {
-            return new CommandCreator(new TurnToAnglePDAction(1, Math.PI / 2), Robot.ACTION_SCHEDULER);
-        }),
-        ACCELY_TEST("drivey test", () -> {
-            return new CommandCreator(new MotionMagicDriveAction(10, 10, 10, 10), Robot.ACTION_SCHEDULER);
-        });
+        RIGHT_FRONT_HATCH_HAB2("RIGHT Hab 2 -> Right Front Hatch CARGO SHIP", RightStartingAutos.Hab2::frontRightHatch),
+
+        LEFTT_FRONT_HATCH_HAB2("LEFT Hab 2 -> Left Front Hatch CARGO SHIP", LeftStartingAutos.Hab2::frontLeftHatch),
+        LEFT_NEAR_HATCH_HAB2("LEFT Hab 2 -> LEFT nearSIDE Hatch CARGO SHIP", LeftStartingAutos.Hab2::leftNearSideHatch);
+//        TURNYTEST("turn test", () -> {
+//            return new CommandCreator(new TurnToAnglePDAction(1, Math.PI / 2), Robot.ACTION_SCHEDULER);
+//        }),
+//        ACCELY_TEST("drivey test", () -> {
+//            return new CommandCreator(new MotionMagicDriveAction(10, 10, 10, 10), Robot.ACTION_SCHEDULER);
+//        });
 
 
         /**

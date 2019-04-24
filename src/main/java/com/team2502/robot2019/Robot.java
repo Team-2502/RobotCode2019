@@ -132,6 +132,11 @@ public class Robot extends TimedRobot
         SmartDashboard.putNumber(Constants.ShuffleboardKeys.DELAY_AUTO, 0);
 
         MathUtils.init();
+
+        SmartDashboard.putNumber("minDistance", 1);
+        SmartDashboard.putNumber("maxDistance", 5);
+        SmartDashboard.putNumber("minSpeed", 3);
+        SmartDashboard.putNumber("maxSpeed", 10);
     }
 
 
