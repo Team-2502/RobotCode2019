@@ -144,8 +144,8 @@ public class Constants
 
         public static class OverBumperActive
         {
-            public static final double SPEED_FWD = 0.35D;
-            public static final double SPEED_BWD = -0.35D;
+            public static final double SPEED_FWD = 0.5D;
+            public static final double SPEED_BWD = -0.5D;
         }
 
         public static class Encoder
