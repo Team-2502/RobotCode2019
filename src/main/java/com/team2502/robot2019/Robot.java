@@ -87,7 +87,7 @@ public class Robot extends TimedRobot
         CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
         CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
         CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
-        CAMERA3 = new HttpCamera("vision", "http://10.25.2.29:1181/?action=stream", HttpCamera.HttpCameraKind.kCSCore);// + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ":1181");
+        CAMERA3 = new HttpCamera("vision", "http://frcvision.local:1181/?action=stream", HttpCamera.HttpCameraKind.kCSCore);// + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ":1181");
         CameraServer.getInstance().addCamera(CAMERA3);
         SERVER = CameraServer.getInstance().getServer();
 
