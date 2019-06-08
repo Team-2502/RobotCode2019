@@ -48,7 +48,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
 
     private SendableChooser<TeleopMode> teleopChooser;
 
-    private final DifferentialDrive diffDrive;
+    public final DifferentialDrive diffDrive;
 
     private final PigeonIMU pigeonIMU;
 

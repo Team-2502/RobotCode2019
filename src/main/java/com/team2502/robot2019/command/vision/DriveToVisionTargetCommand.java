@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class DriveToVisionTargetCommand extends CommandGroup
 {
     public DriveToVisionTargetCommand() {
-        addSequential(new GoToTargetNetworkTables());
+        addSequential(new GoToTargetLimelight());
         addSequential(new DriveStraightWithGyroCommand(2, 3));
     }
 }
