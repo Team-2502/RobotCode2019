@@ -60,20 +60,9 @@ public class Robot extends TimedRobot
     public static CargoSubsystem CARGO_ACTIVE;
     public static ClimberSubsystem CLIMBER;
     public static CrawlerSubsystem CRAWLER;
-    public static Compressor COMPRESSOR;
     public static UsbCamera CAMERA0;
     public static UsbCamera CAMERA1;
     public static UsbCamera CAMERA2;
-    private HttpCamera CAMERA3;
-
-    public static VideoSink SERVER;
-    public static ScoringHUD SCORING_HUD;
-    public static  NetworkTable VISION_TABLE;
-    public static NetworkTableEntry tvecs1Entry;
-    public static NetworkTableEntry tvecs2Entry;
-    public static NetworkTableEntry angleEntry;
-    public static NetworkTableEntry connectedEntry;
-    public static NetworkTableEntry seesTarget;
 
     public static List<Runnable> onDisableThings = new ArrayList<>();
 
@@ -87,11 +76,6 @@ public class Robot extends TimedRobot
         CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
         CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
         CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
-        CAMERA3 = new HttpCamera("vision", "http://frcvision.local:1181/?action=stream", HttpCamera.HttpCameraKind.kCSCore);// + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ":1181");
-        CameraServer.getInstance().addCamera(CAMERA3);
-        SERVER = CameraServer.getInstance().getServer();
-
-        SERVER.setSource(CAMERA3);
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
@@ -99,25 +83,12 @@ public class Robot extends TimedRobot
         CLIMB_CLAWS = new ClimbClawSolenoid();
         CARGO_ACTIVE = new CargoSubsystem();
         CLIMBER = new ClimberSubsystem();
-        COMPRESSOR = new Compressor();
         CRAWLER = new CrawlerSubsystem();
         OBA = new OBASolenoid();
 
-        SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
 
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
-        VISION_TABLE = inst.getTable("SmartDashboard");
-        tvecs1Entry = VISION_TABLE.getEntry("tvecs1");
-        tvecs1Entry.setDouble(-9001);
-        tvecs2Entry = VISION_TABLE.getEntry("tvecs2");
-        tvecs2Entry.setDouble(-9001);
-        angleEntry = VISION_TABLE.getEntry("angle");
-        angleEntry.setDouble(-9001);
-        connectedEntry = VISION_TABLE.getEntry("connected");
-        connectedEntry.setNumber(0);
-        seesTarget = VISION_TABLE.getEntry("seesTarget");
-        seesTarget.setBoolean(true);
 
         SmartDashboard.putNumber("pleaseUnstick", 1);
 
