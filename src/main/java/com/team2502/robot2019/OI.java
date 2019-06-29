@@ -11,8 +11,7 @@ import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
 import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 
-import com.team2502.robot2019.command.vision.DriveToVisionTargetCommand;
-import com.team2502.robot2019.command.vision.GoToTargetLimelight;
+import com.team2502.robot2019.command.vision.GoToTargetLimelightSimple;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -103,7 +102,7 @@ public final class OI
     static
     {
         BUTTON_HATCH_PUSHER.whenPressed(new HatchIntakeCommand());
-        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetLimelight());
+        BUTTON_ENABLE_AUTO_ALIGN.whenPressed(new GoToTargetLimelightSimple());
         BUTTON_ENABLE_AUTO_ALIGN.whenReleased(new AbortAutoCommand());
 
         BUTTON_ABORT_AUTO.whenPressed(new LambdaCommand(() -> {

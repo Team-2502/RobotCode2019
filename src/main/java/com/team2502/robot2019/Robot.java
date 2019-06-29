@@ -64,11 +64,11 @@ public class Robot extends TimedRobot
     public static UsbCamera CAMERA1;
     public static UsbCamera CAMERA2;
     public static NetworkTable LIMELIGHT;
-    public static NetworkTableEntry TX;
-    public static NetworkTableEntry TY;
-    public static NetworkTableEntry TA;
-    public static NetworkTableEntry TV;
-    public static NetworkTableEntry TS;
+    public static NetworkTableEntry LL_TX;
+    public static NetworkTableEntry LL_TY;
+    public static NetworkTableEntry LL_TS;
+    public static NetworkTableEntry LL_TA;
+    public static NetworkTableEntry LL_TV;
 
     public static List<Runnable> onDisableThings = new ArrayList<>();
 
@@ -116,12 +116,16 @@ public class Robot extends TimedRobot
         SmartDashboard.putNumber("maxSpeed", 10);
 
         LIMELIGHT = NetworkTableInstance.getDefault().getTable("limelight");
-        TX = LIMELIGHT.getEntry("tx");
-        TA = LIMELIGHT.getEntry("ta");
-        TS = LIMELIGHT.getEntry("ts");
-        TY = LIMELIGHT.getEntry("ty");
-        TV = LIMELIGHT.getEntry("tv");
+        LL_TX = LIMELIGHT.getEntry("tx");
+        LL_TA = LIMELIGHT.getEntry("ta");
+        LL_TS = LIMELIGHT.getEntry("ts");
+        LL_TY = LIMELIGHT.getEntry("ty");
+        LL_TV = LIMELIGHT.getEntry("tv");
 
+        SmartDashboard.putNumber("LL_Steer_K", 0.03);
+        SmartDashboard.putNumber("LL_Driver_K", 0.26);
+        SmartDashboard.putNumber("LL_DES_T_A", 13.0);
+        SmartDashboard.putNumber("LL_MAX_SPEED", 1);
 
 
     }
