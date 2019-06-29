@@ -41,10 +41,10 @@ public class PointAtTargetUsingPositionControl extends Command
 
     private void updateVisionData()
     {
-        double tvecs1 = Robot.tvecs1Entry.getDouble(-9001);
-        double tvecs2 = Robot.tvecs2Entry.getDouble(-9001);
+        double tvecs1 = 1; //Robot.tvecs1Entry.getDouble(-9001);
+        double tvecs2 = 1; //Robot.tvecs2Entry.getDouble(-9001);
         visionInfo.pos = new ImmutableVector(tvecs1, tvecs2);
-        visionInfo.angle = Robot.angleEntry.getDouble(-9001);
+        visionInfo.angle = 1; //Robot.angleEntry.getDouble(-9001);
     }
 
     @Override

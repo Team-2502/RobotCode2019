@@ -1,6 +1,8 @@
 package com.team2502.robot2019;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public final class DashboardData
 
     private static void updateVisionData()
     {
-        Robot.seesTarget.setBoolean(! (Robot.tvecs2Entry.getDouble(-9001) == -9001 || Robot.angleEntry.getDouble(-9001) == -9001));
+        //Robot.seesTarget.setBoolean(! (Robot.tvecs2Entry.getDouble(-9001) == -9001 || Robot.angleEntry.getDouble(-9001) == -9001));
     }
 
 
