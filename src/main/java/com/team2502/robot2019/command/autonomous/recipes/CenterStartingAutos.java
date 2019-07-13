@@ -15,10 +15,7 @@ import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.Constants;
 import com.team2502.robot2019.Robot;
-import com.team2502.robot2019.command.autonomous.ingredients.AccelVelocityDriveAction;
-import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroAction;
-import com.team2502.robot2019.command.autonomous.ingredients.SetHatchIntakeAction;
-import com.team2502.robot2019.command.autonomous.ingredients.TurnToAnglePDAction;
+import com.team2502.robot2019.command.autonomous.ingredients.*;
 import com.team2502.robot2019.command.vision.GoToTargetNTAction;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,6 +29,7 @@ public class CenterStartingAutos
     public static Command frontRightHatch()
     {
         ActionGroup group = new ActionGroup()
+                .addSequential(new WaitBasedOnShuffleBoardAction())
                 .addSequential(new SetHatchIntakeAction(false))
                 .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                 .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
@@ -49,6 +47,7 @@ public class CenterStartingAutos
     public static Command frontLeftHatch()
     {
             ActionGroup group = new ActionGroup()
+                    .addSequential(new WaitBasedOnShuffleBoardAction())
                     .addSequential(new SetHatchIntakeAction(false))
                     .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                     .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
@@ -64,6 +63,7 @@ public class CenterStartingAutos
     public static Command rightNearSideHatch()
     {
         ActionGroup group = new ActionGroup()
+                .addSequential(new WaitBasedOnShuffleBoardAction())
                 .addSequential(new DriveStraightWithGyroAction(2.5, 1500))
                 .addSequential(new DriveStraightWithGyroAction(2.5, (long) (4500), -Math.PI / 5))
                 .addSequential(new TurnToAnglePDAction(1, Math.PI / 2 - Math.PI / 6))
@@ -108,6 +108,7 @@ public class CenterStartingAutos
         });
 
         ActionGroup group = new ActionGroup()
+                .addSequential(new WaitBasedOnShuffleBoardAction())
                 .addParallel(new BackgroundAction(20, TimeUnit.MILLISECONDS, rec::update))
                 .addSequential(new SetHatchIntakeAction(false))
                 .addSequential(new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppms, Robot.DRIVE_TRAIN.getLocEstimator(),
@@ -161,6 +162,7 @@ public class CenterStartingAutos
         });
 
         ActionGroup group = new ActionGroup()
+                .addSequential(new WaitBasedOnShuffleBoardAction())
                 .addParallel(new BackgroundAction(20, TimeUnit.MILLISECONDS, rec::update))
                 .addSequential(new SetHatchIntakeAction(false))
                 .addSequential(new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppms, Robot.DRIVE_TRAIN.getLocEstimator(),

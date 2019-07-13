@@ -2,6 +2,7 @@ package com.team2502.robot2019.command.autonomous.ingredients;
 
 import com.github.ezauton.core.action.PeriodicAction;
 import com.team2502.robot2019.Constants;
+import com.team2502.robot2019.Robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,7 @@ public class WaitBasedOnShuffleBoardAction extends PeriodicAction
     @Override
     protected boolean isFinished() throws Exception
     {
-        return stopwatch.read(TimeUnit.MILLISECONDS) > delayTimeMillis;
+        return true;
+//        return Robot.okToStartAuto;
     }
 }

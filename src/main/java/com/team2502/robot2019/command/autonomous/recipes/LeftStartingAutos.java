@@ -25,6 +25,7 @@ public class LeftStartingAutos
     public static class Hab2 {
         public static Command leftNearSideHatch() {
             ActionGroup group = new ActionGroup()
+                    .addSequential(new WaitBasedOnShuffleBoardAction())
                     .addSequential(new DriveStraightWithGyroAction(-7, 1000))
                     .addSequential(new TimedPeriodicAction(1500, TimeUnit.MILLISECONDS))
                     .addSequential(new TurnToAnglePDAction(2, Math.PI / 6))
@@ -35,35 +36,9 @@ public class LeftStartingAutos
 
         public static Command frontLeftHatch() {
 
-            Recording rec = new Recording()
-                    .addSubRecording(new RobotStateRecorder(RealClock.CLOCK, new TranslationalLocationEstimator()
-                    {
-                        @Override
-                        public ImmutableVector estimateLocation()
-                        {
-                            return Robot.DRIVE_TRAIN.getLocEstimator().estimateLocation().mul(-1);
-                        }
-
-                        @Override
-                        public ImmutableVector estimateAbsoluteVelocity()
-                        {
-                            return Robot.DRIVE_TRAIN.getLocEstimator().estimateAbsoluteVelocity().mul(-1);
-                        }
-                    }, () -> -Robot.DRIVE_TRAIN.getRotEstimator().estimateHeading(), 36 / 12D, 30 / 12D));
-
-            Robot.onDisableThings.add(() -> {
-                try
-                {
-                    rec.save("offofhab2.json");
-                }
-                catch(IOException e)
-                {
-                    e.printStackTrace();
-                }
-            });
 
             ActionGroup group = new ActionGroup()
-                    .addParallel(new BackgroundAction(10, TimeUnit.MILLISECONDS, rec::update))
+                    .addSequential(new WaitBasedOnShuffleBoardAction())
                     .addSequential(AutoSpecificUtils.driveOffOfHab2Backwards())
                     .addSequential(new DriveStraightWithGyroAction(-3, 2000, -Math.PI / 2))
                     .addSequential(new TurnToAnglePDAction(5, -Math.PI));
