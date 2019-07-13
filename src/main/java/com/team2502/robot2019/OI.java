@@ -4,8 +4,8 @@ import com.team2502.robot2019.command.LambdaCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.AbortAutoCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.DriveStraightWithGyroCommand;
 import com.team2502.robot2019.command.autonomous.ingredients.VelocityDriveCommand;
-import com.team2502.robot2019.command.teleop.IncrementHUD;
 import com.team2502.robot2019.command.teleop.cargoactive.CargoActiveCommand;
+import com.team2502.robot2019.command.teleop.cargoactive.RunOBACommand;
 import com.team2502.robot2019.command.teleop.cargoactive.ToggleOBACommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbClawCommand;
 import com.team2502.robot2019.command.teleop.climber.ClimbCommand;
@@ -13,8 +13,6 @@ import com.team2502.robot2019.command.teleop.climber.CrawlCommand;
 import com.team2502.robot2019.command.teleop.HatchIntakeCommand;
 
 import com.team2502.robot2019.command.vision.DriveToVisionTargetCommand;
-import com.team2502.robot2019.command.vision.GoToTargetNetworkTables;
-import com.team2502.robot2019.subsystem.CargoSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -70,8 +68,13 @@ public final class OI
     public static final Button BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_TOP);
     public static final Button BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_TOP);
 
-    public static final Button BUTTON_RUN_CARGO_OBA_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
-    public static final Button BUTTON_RUN_CARGO_OBA_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
+    // ###############
+    // TODO: Make OBA Buttons
+    public static final Button BUTTON_OBA_TOGGLE = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_OBA_TOGGLE);
+    public static final Button BUTTON_OBA_IN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_OBA_IN);
+    public static final Button BUTTON_OBA_OUT = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_OBA_OUT);
+    // ###############
+
 
     public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_UP);
     public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_DOWN);
@@ -85,7 +88,6 @@ public final class OI
     public static final Button BUTTON_DRIVER_FLIP_OUT_LEFT = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
     public static final Button BUTTON_DRIVER_FLIP_OUT_RIGHT = new JoystickButton(JOYSTICK_DRIVE_RIGHT, RobotMap.Joystick.Button.BUTTON_DRIVER_ANTI_TIP);
 
-    public static final Button BUTTON_TOGGLE_OBA = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_SWITCH_CAMERA);
 
 
     public static final Button BUTTON_CRAWL = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_CRAWL);
@@ -122,11 +124,19 @@ public final class OI
 
 
         // CARGO MANIPULATOR
-        BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_BWD));
+        BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_FWD));
+        BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(Constants.Physical.CargoActive.SPEED_BWD));
 
-        BUTTON_RUN_CARGO_OBA_FWD.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.BOTH, Constants.Physical.OverBumperActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_OBA_BWD.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.BOTH, Constants.Physical.OverBumperActive.SPEED_BWD));
+
+
+
+        // ###############
+        // TODO: Attach OBA command (run wheels, deploy) to button
+        BUTTON_OBA_TOGGLE.whenPressed(new ToggleOBACommand());
+        BUTTON_OBA_IN.whileHeld(new RunOBACommand(Constants.Physical.OverBumperActive.SPEED_FWD));
+        BUTTON_OBA_OUT.whileHeld(new RunOBACommand(Constants.Physical.OverBumperActive.SPEED_BWD));
+        // ###############
+
 
         // CLIMBER
         BUTTON_CLIMB_UP.whileHeld(new ClimbCommand(true, ClimbCommand.Side.BOTH));
@@ -141,7 +151,7 @@ public final class OI
         BUTTON_CRAWL.whileHeld(new CrawlCommand());
         BUTTON_TOGGLE_FLIP_OUT.whenPressed(new ClimbClawCommand());
 
-        BUTTON_TOGGLE_OBA.whenPressed(new ToggleOBACommand());
+
 
         BUTTON_DRIVER_FLIP_OUT_LEFT.whenPressed(new ClimbClawCommand());
         BUTTON_DRIVER_FLIP_OUT_RIGHT.whenPressed(new ClimbClawCommand());

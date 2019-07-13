@@ -6,20 +6,18 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class CargoActiveCommand extends Command {
 
-    private final CargoSubsystem.Section section;
     private double speed;
 
-    public CargoActiveCommand(CargoSubsystem.Section section, double speed)
+    public CargoActiveCommand(double speed)
     {
 //        requires(Robot.CARGO_ACTIVE);
-        this.section = section;
         this.speed = speed;
     }
 
     @Override
     protected void execute()
     {
-        Robot.CARGO_ACTIVE.runIntake(section, speed);
+        Robot.CARGO_ACTIVE.runTop(speed);
     }
 
     @Override

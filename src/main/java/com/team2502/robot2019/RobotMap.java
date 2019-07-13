@@ -35,8 +35,6 @@ public class RobotMap
             public static final int BUTTON_KILL_ACTIONS = 14;
             public static final int BUTTON_ENABLE_AUTO_ALIGN = 1;
 
-            public static final int BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM = 5;
-            public static final int BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM = 3;
 
             public static final int BUTTON_RUN_CARGO_ACTIVE_FWD_TOP = 6;
             public static final int BUTTON_RUN_CARGO_ACTIVE_BWD_TOP = 4;
@@ -52,7 +50,15 @@ public class RobotMap
             public static final int BUTTON_SWITCH_CAMERA = 2;
             public static final int BUTTON_CRAWL = 1;
             public static final int BUTTON_TOGGLE_FLIP_OUT = 7;
-            public static final int BUTTON_TOGGLE_OBA = 8;
+
+
+            // ###############
+            // TODO: OBA button defns
+
+            public  static final int BUTTON_OBA_TOGGLE = 2;
+            public static final int BUTTON_OBA_IN = 5;
+            public static final int BUTTON_OBA_OUT = 3;
+            //
             public static final int BUTTON_DRIVER_ANTI_TIP = 2;
 
             public static final int BUTTON_HUD_L0 = 1;
@@ -76,7 +82,11 @@ public class RobotMap
         public static final int DRIVE_TRAIN_FRONT_LEFT = 3;
         public static final int DRIVE_TRAIN_BACK_LEFT = 4;
 
-        public static final int CARGO_LOWER_BELT = 5;
+        // ###############
+        // TODO: OBA Motor
+        public static final int OBA_MOTOR = 5;
+        //
+
         public static final int CARGO_UPPER_BELT = 6;
 
         public static final int CLIMBER_LEFT = 7;
@@ -98,7 +108,11 @@ public class RobotMap
 
         public static final int HATCH_INTAKE = 4;
         public static final int FLIP_OUTS = 3;
-        public static final int OBA = 2;
+
+        // ###############
+        // TODO: OBA Solenoid
+        public static final int OBA_SOLENOID = 2;
+        //
 
         private Solenoid() { }
     }

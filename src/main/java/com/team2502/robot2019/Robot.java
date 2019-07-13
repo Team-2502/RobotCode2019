@@ -18,13 +18,9 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
-import com.team2502.robot2019.subsystem.CargoSubsystem;
-import com.team2502.robot2019.subsystem.ClimberSubsystem;
-import com.team2502.robot2019.subsystem.CrawlerSubsystem;
-import com.team2502.robot2019.subsystem.DrivetrainSubsystem;
+import com.team2502.robot2019.subsystem.*;
 import com.team2502.robot2019.subsystem.solenoid.ClimbClawSolenoid;
 import com.team2502.robot2019.subsystem.solenoid.HatchIntakeSolenoid;
-import com.team2502.robot2019.subsystem.solenoid.OBASolenoid;
 import com.team2502.robot2019.utils.ScoringHUD;
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.UsbCamera;
@@ -55,7 +51,13 @@ public class Robot extends TimedRobot
     public static DrivetrainSubsystem DRIVE_TRAIN;
     public static HatchIntakeSolenoid HATCH_INTAKE;
     public static ClimbClawSolenoid CLIMB_CLAWS;
-    public static OBASolenoid OBA;
+    public static OBASubsystem OBA;
+
+    // ###############
+    // TODO: OBA Subsystem defn
+
+    // ###############
+
     public static CargoSubsystem CARGO_ACTIVE;
     public static ClimberSubsystem CLIMBER;
     public static CrawlerSubsystem CRAWLER;
@@ -99,7 +101,14 @@ public class Robot extends TimedRobot
         CLIMBER = new ClimberSubsystem();
         COMPRESSOR = new Compressor();
         CRAWLER = new CrawlerSubsystem();
-        OBA = new OBASolenoid();
+        OBA = new OBASubsystem();
+
+        // ###############
+        // TODO: OBA subsystem defn
+
+
+        // ###############
+
 
         SCORING_HUD = new ScoringHUD();
         AutoSwitcher.putToSmartDashboard();
@@ -219,7 +228,12 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
-        OBA.set(false);
+        // ###############
+        // TODO: OBA should not redeploy after reenabling. Fix this here
+
+        // ###############
+
+
         HATCH_INTAKE.set(false);
         CLIMB_CLAWS.set(false);
 
