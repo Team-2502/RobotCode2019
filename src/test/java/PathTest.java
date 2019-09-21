@@ -116,9 +116,10 @@ public class PathTest
         List<Path> paths = Arrays.asList(
                 new SplinePPWaypoint.Builder(4)
                         .add(0, 0, 0, 2, 13, -12)
-                        .add(0, 6, 0, 5, 13, -13)
-                        .add(6, 10, 2.5, 1.25, 6, 13, -12)
-                        .add(3, 17, -20, 0, 6, 13, -13)
+                        .add(0, 6, 0, 10, 10, 13, -13)
+//                        .add(6, 10, 2.5, 1.25, 6, 13, -12)
+                        .add(5.155, 17.265, 0, 25, 3, 13, -12)
+//                        .add(3.93, 17.3, -10, 0, 6, 13, -13)
 
 //                        .add(6.6, 14, 10, 10, 2, 13, -12)
 //                        .add(3, 17.387, -0.2, 0, 2, 13, -12)
@@ -128,6 +129,50 @@ public class PathTest
                                         );
 
         test(paths, "apple.json");
+    }
+
+    @Test
+    public void testHab2ToCenterRight() throws TimeoutException, ExecutionException
+    {
+        List<Path> paths = Arrays.asList(
+                new SplinePPWaypoint.Builder(4)
+                        .add(0, 0, 0, 2, 13, -12)
+                        .add(0, 6, 0, 5, 13, -13)
+                        .add(6, 10, 2.5, 1.25, 6, 13, -12)
+                        .add(3.93, 17.3, -10, 0, 6, 13, -13)
+
+//                        .add(6.6, 14, 10, 10, 2, 13, -12)
+//                        .add(3, 17.387, -0.2, 0, 2, 13, -12)
+//                        .add(5, 17.2, -0.001, 0, 3.5, 13, -12)
+                        .buildPathGenerator()
+                        .generate(0.05)
+                                        );
+
+        test(paths, "apple.json");
+    }
+
+    @Test
+    public void testCenterToLeft() throws Exception {
+        List<Path> paths = Arrays.asList(
+                new SplinePPWaypoint.Builder(4)
+                        .add(0, 0, 0, 2, 13, -12)
+                        .add(-1, 12.5, 0, 10, 5, 13, -13)
+                        .buildPathGenerator()
+                        .generate(0.05),
+                new SplinePPWaypoint.Builder(4)
+                        .add(-1, 12.5, 0, -10, -5, 13, -13)
+                        .add(-11, 9.5, -10, 0, -5, 13, -13)
+                        .buildPathGenerator()
+                        .generate(0.05),
+                new SplinePPWaypoint.Builder(4)
+                        .add(-11, 9.5, 10, 0, 5, 13, -13)
+                        .add(-11.31, -2, 0, -15, 5, 13, -13)
+                        .buildPathGenerator()
+                        .generate(0.05)
+                                        );
+
+        test(paths, "banana.json");
+
     }
 
     private void test(List<Path> paths, String fileName)

@@ -4,6 +4,7 @@ import com.github.ezauton.core.action.PeriodicAction;
 import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.utils.MathUtils;
 import com.team2502.robot2019.Robot;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.concurrent.TimeUnit;
@@ -17,15 +18,15 @@ public class TurnToAnglePDAction extends PeriodicAction
 
     private final double speed;
 
-    private final double defaultKPgain = 5;
-    private final double defaultKDgain = 0;
+    private final double defaultKPgain = 15;
+    private final double defaultKDgain = 1;
 
     private double targetAngle;
 
     private double kPgain;
     private double kDgain;
     private static final double velErrThresh = 0.05;
-    private static final double posErrThresh = 0.1;
+    private static final double posErrThresh = 0.075;
 
     /**
      * Construct a Drive Straight command
@@ -78,5 +79,6 @@ public class TurnToAnglePDAction extends PeriodicAction
     public void end() throws Exception
     {
         Robot.DRIVE_TRAIN.giveBack();
+        DriverStation.reportError("Ended TurnToAnglePDAction", false);
     }
 }

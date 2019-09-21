@@ -95,6 +95,7 @@ public final class OI
     public static final Button BUTTON_DRIVE_FORWARDS_NOGYRO = new JoystickButton(JOYSTICK_DRIVE_LEFT, 7);
 
     public static final Button BUTTON_ABORT_AUTO = new JoystickButton(JOYSTICK_SIDE_PANEL, 6);
+
     public static final Button BUTTON_KILL_ACTIONS = new JoystickButton(JOYSTICK_DRIVE_LEFT, RobotMap.Joystick.Button.BUTTON_KILL_ACTIONS);
     public static int camera1Selected = 0;
     /*
@@ -118,6 +119,7 @@ public final class OI
                 e.printStackTrace();
             }
         }));
+
 
         // CARGO MANIPULATOR
         BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_FWD));

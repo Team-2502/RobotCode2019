@@ -37,6 +37,9 @@ public class Constants
         public static final double JOYSTICK_DEADBAND = 0.05;
     }
 
+    public static class ShuffleboardKeys {
+        public static final String DELAY_AUTO = "delay auto by how many seconds?";
+    }
     /**
      * Variables that pertain to auto
      */
@@ -44,7 +47,7 @@ public class Constants
     {
         public static final String COPROCESSOR_MDNS_ADDR = "frcvision.local";
         public static final int PORT = 5800;
-        public static final double visionOffset = 0.14;//.3;
+        public static final double visionOffset = -.1;//.3;
 
         public static final double visionkP = 2D;
         public static final double visionkI = 0D;
@@ -141,8 +144,8 @@ public class Constants
 
         public static class OverBumperActive
         {
-            public static final double SPEED_FWD = 0.35D;
-            public static final double SPEED_BWD = -0.35D;
+            public static final double SPEED_FWD = 0.5D;
+            public static final double SPEED_BWD = -0.5D;
         }
 
         public static class Encoder

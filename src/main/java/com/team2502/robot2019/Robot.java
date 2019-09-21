@@ -15,7 +15,7 @@ import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.simulation.ActionScheduler;
+import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import com.team2502.robot2019.subsystem.CargoSubsystem;
@@ -60,12 +60,12 @@ public class Robot extends TimedRobot
     public static ClimberSubsystem CLIMBER;
     public static CrawlerSubsystem CRAWLER;
     public static Compressor COMPRESSOR;
-    public static UsbCamera CAMERA0;
-    public static UsbCamera CAMERA1;
-    public static UsbCamera CAMERA2;
-    private HttpCamera CAMERA3;
-
-    public static VideoSink SERVER;
+//    public static UsbCamera CAMERA0;
+//    public static UsbCamera CAMERA1;
+//    public static UsbCamera CAMERA2;
+//    private HttpCamera VISION_CAM;
+//
+//    public static VideoSink SERVER;
     public static ScoringHUD SCORING_HUD;
     public static  NetworkTable VISION_TABLE;
     public static NetworkTableEntry tvecs1Entry;
@@ -83,14 +83,13 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit()
     {
-        CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
-        CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
-        CAMERA2 = CameraServer.getInstance().startAutomaticCapture(2);
-        CAMERA3 = new HttpCamera("vision", "http://10.25.2.29:1181/?action=stream", HttpCamera.HttpCameraKind.kCSCore);// + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ":1181");
-        CameraServer.getInstance().addCamera(CAMERA3);
-        SERVER = CameraServer.getInstance().getServer();
+        //CAMERA0 = CameraServer.getInstance().startAutomaticCapture(0);
+        //CAMERA1 = CameraServer.getInstance().startAutomaticCapture(1);
+        //VISION_CAM = new HttpCamera("vision", "http://frcvision.local:1181/?action=stream", HttpCamera.HttpCameraKind.kCSCore);// + Constants.Autonomous.COPROCESSOR_MDNS_ADDR + ":1181");
+        //CameraServer.getInstance().addCamera(VISION_CAM);
+        //SERVER = CameraServer.getInstance().getServer();
 
-        SERVER.setSource(CAMERA3);
+        //SERVER.setSource(VISION_CAM);
 
 
         DRIVE_TRAIN = new DrivetrainSubsystem();
@@ -127,6 +126,15 @@ public class Robot extends TimedRobot
         SmartDashboard.putNumber("kP", 0.2);
         SmartDashboard.putNumber("kI", 0);
         SmartDashboard.putNumber("kD", 0);
+
+        SmartDashboard.putNumber(Constants.ShuffleboardKeys.DELAY_AUTO, 0);
+
+        MathUtils.init();
+
+        SmartDashboard.putNumber("minDistance", 1);
+        SmartDashboard.putNumber("maxDistance", 5);
+        SmartDashboard.putNumber("minSpeed", 3);
+        SmartDashboard.putNumber("maxSpeed", 10);
     }
 
 

@@ -498,7 +498,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
             case TANK_VELOCITY:
                 speed1 = -OI.JOYSTICK_DRIVE_LEFT.getY() * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
                 speed2 = -OI.JOYSTICK_DRIVE_RIGHT.getY() * Constants.Physical.DriveTrain.MAX_FPS_SPEED;
-                runAccelVelocity(speed1, speed2, Constants.Physical.DriveTrain.MAX_FPS2_ACCEL);
+                runMotorsVelocity(speed1, speed2);
                 break;
 
             case CURVATURE:
