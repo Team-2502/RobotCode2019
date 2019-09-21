@@ -160,9 +160,9 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
-        Robot.DRIVE_TRAIN.getPigeon().setFusedHeading(0);
-        Robot.DRIVE_TRAIN.getLocEstimator().reset();
-        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
+//        Robot.DRIVE_TRAIN.getPigeon().setFusedHeading(0);
+//        Robot.DRIVE_TRAIN.getLocEstimator().reset();
+//        Scheduler.getInstance().add(AutoSwitcher.getAutoInstance());
     }
 
     private CommandCreator PPTest() {

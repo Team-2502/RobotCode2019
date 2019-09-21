@@ -43,6 +43,9 @@ public class DriveCommand extends Command
                 lastIteractive = false;
             }
         }
+        double throttle = (-OI.JOYSTICK_DRIVE_LEFT.getThrottle() + 1)/2;
+        Robot.DRIVE_TRAIN.setSpeedLimit(throttle);
+        System.out.println("throttle = " + throttle);
     }
 
     @Override

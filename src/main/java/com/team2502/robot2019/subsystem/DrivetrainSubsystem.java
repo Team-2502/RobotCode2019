@@ -89,8 +89,11 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         frontLeft.configClosedloopRamp(0);
         frontRight.configClosedloopRamp(0);
 
-        frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
-        frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+//        frontLeft.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+//        frontRight.configOpenloopRamp(Constants.Physical.DriveTrain.SECONDS_FROM_NEUTRAL_TO_FULL);
+
+//
+
 
 
         SpeedControllerGroup scgLeft = new SpeedControllerGroup(frontLeft, backLeft);
@@ -223,6 +226,15 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         }
 
         SmartDashboard.putData("Teleop Mode", teleopChooser);
+    }
+
+    public void setSpeedLimit(double speedLimit) {
+        frontLeft.configPeakOutputForward(speedLimit);
+        frontLeft.configPeakOutputReverse(-speedLimit);
+
+
+        frontRight.configPeakOutputForward(speedLimit);
+        frontRight.configPeakOutputReverse(-speedLimit);
     }
 
     public PigeonIMU getPigeon()
@@ -473,7 +485,7 @@ public class DrivetrainSubsystem extends Subsystem implements IPIDTunable, Drive
         {
             case ARCADE:
                 speed1 = -OI.JOYSTICK_DRIVE_RIGHT.getY();
-                speed2 = OI.JOYSTICK_DRIVE_RIGHT.getTwist();
+                speed2 = OI.JOYSTICK_DRIVE_LEFT.getX();
                 teleopDriveArcade(speed1, speed2);
                 break;
 
