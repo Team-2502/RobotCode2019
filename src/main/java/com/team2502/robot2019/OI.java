@@ -73,8 +73,8 @@ public final class OI
     public static final Button BUTTON_RUN_CARGO_OBA_FWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_BOTTOM);
     public static final Button BUTTON_RUN_CARGO_OBA_BWD = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_BOTTOM);
 
-    public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_UP);
-    public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_CLIMBER_STRUCTURE_DOWN);
+    public static final Button BUTTON_CLIMB_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_FWD_TOP);
+    public static final Button BUTTON_CLIMB_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RUN_CARGO_ACTIVE_BWD_TOP);
 
     public static final Button BUTTON_CLIMB_RIGHT_UP = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_UP);
     public static final Button BUTTON_CLIMB_RIGHT_DOWN = new JoystickButton(JOYSTICK_FUNCTION, RobotMap.Joystick.Button.BUTTON_RIGHT_CLIMB_DOWN);
@@ -122,8 +122,8 @@ public final class OI
 
 
         // CARGO MANIPULATOR
-        BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_FWD));
-        BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_BWD));
+//        BUTTON_RUN_CARGO_ACTIVE_FWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_FWD));
+//        BUTTON_RUN_CARGO_ACTIVE_BWD_TOP.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.INTERNAL, Constants.Physical.CargoActive.SPEED_BWD));
 
         BUTTON_RUN_CARGO_OBA_FWD.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.BOTH, Constants.Physical.OverBumperActive.SPEED_FWD));
         BUTTON_RUN_CARGO_OBA_BWD.whileHeld(new CargoActiveCommand(CargoSubsystem.Section.BOTH, Constants.Physical.OverBumperActive.SPEED_BWD));
